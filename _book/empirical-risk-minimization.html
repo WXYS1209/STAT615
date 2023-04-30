@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Empirical Risk Minimization | STAT 615 Note Book</title>
+  <meta name="description" content="This is a notebook for STAT 615." />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Empirical Risk Minimization | STAT 615 Note Book" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This is a notebook for STAT 615." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Empirical Risk Minimization | STAT 615 Note Book" />
+  
+  <meta name="twitter:description" content="This is a notebook for STAT 615." />
+  
+
+<meta name="author" content="Peter Wang" />
+
+
+<meta name="date" content="2023-04-30" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="plug-in-classifiers-similarity-classifier.html"/>
+<link rel="next" href="summary.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#usage"><i class="fa fa-check"></i><b>1.1</b> Usage</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#render-book"><i class="fa fa-check"></i><b>1.2</b> Render book</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#preview-book"><i class="fa fa-check"></i><b>1.3</b> Preview book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html"><i class="fa fa-check"></i><b>2</b> Classification Problem &amp; Bayes Classifier</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#notation"><i class="fa fa-check"></i><b>2.1</b> Notation</a></li>
+<li class="chapter" data-level="2.2" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#classification-problem"><i class="fa fa-check"></i><b>2.2</b> Classification Problem</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#goal"><i class="fa fa-check"></i><b>2.2.1</b> Goal</a></li>
+<li class="chapter" data-level="2.2.2" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#questions"><i class="fa fa-check"></i><b>2.2.2</b> Questions</a></li>
+<li class="chapter" data-level="2.2.3" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#the-0-1-loss"><i class="fa fa-check"></i><b>2.2.3</b> The 0-1 Loss</a></li>
+<li class="chapter" data-level="2.2.4" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#observations"><i class="fa fa-check"></i><b>2.2.4</b> Observations</a></li>
+<li class="chapter" data-level="2.2.5" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#examples"><i class="fa fa-check"></i><b>2.2.5</b> Examples</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#other-topics"><i class="fa fa-check"></i><b>2.3</b> Other Topics</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html"><i class="fa fa-check"></i><b>3</b> Plug-in Classifiers (Similarity Classifier)</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#notions-of-consistency-for-families-of-binary-classifier"><i class="fa fa-check"></i><b>3.1</b> Notions of Consistency for Families of Binary Classifier</a></li>
+<li class="chapter" data-level="3.2" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#functions-of-hateta_n"><i class="fa fa-check"></i><b>3.2</b> Functions of <span class="math inline">\(\hat{\eta}_n\)</span></a></li>
+<li class="chapter" data-level="3.3" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#consistency"><i class="fa fa-check"></i><b>3.3</b> Consistency</a></li>
+<li class="chapter" data-level="3.4" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#strong-consistency"><i class="fa fa-check"></i><b>3.4</b> Strong Consistency</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#theorems-from-probability-theory"><i class="fa fa-check"></i><b>3.4.1</b> Theorems from probability theory:</a></li>
+<li class="chapter" data-level="3.4.2" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#concentration-inequalities"><i class="fa fa-check"></i><b>3.4.2</b> Concentration Inequalities</a></li>
+<li class="chapter" data-level="3.4.3" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#more-about-con-ineq"><i class="fa fa-check"></i><b>3.4.3</b> More about Con-Ineq</a></li>
+<li class="chapter" data-level="3.4.4" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#strong-consistency-1"><i class="fa fa-check"></i><b>3.4.4</b> Strong Consistency</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html"><i class="fa fa-check"></i><b>4</b> Empirical Risk Minimization</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#questions-1"><i class="fa fa-check"></i><b>4.1</b> Questions</a></li>
+<li class="chapter" data-level="4.2" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#concentration-bounds-for-undersetmathfrak-f-in-mathcal-foperatornamesup-r_nmathfrak-f---rmathfrak-f"><i class="fa fa-check"></i><b>4.2</b> Concentration Bounds for <span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |\)</span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#in-terms-of-shattering-number"><i class="fa fa-check"></i><b>4.2.1</b> In terms of Shattering Number</a></li>
+<li class="chapter" data-level="4.2.2" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#in-terms-of-vc-dimension"><i class="fa fa-check"></i><b>4.2.2</b> In terms of VC Dimension</a></li>
+<li class="chapter" data-level="4.2.3" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#in-terms-of-rademacher-complexity"><i class="fa fa-check"></i><b>4.2.3</b> In terms of Rademacher Complexity</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>5</b> Summary</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="summary.html"><a href="summary.html#classification-problem-1"><i class="fa fa-check"></i><b>5.1</b> Classification Problem</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="summary.html"><a href="summary.html#similarity-classifiers"><i class="fa fa-check"></i><b>5.1.1</b> Similarity Classifiers</a></li>
+<li class="chapter" data-level="5.1.2" data-path="summary.html"><a href="summary.html#emprirical-risk-minimization"><i class="fa fa-check"></i><b>5.1.2</b> Emprirical Risk Minimization</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="summary.html"><a href="summary.html#no-free-lunch-theorem"><i class="fa fa-check"></i><b>5.2</b> No Free Lunch Theorem</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="linear-classifiers.html"><a href="linear-classifiers.html"><i class="fa fa-check"></i><b>6</b> Linear Classifiers</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="linear-classifiers.html"><a href="linear-classifiers.html#lda-or-qda"><i class="fa fa-check"></i><b>6.1</b> LDA or QDA</a></li>
+<li class="chapter" data-level="6.2" data-path="linear-classifiers.html"><a href="linear-classifiers.html#logistic-regression"><i class="fa fa-check"></i><b>6.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="linear-classifiers.html"><a href="linear-classifiers.html#perceptrons-and-svms"><i class="fa fa-check"></i><b>6.3</b> Perceptrons and SVMs</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 615 Note Book</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="empirical-risk-minimization" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Empirical Risk Minimization<a href="empirical-risk-minimization.html#empirical-risk-minimization" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="definition">
+<p><span id="def:ER" class="definition"><strong>Definition 4.1  (Empirical Risk) </strong></span>Given <span class="math inline">\((x_1, y_1), \cdots, (x_n, y_n)\)</span>, <span class="math inline">\(\mathfrak f: \mathcal X \to \{0,1\}\)</span>, define the empirical risk: <span class="math inline">\(R_n(\mathcal f) = \frac{1}{n}\sum_{i=1}^n 1_{\mathfrak f(x_i) \neq y_i}\)</span>.</p>
+</div>
+<p><strong><em>Goal</em></strong>: To understand how does <span class="math inline">\(R(\mathfrak f_n^*)\)</span> behave as a function of <span class="math inline">\(n\)</span> and the training data, where <span class="math inline">\(\mathfrak f_n^* \in \underset{\mathfrak f \in \mathcal F}{\operatorname{argmin}} R_n(\mathfrak f)\)</span>.</p>
+<div id="questions-1" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Questions<a href="empirical-risk-minimization.html#questions-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Suppose for a moment that we have proved that with probability greater than <span class="math inline">\(1-\delta\)</span>: <span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \leq \epsilon(n, \mathcal F, \delta)\)</span>, we have:</p>
+<ul>
+<li><p><span class="math inline">\(\mathfrak f_n^* \in \mathcal F\)</span></p></li>
+<li><p><span class="math inline">\(\mathfrak f^* \in \mathcal F\)</span></p></li>
+<li><p><span class="math inline">\(R_n(\mathfrak f_n^*) \leq R_n(\mathfrak f^*)\)</span></p></li>
+<li><p><span class="math inline">\(R(\mathfrak f^*) \leq R(\mathfrak f_n^*)\)</span></p></li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>Comparison between empirical risk and true risk: With probability greater than <span class="math inline">\(1-\delta\)</span>, <span class="math inline">\(R(\mathfrak f_n^*) \leq R_n(\mathfrak f_n^*) + \epsilon(n, \mathcal F, \delta)\)</span>.</li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+| R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*) | &amp;\leq \underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |\\
+&amp;\leq \epsilon(n, \mathcal F, \delta)
+\end{aligned}
+\]</span></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Let <span class="math inline">\(\mathfrak f^* \in \underset{\mathfrak f \in \mathcal F}{\operatorname{argmin}} R(\mathfrak f)\)</span>, with probability greater than <span class="math inline">\(1-\delta\)</span>: <span class="math inline">\(R(\mathfrak f_n^*) \leq R(\mathfrak f^*) + \epsilon(n, \mathcal F, \delta)\)</span>.</li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+0 \leq R(\mathfrak f_n^*) - R(\mathfrak f^*) &amp;= R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*) \\
+&amp;\quad + R_n(\mathfrak f_n^*) - R_n(\mathfrak f^*) \\
+&amp;\quad+ R_n(\mathfrak f^*) - R(\mathfrak f^*) \quad(\leq 0)\\
+&amp;\leq R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*)\\
+&amp;\quad+ R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*)\\
+&amp;\leq 2| R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*) |\\
+&amp;\leq 2 \epsilon(n, \mathcal F, \delta)
+\end{aligned}
+\]</span></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Comparison between true risk of <span class="math inline">\(\mathfrak f_n^*\)</span> and Bayes risk: With probability greater than <span class="math inline">\(1-\delta\)</span>: <span class="math inline">\(R(\mathfrak f_n^*) \leq R(\mathfrak f_B) + \epsilon(n, \mathcal F, \delta)\)</span>.</li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+R(\mathfrak f_n^*) &amp;\leq R(\mathfrak f^*) + \epsilon(n, \mathcal F, \delta)\\
+&amp;= R(\mathfrak f_B) \\
+&amp;\quad+ R(\mathfrak f^*) - R(\mathfrak f_B) \quad (\leq 0)\\
+&amp;\quad+ \epsilon(n, \mathcal F, \delta)\\
+&amp;\leq R(\mathfrak f_B) + \epsilon(n, \mathcal F, \delta)
+\end{aligned}
+\]</span></p>
+</div>
+<div id="concentration-bounds-for-undersetmathfrak-f-in-mathcal-foperatornamesup-r_nmathfrak-f---rmathfrak-f" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Concentration Bounds for <span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |\)</span><a href="empirical-risk-minimization.html#concentration-bounds-for-undersetmathfrak-f-in-mathcal-foperatornamesup-r_nmathfrak-f---rmathfrak-f" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="in-terms-of-shattering-number" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> In terms of Shattering Number<a href="empirical-risk-minimization.html#in-terms-of-shattering-number" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="theorem">
+<p><span id="thm:VC" class="theorem"><strong>Theorem 4.1  (Vapnick-Chervonenkis) </strong></span><span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \to 0\)</span> in probability iff <span class="math inline">\(| R(\mathfrak f_n^*) - R(\mathfrak f^*) | \to 0\)</span> in probability.</p>
+</div>
+<p>Suppose <span class="math inline">\(| \mathcal F | &lt; \infty\)</span>, where we can use a union bound:</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \geq t) &amp;= P(\exists \mathfrak f \in \mathcal F \quad s.t. \quad | R_n(\mathfrak f) - R(\mathfrak f) | \geq t)\\
+&amp;= P(\bigcup_{\mathfrak f \in \mathcal F} \{| R_n(\mathfrak f) - R(\mathfrak f) | \geq t\})\\
+&amp;\leq \sum_{\mathfrak f \in \mathcal F} P(| R_n(\mathfrak f) - R(\mathfrak f) | \geq t)\\
+&amp;\underset{Hoeffdings}{\leq} | \mathcal F| \cdot 2\operatorname{exp}(-\frac{nt^2}{8})
+\end{aligned}
+\]</span></p>
+<p>To extend to a setting where <span class="math inline">\(| \mathcal F | = \infty\)</span>, we have:</p>
+<div class="definition">
+<p><span id="def:SN" class="definition"><strong>Definition 4.2  (Shattering Number) </strong></span><span class="math inline">\(S(n, \mathcal F) = \underset{x_1, \cdots, x_n}{\operatorname{sup}} | \mathcal F_{x_1, \cdots, x_n}|\)</span></p>
+</div>
+<div class="definition">
+<p><span id="def:VCD" class="definition"><strong>Definition 4.3  (VC Dimension) </strong></span><span class="math inline">\(\forall n &lt; VC(\mathcal F)\)</span>, <span class="math inline">\(S(n, \mathcal F) = 2^n\)</span>, and <span class="math inline">\(S(VC(\mathcal F), \mathcal F) &lt; 2^{VC(\mathcal F)}\)</span>.</p>
+</div>
+<p><strong>Symmetrization</strong>:</p>
+<div class="theorem">
+<p><span id="thm:symm" class="theorem"><strong>Theorem 4.2  </strong></span>Let <span class="math inline">\(t&gt;0\)</span> be such that <span class="math inline">\(t \geq \sqrt{\frac{2}{n}}\)</span>. Let <span class="math inline">\(R_n\)</span> be the empirical risk associated to <span class="math inline">\((x_1, y_1), \cdots, (x_n, y_n) \underset{i.i.d}{\sim} \rho\)</span>. Let <span class="math inline">\(R_n&#39;\)</span> be the empirical risk associated to <span class="math inline">\((x_1&#39;, y_1&#39;), \cdots, (x_n&#39;, y_n&#39;) \underset{i.i.d}{\sim} \rho\)</span> independent from <span class="math inline">\((x_1, y_1), \cdots, (x_n, y_n)\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;R_n(\mathfrak f) = \frac{1}{n} \sum_{i=1}^n 1_{\mathfrak f(x_i) \neq y_i}\\
+&amp;R_n&#39;(\mathfrak f) = \frac{1}{n} \sum_{i=1}^n 1_{\mathfrak f(x&#39;_i) \neq y&#39;_i}\\
+\end{aligned}
+\]</span></p>
+<p>Then we have:</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \geq t) \leq 2P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R&#39;_n(\mathfrak f) | \geq \frac{t}{2})
+\end{aligned}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span>Suppose <span class="math inline">\(\tilde{\mathfrak f}_n \in \mathcal F\)</span> is a maximizer for <span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |\)</span>.</p>
+<p>Claim:</p>
+<p><span class="math display">\[
+\begin{aligned}
+1_{| R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | &gt; t} \cdot 1_{| R(\tilde{\mathfrak f}_n) - R&#39;_n(\tilde{\mathfrak f}_n) | &lt; \frac{t}{2}} \leq 1_{| R&#39;_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | &gt; \frac{t}{2}}
+\end{aligned}
+\]</span></p>
+<p>Case 1: LHS = 0, then there is nothing to prove.</p>
+<p>Case 2: LHS = 1, then we have <span class="math inline">\(| R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | &gt; t\)</span> and <span class="math inline">\(| R(\tilde{\mathfrak f}_n) - R&#39;_n(\tilde{\mathfrak f}_n) | &lt; \frac{t}{2}\)</span>. Thus,</p>
+<p><span class="math display">\[
+\begin{aligned}
+| R&#39;_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | &amp;\geq | R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | - | R(\tilde{\mathfrak f}_n) - R&#39;_n(\tilde{\mathfrak f}_n) |\\
+&amp;&gt; t - \frac{t}{2} = \frac{t}{2}
+\end{aligned}
+\]</span></p>
+<p>which means RHS = 1.</p>
+<p>Then, for <span class="math inline">\(R&#39;_n(\tilde{\mathfrak f}_n) = \frac{1}{n} \sum_{i=1}^n 1_{\tilde{\mathfrak f}_n(x&#39;_i) \neq y_i}\)</span>, we have <span class="math inline">\(E[R&#39;_n(\tilde{\mathfrak f}_n) | (x_1, y_1), \cdots, (x_n, y_n)] = R(\tilde{\mathfrak f}_n)\)</span>. Thus,</p>
+<p><span class="math display">\[
+\begin{aligned}
+Var(R&#39;_n(\tilde{\mathfrak f}_n) - R(\tilde{\mathfrak f}_n) | (x_1, y_1), \cdots, (x_n, y_n)) &amp;=
+\frac{1}{n^2} \sum_{i=1}^n Var(\frac{1}{n} \sum_{i=1}^n 1_{\tilde{\mathfrak f}_n(x&#39;_i) \neq y_i} | (x_1, y_1), \cdots, (x_n, y_n))\\
+&amp;\leq \frac{1}{n^2} \cdot n \cdot \frac{1}{4}\\
+&amp;= \frac{1}{4n}
+\end{aligned}
+\]</span></p>
+<p>Then,</p>
+<p><span class="math display">\[
+\begin{aligned}
+1_{| R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | &gt; t} \cdot E[1_{| R(\tilde{\mathfrak f}_n) - R&#39;_n(\tilde{\mathfrak f}_n) | &lt; \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)] \leq E[1_{| R&#39;_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | &gt; \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)]
+\end{aligned}
+\]</span></p>
+<p>As</p>
+<p><span class="math display">\[
+\begin{aligned}
+E[1_{| R(\tilde{\mathfrak f}_n) - R&#39;_n(\tilde{\mathfrak f}_n) | &lt; \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)] &amp;= 1 - E[1_{| R(\tilde{\mathfrak f}_n) - R&#39;_n(\tilde{\mathfrak f}_n) | \geq \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)]\\
+&amp;\geq 1 - (\frac{2}{t})^2 Var(R&#39;_n(\tilde{\mathfrak f}_n) - R(\tilde{\mathfrak f}_n) | (x_1, y_1), \cdots, (x_n, y_n))\\
+&amp;\geq 1 - \frac{1}{t^2n}\\
+&amp;\underset{t \geq \sqrt{\frac{2}{n}}}{\geq} \frac{1}{2}
+\end{aligned}
+\]</span></p>
+<p>we have:</p>
+<p><span class="math display">\[
+\begin{aligned}
+1_{| R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | &gt; t} \leq 2 E[1_{| R&#39;_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | &gt; \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)]
+\end{aligned}
+\]</span></p>
+<p>Take expectation of both sides, we then have:</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \geq t) &amp;\leq 2P(| R&#39;_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | \geq \frac{t}{2})\\
+&amp;\leq 2 P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R&#39;_n(\mathfrak f) - R_n(\mathfrak f) | \geq \frac{t}{2})
+\end{aligned}
+\]</span></p>
+</div>
+<p>How do we bound <span class="math inline">\(P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R&#39;_n(\mathfrak f) - R_n(\mathfrak f) | \geq \frac{t}{2})\)</span>?</p>
+<p>At most the number of different values that <span class="math inline">\(R&#39;_n(\mathfrak f) - R_n(\mathfrak f)\)</span> can take when we change <span class="math inline">\(\mathfrak f \in \mathcal F\)</span> is the number of assignment that the family <span class="math inline">\(\mathcal F\)</span> induces on <span class="math inline">\((x_1, \cdots, x_n, x&#39;_1, \cdots, x&#39;_n)\)</span>.</p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R&#39;_n(\mathfrak f) - R_n(\mathfrak f) | \geq \frac{t}{2}) &amp;= P(\underset{\mathfrak f \in \mathcal F_{x_1, \cdots, x_n, x&#39;_1, \cdots, x&#39;_n}}{\operatorname{max}} | R&#39;_n(\mathfrak f) - R_n(\mathfrak f) | \geq \frac{t}{2})\\
+&amp;\underset{S(2n, \mathcal F) = \operatorname{sup} |\mathcal F_{x_1, \cdots, x_n, x&#39;_1, \cdots, x&#39;_n}|}{\leq} S(2n, \mathcal F) \cdot 2\operatorname{exp}(-\frac{nt^2}{8})
+\end{aligned}
+\]</span></p>
+<p>Thus, combining the Symmetrization argument and the above we have:</p>
+<div class="theorem">
+<p><span id="thm:VCinS" class="theorem"><strong>Theorem 4.3  (Vapnick-Chervonenkisi Therorem) </strong></span>Let <span class="math inline">\(t&gt;0\)</span> be such that <span class="math inline">\(t \geq \sqrt{\frac{2}{n}}\)</span>. Then,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \geq t) \leq 4 S(2n, \mathcal F) \cdot 2\operatorname{exp}(-\frac{nt^2}{8})
+\end{aligned}
+\]</span></p>
+</div>
+<p>Let <span class="math inline">\(\delta = 4 S(2n, \mathcal F) \cdot 2\operatorname{exp}(-\frac{nt^2}{8})\)</span>, we have <span class="math inline">\(t = \sqrt{\frac{8 \operatorname{log} (\frac{4S(2n, \mathcal F)}{\delta})}{n}}\)</span>. Then, with probability of at least <span class="math inline">\(1-\delta\)</span>, we have:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | &amp;\leq t\\
+&amp;= \sqrt{\frac{8 \operatorname{log} (\frac{4S(2n, \mathcal F)}{\delta})}{n}}\\
+&amp;= \sqrt{\frac{8 \operatorname{log} (4S(2n, \mathcal F)) + 8\operatorname{log (\frac{1}{\delta})}}{n}}
+\end{aligned}
+\]</span></p>
+<p>We call <span class="math inline">\(0 \leq R(f_n^* - R^*) \to 0\)</span> as <span class="math inline">\(n \to \infty\)</span> a restricted (<span class="math inline">\(\mathfrak f \in \mathcal F\)</span>) consistency statement.</p>
+</div>
+<div id="in-terms-of-vc-dimension" class="section level3 hasAnchor" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> In terms of VC Dimension<a href="empirical-risk-minimization.html#in-terms-of-vc-dimension" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="theorem">
+<p><span id="thm:VCSS" class="theorem"><strong>Theorem 4.4  (Vapnick,Chervonenkisi,Sauer,Shelah) </strong></span>If <span class="math inline">\(VC(\mathcal F) &lt; \infty\)</span>, then:</p>
+<p><span class="math display">\[
+S(n,\mathcal F) \leq (\frac{e n}{VC(\mathcal F)})^{VC(\mathcal F)}
+\]</span></p>
+</div>
+<p>The RHS is a polynomial in n.</p>
+<div class="corollary">
+<p><span id="cor:unlabeled-div-22" class="corollary"><strong>Corollary 4.1  </strong></span>With probability of at least <span class="math inline">\(1-\delta\)</span>, we have:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | &amp;\leq \sqrt{\frac{8 \operatorname{log} (\frac{4S(2n, \mathcal F)}{\delta})}{n}}\\
+&amp;\leq \sqrt{\frac{8 \operatorname{log} (4(\frac{e n}{VC(\mathcal F)})^{VC(\mathcal F)}) + 8\operatorname{log (\frac{1}{\delta})}}{n}}\\
+&amp;\approx \sqrt{\frac{c \cdot VC(\mathcal F) \operatorname{log} (n) + c\operatorname{log (\frac{1}{\delta})}}{n}}
+\end{aligned}
+\]</span></p>
+</div>
+<p>If <span class="math inline">\(VC(\mathcal F) = \infty\)</span>, <span class="math inline">\(\sqrt{\frac{c \operatorname{log} (2^n) + c\operatorname{log (\frac{1}{\delta})}}{n}} = \sqrt{c \operatorname{log} (2) + \frac{c\operatorname{log} (\frac{1}{\delta})}{n}}\)</span>, which doesn’t go to 0 as <span class="math inline">\(n \to \infty\)</span>. Thus, keep VC dimension finite is critical for restricted universal strong consistency of ERM.</p>
+</div>
+<div id="in-terms-of-rademacher-complexity" class="section level3 hasAnchor" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> In terms of Rademacher Complexity<a href="empirical-risk-minimization.html#in-terms-of-rademacher-complexity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A new convention: let us assume our classifier: <span class="math inline">\(\mathfrak f: \mathcal X \to \{-1,1\}\)</span>, <span class="math inline">\(y_i \in \{-1,1\}\)</span>.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-23" class="definition"><strong>Definition 4.4  </strong></span>Given a family of classifier <span class="math inline">\(\mathcal F\)</span> (<span class="math inline">\(\mathfrak f: \mathcal X \to \{-1,1\}\)</span>), we define</p>
+<ul>
+<li><p><span class="math inline">\(Rad_n(\mathcal F) = E[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} R_n^{\sigma}(\mathfrak f)]\)</span> as Rademacher average.</p></li>
+<li><p><span class="math inline">\(\tilde{Rad}_n(\mathcal F) = E_{\sigma}[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} R_n^{\sigma}(\mathfrak f)]\)</span> as conditional Rademacher average</p></li>
+</ul>
+<p>Here, <span class="math inline">\(R_n^{\sigma}(\mathfrak f) = \frac{1}{n} \sum_{i=1}^n \sigma_i \mathfrak f(x_i)\)</span>, where <span class="math inline">\(x_1, \cdots, x_n\)</span> are <span class="math inline">\(i.i.d\)</span> samples and <span class="math inline">\(\sigma_1, \cdots, \sigma_n\)</span> are <span class="math inline">\(i.i.d\)</span> Rademacher variables (<span class="math inline">\(\sigma_i \in \{-1,1\}\)</span> and <span class="math inline">\(P(\sigma_i=-1)=P(\sigma_i=1)=\frac{1}{2}\)</span>) that are independent from the data.</p>
+</div>
+<p><span class="math inline">\(E\)</span>: expectation over <span class="math inline">\(x_1, \cdots, x_n\)</span> and over <span class="math inline">\(\sigma_1, \cdots, \sigma_n\)</span>.</p>
+<p><span class="math inline">\(E_\sigma\)</span>: expectation over <span class="math inline">\(\sigma_1, \cdots, \sigma_n\)</span>.</p>
+<p>In particular, <span class="math inline">\(\tilde{Rad}_n(\mathcal F)\)</span> is a random variable that depends on <span class="math inline">\(x_1, \cdots, x_n\)</span>.</p>
+<div class="theorem">
+<p><span id="thm:rad" class="theorem"><strong>Theorem 4.5  </strong></span>For all <span class="math inline">\(\delta \in (0,1)\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, we have:</p>
+<p><span class="math display">\[
+\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} |R(\mathfrak f) - R_n(\mathfrak f)| \leq 2Rad_n(\mathcal F) + \sqrt{\frac{c \operatorname{log}(\frac{1}{\delta})}{n}}
+\]</span></p>
+</div>
+<div class="corollary">
+<p><span id="cor:unlabeled-div-24" class="corollary"><strong>Corollary 4.2  </strong></span>If <span class="math inline">\(Rad_n(\mathcal F) \to 0\)</span> as <span class="math inline">\(n \to \infty\)</span>, then ERM with <span class="math inline">\(\mathcal F\)</span> is (restricted) universally strongly consistent.</p>
+</div>
+<p>Unfortunately, <span class="math inline">\(Rad_n(\mathcal F)\)</span> is still distribution dependent: <span class="math inline">\(x_1, \cdots, x_n \sim \rho_X\)</span>, <span class="math inline">\(\sigma_1, \cdots, \sigma_n \sim Rademacher\)</span>.</p>
+<div class="theorem">
+<p><span id="thm:radtil" class="theorem"><strong>Theorem 4.6  </strong></span>For all <span class="math inline">\(\delta \in (0,1)\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, we have:</p>
+<p><span class="math display">\[
+\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} |R(\mathfrak f) - R_n(\mathfrak f)| \leq 2 \tilde{Rad}_n(\mathcal F) + \sqrt{\frac{c \operatorname{log}(\frac{1}{\delta})}{n}}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-25" class="proof"><em>Proof</em>. </span>(Sketch of Proofs):</p>
+<p>For <strong>Theorem <a href="empirical-risk-minimization.html#thm:rad">4.5</a></strong>:</p>
+<p>We are interested in bounding <span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |\)</span>. Given
+<span class="math inline">\((x_1,y_1) \cdots, (x_n,y_n)\)</span>, <span class="math inline">\(g((x_1,y_1) \cdots, (x_n,y_n)):= \underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | \frac{1}{n} \sum_{i=1}^n 1_{\mathfrak f(x_i) \neq y_i} - R(\mathfrak f) |\)</span>.</p>
+<p>We can check that the function <span class="math inline">\(g\)</span> satisfies the condition for using McDiarmid’s Inequality:</p>
+<p><span class="math display">\[
+| g((x_1,y_1) \cdots,(x_i,y_i),\cdots, (x_n,y_n)) - g((x_1,y_1) \cdots,(x&#39;_i,y&#39;_i),\cdots, (x_n,y_n)) | \leq \frac{2}{n}
+\]</span></p>
+<p>Because of this, we can conclude that <span class="math inline">\(\Big | \underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | - E[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |] \Big | \to 0\)</span> as <span class="math inline">\(n \to \infty\)</span> a.s.</p>
+<p>To conclude, we would need to show that <span class="math inline">\(E[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |] \leq 2 Rad_n(\mathcal F)\)</span>.</p>
+<p><span class="math display">\[
+R_n(\mathfrak f) = \frac{1}{n} \sum_{i=1}^n 1_{\mathfrak f(x_i) \neq y_i} = \frac{1}{2n} \sum_{i=1}^n (1 - \mathfrak f(x_i)y_i)
+\]</span></p>
+<p><span class="math display">\[
+R(\mathfrak f) = \frac{1}{2} E[1-\mathfrak f(X)Y]
+\]</span></p>
+<p><span class="math display">\[
+|R_n(\mathfrak f) - R(\mathfrak f)| = \frac{1}{2} \Big|\frac{1}{n} \sum_{i=1}^n \mathfrak f(x_i)y_i - E[\mathfrak f(X)Y]\Big|
+\]</span></p>
+<p>For simplicity, assume <span class="math inline">\(y_i = 1, i=1,\cdots,n\)</span> and <span class="math inline">\(Y=1\)</span>, then we need to show that</p>
+<p><span class="math display">\[
+E\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \mathfrak f(x_i) - E[\mathfrak f(X)]\Big|\Big] \leq 2 Rad_n(\mathcal F)
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+E_X\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \mathfrak f(x_i) - E_{X&#39;}[\mathfrak f(x_i&#39;)]\Big|\Big] &amp;= E_X\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} E_{X&#39;}\Big|\frac{1}{n} \sum_{i=1}^n \Big(\mathfrak f(x_i) - \mathfrak f(x_i&#39;)\Big)\Big|\Big]\\
+&amp;\leq E_X E_{X&#39;}\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \Big(\mathfrak f(x_i) - \mathfrak f(x_i&#39;)\Big)\Big|\Big]\\
+&amp;= E_{X,X&#39;}\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \Big(\mathfrak f(x_i) - \mathfrak f(x_i&#39;)\Big)\Big|\Big]\\
+&amp;\underset{\text{show below}}{=} E_{X,X&#39;,\sigma}\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \sigma_i \Big(\mathfrak f(x_i) - \mathfrak f(x_i&#39;)\Big)\Big|\Big]\\
+&amp;\leq 2E_{X,\sigma}\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \sigma_i \mathfrak f(x_i)\Big|\Big]\\
+&amp;= 2 Rad_n(\mathcal F)
+\end{aligned}
+\]</span></p>
+<p>For the equality mentioned above, whichever <span class="math inline">\(\sigma_i\)</span> is (<span class="math inline">\(-1,1\)</span>), we have <span class="math inline">\(\sigma_i \Big(\mathfrak f(x_i) - \mathfrak f(x_i&#39;)\Big)\)</span> always have the same distribution.</p>
+<p>For <strong>Theorem <a href="empirical-risk-minimization.html#thm:radtil">4.6</a></strong>:</p>
+<p>With high probability we have <span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} |R(\mathfrak f) - R_n(\mathfrak f)| \leq 2Rad_n(\mathcal F) + O(\sqrt{\frac{1}{n}})\)</span>.</p>
+<p>However, notice that we can find concentration bounds for <span class="math inline">\(\tilde{Rad}_n(\mathcal F) - Rad_n(\mathcal F)\)</span>, as <span class="math inline">\(E_X[\tilde{Rad}_n(\mathcal F)] = Rad_n(\mathcal F)\)</span>.</p>
+<p>Thus, <span class="math inline">\(\tilde{Rad}_n(\mathcal F) - Rad_n(\mathcal F) = \tilde{Rad}_n(\mathcal F) - E[\tilde{Rad}_n(\mathcal F)] := h(x_1, \cdots, x_n)\)</span>.</p>
+<p>Then, we can use McDiarmid’s Inequality if <span class="math inline">\(|h(x_1, \cdots, x_i, \cdots, x_n) - h(x_1, \cdots, x&#39;_i, \cdots, x_n)| \leq \frac{2}{n}\)</span>.</p>
+</div>
+<ul>
+<li>How to Compute the Conditional Rademacher Average for a Given Family?<br />
+How to estimate <span class="math inline">\(\tilde{Rad}_n(\mathcal F)\)</span>?<br />
+A: Use a Mote Carlo estimate.<br />
+For <span class="math inline">\(k = 1, \cdots, K\)</span>, we do the following: <span class="math inline">\(\sigma_1^k, \cdots, \sigma_n^k \sim Rademacher\)</span> (<span class="math inline">\(\sigma_i^k \in \{-1, 1\}\)</span>).<br />
+Now consider: <span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | \frac{1}{n} \sum_{i=1}^n \sigma_i^k \mathfrak f(x_i) |\)</span>, which is not so different from solving the problem:
+<span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{max}} \frac{1}{n} \sum_{i=1}^n y_i \mathfrak f(x_i)\)</span>, but is as difficult as ERM.<br />
+<span class="math inline">\(\tilde{Rad}_n(\mathcal F)_k := \underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | \frac{1}{n} \sum_{i=1}^n \sigma_i^k \mathfrak f(x_i) |\)</span>. By doing this, we produce: <span class="math inline">\(\tilde{Rad}_n(\mathcal F)_1, \cdots, \tilde{Rad}_n(\mathcal F)_K\)</span>. Therefore, by LLN, CLT, Concentration Inequalities, we can study how big <span class="math inline">\(\frac{1}{K} \sum_{k=1}^K \tilde{Rad}_n(\mathcal F)_k - \tilde{Rad}_n(\mathcal F)\)</span> is (Concentration Ineqs as a function of <span class="math inline">\(K\)</span>).</li>
+</ul>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="plug-in-classifiers-similarity-classifier.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="summary.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/03-ERM.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

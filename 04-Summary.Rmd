@@ -1,0 +1,39 @@
+# Summary
+## Classification Problem
+What are some statistical properties of two families of classifiers built from data?
+
+
+
+### Similarity Classifiers
+
+
+
+### Emprirical Risk Minimization
+
+
+
+
+## No Free Lunch Theorem
+
+"Pointwise Statement":
+
+"Uniform Statement": 
+
+
+Example of Pointwise Statement vs Uniform Statement:
+
+
+No Free Lunch Theorem 1:
+
+
+Practical Corollary:
+
+
+No Free Lunch Theorem 2:
+
+Practical Corollary:
+
+Observation: we can not quantify the universal convergence rate.
+
+Conclusion: No magic classifier that suits every situation.
+

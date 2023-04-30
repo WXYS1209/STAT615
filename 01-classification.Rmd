@@ -1,0 +1,186 @@
+# Classification Problem & Bayes Classifier
+
+## Notation
+- $\mathcal X$ = input space; $\mathcal Y$ = output space
+- $x$ = feature vector, input, data point; $y$ = label
+- $(X, Y)$ = random variable.
+
+- **Supervised Learning**: From given data set $(x_1,y_1), \cdots, (x_n,y_n)$, find $\mathfrak f$, such that $\mathfrak f: ~x (\in \mathcal X) \to y (\in \mathcal Y)$.  
+$(x_1,y_1), \cdots, (x_n,y_n)$ come from a distribution of input-output pairs.
+
+- **Distribution**: $\rho$, is a probability distribution over $\mathcal X \times \mathcal Y$, the "Ground Truth".
+
+## Classification Problem
+Given $\mathfrak f : \mathcal X \to \mathcal Y$, compute $P_{(X,Y) \sim \rho}(\mathfrak f(X) \neq Y)$, which is **average misclassification error (AME)**.
+
+### Goal
+To build the "best" possible classifier, that is find $\mathfrak f$ that makes the AME as small as possible.
+
+### Questions
+
+- Does there exist a "best" classifier (relative to AME)?  
+
+  ::: {.theorem #pyth name="Bayes Classifier"}  
+  Given $\rho$ distribution over $\mathcal X \times \mathcal Y$,  
+  - $l$ = 0-1 loss;  
+  - $\mathcal Y$ = {0,1} (binary problem);  
+  - $\mathfrak f_B(x)$ := $\begin{cases}1 & if ~P_{(X,Y) \in \rho}(Y=1 \mid X=x) \geq P_{(X,Y) \in \rho}(Y=0 \mid X=x)\\0 & o.w.\end{cases}$.
+
+  Then $\mathfrak f_B$ minimizes the AME.
+  :::  
+  
+  ::: {.proof}
+  $\forall ~\mathfrak f: \mathcal X \to \{0,1\}$, we have  
+$$
+\begin{aligned}
+P(\mathfrak f(X) \neq Y) &= E[1_{\mathfrak f(X) \neq Y}]\\
+&= E\Big[E[1_{\mathfrak f(X) \neq Y} \mid X]\Big]\\
+&= E\Big[1_{\mathfrak f(X) \neq 1} \cdot P(Y=1 \mid X) + 1_{\mathfrak f(X) \neq 0} \cdot P(Y=0 \mid X)\Big]\\
+\end{aligned}
+$$  
+
+  - When $P(Y=1 \mid X) \geq P(Y=0 \mid X)$, we have  
+  $$
+  \begin{aligned}
+  1_{\mathfrak f(X) \neq 1} \cdot P(Y=1 \mid X) + 1_{\mathfrak f(X) \neq 0} \cdot P(Y=0 \mid X) &\geq 1_{\mathfrak f(X) \neq 1} \cdot P(Y=0 \mid X) + 1_{\mathfrak f(X) \neq 0} \cdot P(Y=0 \mid X)\\
+  &= P(Y=0 \mid X) \cdot (1_{\mathfrak f(X) \neq 1} + 1_{\mathfrak f(X) \neq 0})\\
+  &= P(Y=0 \mid X)\\
+  &=_{\mathfrak f_B(X) = 1} ~P(\mathfrak f_B(X) \neq Y \mid X)
+  \end{aligned}
+  $$
+  - When $P(Y=0 \mid X) > P(Y=1 \mid X)$, we similarly have  
+  
+  $$
+  \begin{aligned}
+  1_{\mathfrak f(X) \neq 1} \cdot P(Y=1 \mid X) + 1_{\mathfrak f(X) \neq 0} \cdot P(Y=0 \mid X) > P(\mathfrak f_B(X) \neq Y \mid X)
+  \end{aligned}
+  $$
+  As a result, we have
+$$
+\begin{aligned}
+P(\mathfrak f(X) \neq Y) &\geq E[P(\mathfrak f_B(X) \neq Y \mid X)]\\
+&= E\Big[E[1_{\mathfrak f_B(X) \neq Y} \mid X]\Big]\\
+&= P(\mathfrak f_B(X) \neq Y)
+\end{aligned}
+$$  
+  which means that $\mathfrak f_B$ minimizes the AME.
+:::
+
+
+
+
+- Can we construct this "best" classifier (if we only observe the data $(x_1, y_1), \cdots, (x_n, y_n)$)?
+
+- If we can not build this classifier from the observed data, then what can we do in that case?
+
+### The 0-1 Loss
+
+
+$$\begin{aligned}l:\{1, \cdots, k\} \times \{1, \cdots, k\} &\to \mathcal R\\(\mathcal Y, \mathcal Y') &\to \mathcal R\end{aligned}; \quad l(y,y') = \begin{cases}1 & if ~y\neq y'\\0 & if ~y = y'\end{cases}.$$
+
+
+Relative to this loss function, and relative to the distribution $\rho$, we can define the **risk** of a given classifier $\mathfrak f: \mathcal X \to \mathcal Y = \{1, \cdots, k\}$, 
+
+$$
+\begin{aligned}
+R(\mathfrak f) :&= E_{(X, Y) \in \rho}[l(\mathfrak f(X), Y)] \\
+&= P(\mathfrak f(X) \neq Y).
+\end{aligned}
+$$
+
+To find the "best" classifier is to solve $min_{\mathfrak f} R(\mathfrak f)$.
+
+-----
+
+:::{.example #traffic}
+$y_1$ = stop sign, $y_2$ = 50 mph, $y_3$ = 40 mph. The classifier classifies $\mathfrak f: x \to y_2$, when $(x,y)$ was such that $y$ = stop sign. Then the 0-1 loss is $l(\mathfrak f(x), y) = l(y_2, y_1) = 1$.  
+
+Predicting 50 mph, when $y$ = stop sign seems to be worse than predicting 40 mph, when $y$ = 50 mph. Thus other loss function may be better.
+:::
+
+-----
+
+### Observations
+
+- $\mathfrak f_B$ depends on $\rho$: if $(X,Y) \sim \rho'$, you can not expect $\mathfrak f_B$ constructed from $\rho$ to do well at classifying $(X,Y)$.
+
+- Bayes Rule:  
+$$
+P(Y=1 \mid X=x) = \frac{\rho_{X\mid Y=1}(x) \cdot P(Y=1)}{\rho_X(x)}
+$$  
+Thus,  
+$$\begin{aligned}P(Y=1 \mid X=x) \geq P(Y=0 \mid X=x) &\Leftrightarrow \rho_{X\mid Y=1}(x) \cdot P(Y=1) \geq \rho_{X\mid Y=0}(x) \cdot P(Y=0)\\
+&\Leftrightarrow P(X=x, Y=1) \geq P(X=x, Y=0)\\
+&(\text{useful when the input space } \mathcal X \text{ is discrete})
+\end{aligned}
+$$
+
+- In general there are multiple solutions to the problem. However, all of them have the form of $\mathfrak f_B$.
+
+- $R^*_B = min_{\mathfrak f} ~P(\mathfrak f(X) \neq Y) = P(\mathfrak f_B(X) \neq Y)$ is **Bayes Risk**, which indicates how accurate the classifier is. Notice that regardless of what $\rho$ is, $R^*_B \leq \frac{1}{2}$.
+
+- Both $\mathfrak f_B$ and $R^*_B$ depend on $\rho$. But also if we were to change the loss function, the formula for $\mathfrak f_B$ and the value of $R^*_B$ would change.
+
+### Examples
+:::{.example #org}
+$\mathcal X = \{a,b,c,d,e,f\};~ \mathcal Y = \{0,1\};~ \rho$ is a distribution over $\mathcal X \times \mathcal Y$.
+
+| | a | b | c | d | e | f |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+|0|0.1|0.2|0.5|0.3|0.8|0.9|
+|1|0.9|0.3|0.1|0.3|0.1|0.3|
+
+$P(X=x, Y=y) = \frac{q(x,y)}{M}$, where $q(\cdot, \cdot)$ is element of the above matrix, and $M$ is the normalization constant.
+
+According to the Bayes Rule, we have:
+
+$$
+\begin{aligned}
+\mathfrak f_B(x) &= \begin{cases}
+1 & if ~ P(X=x, Y=1) \geq P(X=x, Y=0)\\
+0 & o.w.
+\end{cases}\\
+&= \begin{cases}
+1 &if ~ q(x,1) \geq q(x,0)\\
+0 & o.w.
+\end{cases}
+\end{aligned}
+$$
+
+Thus, 
+
+| | a | b | c | d | e | f |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+|$\mathfrak f_B$|1|1|0|1 (0 is also OK)|0|0|
+:::
+
+:::{.example #gauss name="Mixture of Gaussians Model"}
+$\mathcal X = \mathcal R$; $\mathcal Y = \{0,1\}$; $(X, Y) \sim \rho$, $P(Y=1) = \omega_1$, $P(Y=0) = \omega_0$; $X \mid Y=1 \sim N(\mu_1, \sigma_1^2)$, $X \mid Y=0 \sim N(\mu_0, \sigma_0^2)$. 
+
+According to the Bayes Rule, we have:
+
+$$
+\begin{aligned}
+P(Y=1 \mid X=x) \geq P(Y=0 \mid X=x) &\Leftrightarrow \frac{\rho_1(x) \cdot P(Y=1)}{\rho(x)} \geq \frac{\rho_0(x) \cdot P(Y=0)}{\rho(x)}\\
+&\Leftrightarrow \rho_1(x) \cdot \omega_1 \geq \rho_0(x) \cdot \omega_0\\
+&\Leftrightarrow \omega_1 \cdot \frac{1}{\sqrt{2\pi}\sigma_1} ~exp[-\frac{(x-\mu_1)^2}{2\sigma_1^2}] \geq \omega_0 \cdot \frac{1}{\sqrt{2\pi}\sigma_0} ~exp[-\frac{(x-\mu_0)^2}{2\sigma_0^2}]\\
+&\Leftrightarrow log(\frac{\omega_1}{\sigma_1}) - \frac{(x-\mu_1)^2}{2\sigma_1^2} \geq log(\frac{\omega_0}{\sigma_0}) - \frac{(x-\mu_0)^2}{2\sigma_0^2}
+\end{aligned}
+$$
+
+where $\rho_1(x) = P(X=x \mid Y=1)$, $\rho_0(x) = P(X=x \mid Y=0)$, $\rho(\cdot)$ is the marginal density of $X$.
+:::
+
+## Other Topics
+"Weak Classifier" or "Probabilistic Classifier"
+
+$\mathfrak g: \mathcal X \to [0,1]$.
+
+$\mathfrak g(x)$ = likelihood that we are going to label 1.
+
+$min_{\mathfrak g} ~E[\mid \mathfrak g(x) - Y \mid]$.
+
+:::{.theorem #idk}
+......
+:::
+

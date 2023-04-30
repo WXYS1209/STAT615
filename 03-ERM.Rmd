@@ -1,0 +1,366 @@
+# Empirical Risk Minimization
+:::{.definition #ER name="Empirical Risk"}
+Given $(x_1, y_1), \cdots, (x_n, y_n)$, $\mathfrak f: \mathcal X \to \{0,1\}$, define the empirical risk: $R_n(\mathcal f) = \frac{1}{n}\sum_{i=1}^n 1_{\mathfrak f(x_i) \neq y_i}$.
+:::
+
+***Goal***: To understand how does $R(\mathfrak f_n^*)$ behave as a function of $n$ and the training data, where $\mathfrak f_n^* \in \underset{\mathfrak f \in \mathcal F}{\operatorname{argmin}} R_n(\mathfrak f)$.
+ 
+ 
+## Questions
+
+Suppose for a moment that we have proved that with probability greater than $1-\delta$: $\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \leq \epsilon(n, \mathcal F, \delta)$, we have:
+
+- $\mathfrak f_n^* \in \mathcal F$
+
+- $\mathfrak f^* \in \mathcal F$
+
+- $R_n(\mathfrak f_n^*) \leq R_n(\mathfrak f^*)$
+
+- $R(\mathfrak f^*) \leq R(\mathfrak f_n^*)$
+
+1. Comparison between empirical risk and true risk: With probability greater than $1-\delta$, $R(\mathfrak f_n^*) \leq R_n(\mathfrak f_n^*) + \epsilon(n, \mathcal F, \delta)$.
+
+$$
+\begin{aligned}
+| R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*) | &\leq \underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |\\
+&\leq \epsilon(n, \mathcal F, \delta)
+\end{aligned}
+$$
+
+
+2. Let $\mathfrak f^* \in \underset{\mathfrak f \in \mathcal F}{\operatorname{argmin}} R(\mathfrak f)$, with probability greater than $1-\delta$: $R(\mathfrak f_n^*) \leq R(\mathfrak f^*) + \epsilon(n, \mathcal F, \delta)$.
+
+$$
+\begin{aligned}
+0 \leq R(\mathfrak f_n^*) - R(\mathfrak f^*) &= R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*) \\
+&\quad + R_n(\mathfrak f_n^*) - R_n(\mathfrak f^*) \\
+&\quad+ R_n(\mathfrak f^*) - R(\mathfrak f^*) \quad(\leq 0)\\
+&\leq R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*)\\
+&\quad+ R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*)\\
+&\leq 2| R(\mathfrak f_n^*) - R_n(\mathfrak f_n^*) |\\
+&\leq 2 \epsilon(n, \mathcal F, \delta)
+\end{aligned}
+$$
+
+3. Comparison between true risk of $\mathfrak f_n^*$ and Bayes risk: With probability greater than $1-\delta$: $R(\mathfrak f_n^*) \leq R(\mathfrak f_B) + \epsilon(n, \mathcal F, \delta)$.
+
+$$
+\begin{aligned}
+R(\mathfrak f_n^*) &\leq R(\mathfrak f^*) + \epsilon(n, \mathcal F, \delta)\\
+&= R(\mathfrak f_B) \\
+&\quad+ R(\mathfrak f^*) - R(\mathfrak f_B) \quad (\leq 0)\\
+&\quad+ \epsilon(n, \mathcal F, \delta)\\
+&\leq R(\mathfrak f_B) + \epsilon(n, \mathcal F, \delta)
+\end{aligned}
+$$
+
+
+
+ 
+## Concentration Bounds for $\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |$
+
+### In terms of Shattering Number
+
+:::{.theorem #VC name="Vapnick-Chervonenkis"}
+$\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \to 0$ in probability iff $| R(\mathfrak f_n^*) - R(\mathfrak f^*) | \to 0$ in probability.
+:::
+
+Suppose $| \mathcal F | < \infty$, where we can use a union bound:
+
+$$
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \geq t) &= P(\exists \mathfrak f \in \mathcal F \quad s.t. \quad | R_n(\mathfrak f) - R(\mathfrak f) | \geq t)\\
+&= P(\bigcup_{\mathfrak f \in \mathcal F} \{| R_n(\mathfrak f) - R(\mathfrak f) | \geq t\})\\
+&\leq \sum_{\mathfrak f \in \mathcal F} P(| R_n(\mathfrak f) - R(\mathfrak f) | \geq t)\\
+&\underset{Hoeffdings}{\leq} | \mathcal F| \cdot 2\operatorname{exp}(-\frac{nt^2}{8})
+\end{aligned}
+$$
+
+To extend to a setting where $| \mathcal F | = \infty$, we have:
+
+:::{.definition #SN name="Shattering Number"}
+$S(n, \mathcal F) = \underset{x_1, \cdots, x_n}{\operatorname{sup}} | \mathcal F_{x_1, \cdots, x_n}|$
+:::
+
+:::{.definition #VCD name="VC Dimension"}
+$\forall n < VC(\mathcal F)$, $S(n, \mathcal F) = 2^n$, and $S(VC(\mathcal F), \mathcal F) < 2^{VC(\mathcal F)}$.
+:::
+
+**Symmetrization**:
+
+:::{.theorem #symm}
+Let $t>0$ be such that $t \geq \sqrt{\frac{2}{n}}$. Let $R_n$ be the empirical risk associated to $(x_1, y_1), \cdots, (x_n, y_n) \underset{i.i.d}{\sim} \rho$. Let $R_n'$ be the empirical risk associated to $(x_1', y_1'), \cdots, (x_n', y_n') \underset{i.i.d}{\sim} \rho$ independent from $(x_1, y_1), \cdots, (x_n, y_n)$:
+
+$$
+\begin{aligned}
+&R_n(\mathfrak f) = \frac{1}{n} \sum_{i=1}^n 1_{\mathfrak f(x_i) \neq y_i}\\
+&R_n'(\mathfrak f) = \frac{1}{n} \sum_{i=1}^n 1_{\mathfrak f(x'_i) \neq y'_i}\\
+\end{aligned}
+$$
+
+Then we have: 
+
+$$
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \geq t) \leq 2P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R'_n(\mathfrak f) | \geq \frac{t}{2})
+\end{aligned}
+$$
+:::
+
+:::{.proof}
+Suppose $\tilde{\mathfrak f}_n \in \mathcal F$ is a maximizer for $\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |$.
+
+Claim: 
+
+$$
+\begin{aligned}
+1_{| R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | > t} \cdot 1_{| R(\tilde{\mathfrak f}_n) - R'_n(\tilde{\mathfrak f}_n) | < \frac{t}{2}} \leq 1_{| R'_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | > \frac{t}{2}}
+\end{aligned}
+$$
+
+Case 1: LHS = 0, then there is nothing to prove.
+
+Case 2: LHS = 1, then we have $| R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | > t$ and $| R(\tilde{\mathfrak f}_n) - R'_n(\tilde{\mathfrak f}_n) | < \frac{t}{2}$. Thus,
+
+$$
+\begin{aligned}
+| R'_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | &\geq | R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | - | R(\tilde{\mathfrak f}_n) - R'_n(\tilde{\mathfrak f}_n) |\\
+&> t - \frac{t}{2} = \frac{t}{2}
+\end{aligned}
+$$
+
+which means RHS = 1.
+
+Then, for $R'_n(\tilde{\mathfrak f}_n) = \frac{1}{n} \sum_{i=1}^n 1_{\tilde{\mathfrak f}_n(x'_i) \neq y_i}$, we have $E[R'_n(\tilde{\mathfrak f}_n) | (x_1, y_1), \cdots, (x_n, y_n)] = R(\tilde{\mathfrak f}_n)$. Thus, 
+
+$$
+\begin{aligned}
+Var(R'_n(\tilde{\mathfrak f}_n) - R(\tilde{\mathfrak f}_n) | (x_1, y_1), \cdots, (x_n, y_n)) &=
+\frac{1}{n^2} \sum_{i=1}^n Var(\frac{1}{n} \sum_{i=1}^n 1_{\tilde{\mathfrak f}_n(x'_i) \neq y_i} | (x_1, y_1), \cdots, (x_n, y_n))\\
+&\leq \frac{1}{n^2} \cdot n \cdot \frac{1}{4}\\
+&= \frac{1}{4n}
+\end{aligned}
+$$
+
+Then,
+
+$$
+\begin{aligned}
+1_{| R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | > t} \cdot E[1_{| R(\tilde{\mathfrak f}_n) - R'_n(\tilde{\mathfrak f}_n) | < \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)] \leq E[1_{| R'_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | > \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)]
+\end{aligned}
+$$
+
+As 
+
+$$
+\begin{aligned}
+E[1_{| R(\tilde{\mathfrak f}_n) - R'_n(\tilde{\mathfrak f}_n) | < \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)] &= 1 - E[1_{| R(\tilde{\mathfrak f}_n) - R'_n(\tilde{\mathfrak f}_n) | \geq \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)]\\
+&\geq 1 - (\frac{2}{t})^2 Var(R'_n(\tilde{\mathfrak f}_n) - R(\tilde{\mathfrak f}_n) | (x_1, y_1), \cdots, (x_n, y_n))\\
+&\geq 1 - \frac{1}{t^2n}\\
+&\underset{t \geq \sqrt{\frac{2}{n}}}{\geq} \frac{1}{2}
+\end{aligned}
+$$
+
+we have:
+
+$$
+\begin{aligned}
+1_{| R(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | > t} \leq 2 E[1_{| R'_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | > \frac{t}{2}} | (x_1, y_1), \cdots, (x_n, y_n)]
+\end{aligned}
+$$
+
+Take expectation of both sides, we then have:
+
+$$
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \geq t) &\leq 2P(| R'_n(\tilde{\mathfrak f}_n) - R_n(\tilde{\mathfrak f}_n) | \geq \frac{t}{2})\\
+&\leq 2 P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R'_n(\mathfrak f) - R_n(\mathfrak f) | \geq \frac{t}{2})
+\end{aligned}
+$$
+:::
+
+How do we bound $P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R'_n(\mathfrak f) - R_n(\mathfrak f) | \geq \frac{t}{2})$?
+
+At most the number of different values that $R'_n(\mathfrak f) - R_n(\mathfrak f)$ can take when we change $\mathfrak f \in \mathcal F$ is the number of assignment that the family $\mathcal F$ induces on $(x_1, \cdots, x_n, x'_1, \cdots, x'_n)$. 
+
+Therefore, 
+
+$$
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R'_n(\mathfrak f) - R_n(\mathfrak f) | \geq \frac{t}{2}) &= P(\underset{\mathfrak f \in \mathcal F_{x_1, \cdots, x_n, x'_1, \cdots, x'_n}}{\operatorname{max}} | R'_n(\mathfrak f) - R_n(\mathfrak f) | \geq \frac{t}{2})\\
+&\underset{S(2n, \mathcal F) = \operatorname{sup} |\mathcal F_{x_1, \cdots, x_n, x'_1, \cdots, x'_n}|}{\leq} S(2n, \mathcal F) \cdot 2\operatorname{exp}(-\frac{nt^2}{8})
+\end{aligned}
+$$
+
+Thus, combining the Symmetrization argument and the above we have:
+
+:::{.theorem #VCinS name="Vapnick-Chervonenkisi Therorem"}
+Let $t>0$ be such that $t \geq \sqrt{\frac{2}{n}}$. Then, 
+
+$$
+\begin{aligned}
+P(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | \geq t) \leq 4 S(2n, \mathcal F) \cdot 2\operatorname{exp}(-\frac{nt^2}{8})
+\end{aligned}
+$$
+:::
+
+Let $\delta = 4 S(2n, \mathcal F) \cdot 2\operatorname{exp}(-\frac{nt^2}{8})$, we have $t = \sqrt{\frac{8 \operatorname{log} (\frac{4S(2n, \mathcal F)}{\delta})}{n}}$. Then, with probability of at least $1-\delta$, we have:
+
+$$
+\begin{aligned}
+\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | &\leq t\\
+&= \sqrt{\frac{8 \operatorname{log} (\frac{4S(2n, \mathcal F)}{\delta})}{n}}\\
+&= \sqrt{\frac{8 \operatorname{log} (4S(2n, \mathcal F)) + 8\operatorname{log (\frac{1}{\delta})}}{n}}
+\end{aligned}
+$$
+
+We call $0 \leq R(f_n^* - R^*) \to 0$ as $n \to \infty$ a restricted ($\mathfrak f \in \mathcal F$) consistency statement.
+
+
+### In terms of VC Dimension
+
+:::{.theorem #VCSS name="Vapnick,Chervonenkisi,Sauer,Shelah"}
+If $VC(\mathcal F) < \infty$, then:
+
+$$
+S(n,\mathcal F) \leq (\frac{e n}{VC(\mathcal F)})^{VC(\mathcal F)}
+$$
+:::
+
+The RHS is a polynomial in n.
+
+:::{.corollary}
+With probability of at least $1-\delta$, we have:
+
+$$
+\begin{aligned}
+\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | &\leq \sqrt{\frac{8 \operatorname{log} (\frac{4S(2n, \mathcal F)}{\delta})}{n}}\\
+&\leq \sqrt{\frac{8 \operatorname{log} (4(\frac{e n}{VC(\mathcal F)})^{VC(\mathcal F)}) + 8\operatorname{log (\frac{1}{\delta})}}{n}}\\
+&\approx \sqrt{\frac{c \cdot VC(\mathcal F) \operatorname{log} (n) + c\operatorname{log (\frac{1}{\delta})}}{n}}
+\end{aligned}
+$$
+:::
+
+If $VC(\mathcal F) = \infty$, $\sqrt{\frac{c \operatorname{log} (2^n) + c\operatorname{log (\frac{1}{\delta})}}{n}} = \sqrt{c \operatorname{log} (2) + \frac{c\operatorname{log} (\frac{1}{\delta})}{n}}$, which doesn't go to 0 as $n \to \infty$. Thus, keep VC dimension finite is critical for restricted universal strong consistency of ERM.
+
+
+### In terms of Rademacher Complexity
+
+A new convention: let us assume our classifier: $\mathfrak f: \mathcal X \to \{-1,1\}$, $y_i \in \{-1,1\}$.
+
+:::{.definition}
+Given a family of classifier $\mathcal F$ ($\mathfrak f: \mathcal X \to \{-1,1\}$), we define
+
+- $Rad_n(\mathcal F) = E[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} R_n^{\sigma}(\mathfrak f)]$ as Rademacher average.
+
+- $\tilde{Rad}_n(\mathcal F) = E_{\sigma}[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} R_n^{\sigma}(\mathfrak f)]$ as conditional Rademacher average
+
+Here, $R_n^{\sigma}(\mathfrak f) = \frac{1}{n} \sum_{i=1}^n \sigma_i \mathfrak f(x_i)$, where $x_1, \cdots, x_n$ are $i.i.d$ samples and $\sigma_1, \cdots, \sigma_n$ are $i.i.d$ Rademacher variables ($\sigma_i \in \{-1,1\}$ and $P(\sigma_i=-1)=P(\sigma_i=1)=\frac{1}{2}$) that are independent from the data.
+:::
+
+$E$: expectation over $x_1, \cdots, x_n$ and over $\sigma_1, \cdots, \sigma_n$.
+
+$E_\sigma$: expectation over $\sigma_1, \cdots, \sigma_n$.
+
+In particular, $\tilde{Rad}_n(\mathcal F)$ is a random variable that depends on $x_1, \cdots, x_n$.
+
+:::{.theorem #rad}
+For all $\delta \in (0,1)$, with probability at least $1-\delta$, we have:
+
+$$
+\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} |R(\mathfrak f) - R_n(\mathfrak f)| \leq 2Rad_n(\mathcal F) + \sqrt{\frac{c \operatorname{log}(\frac{1}{\delta})}{n}}
+$$
+:::
+
+:::{.corollary}
+If $Rad_n(\mathcal F) \to 0$ as $n \to \infty$, then ERM with $\mathcal F$ is (restricted) universally strongly consistent.
+:::
+
+Unfortunately, $Rad_n(\mathcal F)$ is still distribution dependent: $x_1, \cdots, x_n \sim \rho_X$, $\sigma_1, \cdots, \sigma_n \sim Rademacher$.
+
+:::{.theorem #radtil}
+For all $\delta \in (0,1)$, with probability at least $1-\delta$, we have:
+
+$$
+\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} |R(\mathfrak f) - R_n(\mathfrak f)| \leq 2 \tilde{Rad}_n(\mathcal F) + \sqrt{\frac{c \operatorname{log}(\frac{1}{\delta})}{n}}
+$$
+:::
+
+:::{.proof}
+(Sketch of Proofs):
+
+For **Theorem \@ref(thm:rad)**:
+
+We are interested in bounding $\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |$. Given 
+$(x_1,y_1) \cdots, (x_n,y_n)$, $g((x_1,y_1) \cdots, (x_n,y_n)):= \underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | \frac{1}{n} \sum_{i=1}^n 1_{\mathfrak f(x_i) \neq y_i} - R(\mathfrak f) |$.
+
+We can check that the function $g$ satisfies the condition for using McDiarmid's Inequality:
+
+$$
+| g((x_1,y_1) \cdots,(x_i,y_i),\cdots, (x_n,y_n)) - g((x_1,y_1) \cdots,(x'_i,y'_i),\cdots, (x_n,y_n)) | \leq \frac{2}{n}
+$$
+
+Because of this, we can conclude that $\Big | \underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) | - E[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |] \Big | \to 0$ as $n \to \infty$ a.s.
+
+To conclude, we would need to show that $E[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |] \leq 2 Rad_n(\mathcal F)$.
+
+$$
+R_n(\mathfrak f) = \frac{1}{n} \sum_{i=1}^n 1_{\mathfrak f(x_i) \neq y_i} = \frac{1}{2n} \sum_{i=1}^n (1 - \mathfrak f(x_i)y_i)
+$$
+
+$$
+R(\mathfrak f) = \frac{1}{2} E[1-\mathfrak f(X)Y]
+$$
+
+$$
+|R_n(\mathfrak f) - R(\mathfrak f)| = \frac{1}{2} \Big|\frac{1}{n} \sum_{i=1}^n \mathfrak f(x_i)y_i - E[\mathfrak f(X)Y]\Big|
+$$
+
+For simplicity, assume $y_i = 1, i=1,\cdots,n$ and $Y=1$, then we need to show that
+
+$$
+E\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \mathfrak f(x_i) - E[\mathfrak f(X)]\Big|\Big] \leq 2 Rad_n(\mathcal F)
+$$
+
+
+$$
+\begin{aligned}
+E_X\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \mathfrak f(x_i) - E_{X'}[\mathfrak f(x_i')]\Big|\Big] &= E_X\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} E_{X'}\Big|\frac{1}{n} \sum_{i=1}^n \Big(\mathfrak f(x_i) - \mathfrak f(x_i')\Big)\Big|\Big]\\
+&\leq E_X E_{X'}\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \Big(\mathfrak f(x_i) - \mathfrak f(x_i')\Big)\Big|\Big]\\
+&= E_{X,X'}\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \Big(\mathfrak f(x_i) - \mathfrak f(x_i')\Big)\Big|\Big]\\
+&\underset{\text{show below}}{=} E_{X,X',\sigma}\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \sigma_i \Big(\mathfrak f(x_i) - \mathfrak f(x_i')\Big)\Big|\Big]\\
+&\leq 2E_{X,\sigma}\Big[\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} \Big|\frac{1}{n} \sum_{i=1}^n \sigma_i \mathfrak f(x_i)\Big|\Big]\\
+&= 2 Rad_n(\mathcal F)
+\end{aligned}
+$$
+
+For the equality mentioned above, whichever $\sigma_i$ is ($-1,1$), we have $\sigma_i \Big(\mathfrak f(x_i) - \mathfrak f(x_i')\Big)$ always have the same distribution.
+
+For  **Theorem \@ref(thm:radtil)**:
+
+With high probability we have $\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} |R(\mathfrak f) - R_n(\mathfrak f)| \leq 2Rad_n(\mathcal F) + O(\sqrt{\frac{1}{n}})$.
+
+However, notice that we can find concentration bounds for $\tilde{Rad}_n(\mathcal F) - Rad_n(\mathcal F)$, as $E_X[\tilde{Rad}_n(\mathcal F)] = Rad_n(\mathcal F)$.
+
+Thus, $\tilde{Rad}_n(\mathcal F) - Rad_n(\mathcal F) = \tilde{Rad}_n(\mathcal F) - E[\tilde{Rad}_n(\mathcal F)] := h(x_1, \cdots, x_n)$.
+
+Then, we can use McDiarmid's Inequality if $|h(x_1, \cdots, x_i, \cdots, x_n) - h(x_1, \cdots, x'_i, \cdots, x_n)| \leq \frac{2}{n}$. 
+:::
+
+- How to Compute the Conditional Rademacher Average for a Given Family?  
+How to estimate $\tilde{Rad}_n(\mathcal F)$?  
+A: Use a Mote Carlo estimate.  
+For $k = 1, \cdots, K$, we do the following: $\sigma_1^k, \cdots, \sigma_n^k \sim Rademacher$ ($\sigma_i^k \in \{-1, 1\}$).  
+Now consider: $\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | \frac{1}{n} \sum_{i=1}^n \sigma_i^k \mathfrak f(x_i) |$, which is not so different from solving the problem:
+$\underset{\mathfrak f \in \mathcal F}{\operatorname{max}} \frac{1}{n} \sum_{i=1}^n y_i \mathfrak f(x_i)$, but is as difficult as ERM.  
+$\tilde{Rad}_n(\mathcal F)_k := \underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | \frac{1}{n} \sum_{i=1}^n \sigma_i^k \mathfrak f(x_i) |$. By doing this, we produce: $\tilde{Rad}_n(\mathcal F)_1, \cdots, \tilde{Rad}_n(\mathcal F)_K$. Therefore, by LLN, CLT, Concentration Inequalities, we can study how big $\frac{1}{K} \sum_{k=1}^K \tilde{Rad}_n(\mathcal F)_k - \tilde{Rad}_n(\mathcal F)$ is (Concentration Ineqs as a function of $K$).
+
+
+
+
+
+
+
+
+
+
