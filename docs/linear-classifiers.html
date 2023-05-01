@@ -127,7 +127,12 @@
 <ul>
 <li class="chapter" data-level="6.1" data-path="linear-classifiers.html"><a href="linear-classifiers.html#lda-or-qda"><i class="fa fa-check"></i><b>6.1</b> LDA or QDA</a></li>
 <li class="chapter" data-level="6.2" data-path="linear-classifiers.html"><a href="linear-classifiers.html#logistic-regression"><i class="fa fa-check"></i><b>6.2</b> Logistic Regression</a></li>
-<li class="chapter" data-level="6.3" data-path="linear-classifiers.html"><a href="linear-classifiers.html#perceptrons-and-svms"><i class="fa fa-check"></i><b>6.3</b> Perceptrons and SVMs</a></li>
+<li class="chapter" data-level="6.3" data-path="linear-classifiers.html"><a href="linear-classifiers.html#perceptrons-and-svms"><i class="fa fa-check"></i><b>6.3</b> Perceptrons and SVMs</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="linear-classifiers.html"><a href="linear-classifiers.html#perceptrons"><i class="fa fa-check"></i><b>6.3.1</b> Perceptrons</a></li>
+<li class="chapter" data-level="6.3.2" data-path="linear-classifiers.html"><a href="linear-classifiers.html#hard-margin-svm"><i class="fa fa-check"></i><b>6.3.2</b> Hard Margin SVM</a></li>
+<li class="chapter" data-level="6.3.3" data-path="linear-classifiers.html"><a href="linear-classifiers.html#soft-margin-svm"><i class="fa fa-check"></i><b>6.3.3</b> Soft Margin SVM</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -225,12 +230,17 @@ A: Three different ways to tune <span class="math inline">\(\beta, \beta_0\)</sp
 <span class="math inline">\(\mathfrak f_{\beta, \beta_0}(x):=\begin{cases}1 &amp; &lt;\beta,x&gt; + \beta_0 \geq 0 (\Leftrightarrow x \in H^+_{\beta,\beta_0})\\- 1&amp; &lt;\beta,x&gt; + \beta_0 &lt; 0(\Leftrightarrow x \in H^-_{\beta,\beta_0})\end{cases}\)</span>,
 <span class="math inline">\(\sigma(\vec \beta, \beta_0) := \sum_{i \in \mathcal M_{\vec \beta, \beta_0}} dist(x_i, \mathcal H_{\vec \beta, \beta_0})\)</span>,
 where <span class="math inline">\(\mathcal M_{\vec \beta, \beta_0} = \{i \text{ s.t. } \mathfrak f_{\vec \beta, \beta_0} (x_i) \neq y_i\}\)</span></p>
-<p><strong>Perceptrons</strong>: Let <span class="math inline">\((\vec \beta^*, \beta_0^*) := \underset{(\vec \beta, \beta_{0})}{\operatorname{min}} \sigma(\vec \beta, \beta_0)\)</span>, then the perceptron classifier is <span class="math inline">\(\mathfrak f_{\vec \beta^*, \beta_0^*} (x)\)</span>. There exist many solutions of perceptron problems but some hyperplanes seem to be more robust:</p>
+<div id="perceptrons" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Perceptrons<a href="linear-classifiers.html#perceptrons" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let <span class="math inline">\((\vec \beta^*, \beta_0^*) := \underset{(\vec \beta, \beta_{0})}{\operatorname{min}} \sigma(\vec \beta, \beta_0)\)</span>, then the perceptron classifier is <span class="math inline">\(\mathfrak f_{\vec \beta^*, \beta_0^*} (x)\)</span>. There exist many solutions of perceptron problems but some hyperplanes seem to be more robust:</p>
 <div class="example">
 <p><span id="exm:perceptron" class="example"><strong>Example 6.3  </strong></span><img src="figures/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Hyperplane 2 seems to be more robust.</p>
 </div>
-<p><strong>SVMs</strong>: Let’s suppose that <span class="math inline">\((x_i, y_i)_{i=1,\cdots,n}\)</span> is linearly separable (for motivation for now). Then there exists at least one <span class="math inline">\(\vec \beta, \beta_0\)</span> s.t. <span class="math inline">\(\mathcal M_{\vec \beta, \beta_0} = \emptyset\)</span>. What we want is to find</p>
+</div>
+<div id="hard-margin-svm" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Hard Margin SVM<a href="linear-classifiers.html#hard-margin-svm" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s suppose that <span class="math inline">\((x_i, y_i)_{i=1,\cdots,n}\)</span> is linearly separable (for motivation for now). Then there exists at least one <span class="math inline">\(\vec \beta, \beta_0\)</span> s.t. <span class="math inline">\(\mathcal M_{\vec \beta, \beta_0} = \emptyset\)</span>. What we want is to find</p>
 <p><span class="math display">\[
 \begin{aligned}
 \underset{(\vec \beta, \beta_{0})}{\operatorname{max}} &amp;~margin(\vec \beta, \beta_0)\\
@@ -287,6 +297,7 @@ s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n
 <li><p>SVM problem is a convex optimization problem.</p></li>
 </ol>
 </div>
+<hr />
 <p><strong>Duality for Convex Optimization</strong>:</p>
 <p>Primal problem <em>(P)</em>:</p>
 <p><span class="math display">\[
@@ -335,6 +346,7 @@ s.t. &amp;~\lambda_i \geq 0 ~\forall i=1,\cdots,n
 </ol>
 <p>Conversely, if <span class="math inline">\((z^*, \lambda^*)\)</span> satisfy 1-4, then <span class="math inline">\(z^*\)</span> is a solution to <em>(P)</em> and <span class="math inline">\(\lambda^*\)</span> is a solution to <em>(D)</em>.</p>
 </div>
+<hr />
 <p>Back to <strong>SVM</strong> problem:</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -367,14 +379,79 @@ s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n
 \Rightarrow &amp;~ (y_{\hat i} - &lt;x_{\hat i}, \beta^*&gt;) = \beta_0^*
 \end{aligned}
 \]</span></p>
-<p>Then, we go from <span class="math inline">\(\lambda^*\)</span> to <span class="math inline">\((\beta^*, \beta_0^*)\)</span>:</p>
+<p>Then, we go from <span class="math inline">\(\lambda^*\)</span> to <span class="math inline">\((\beta^*, \beta_0^*)\)</span> or <em>(D)</em> to <em>(P)</em>:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \beta^* &amp;= \sum_{i=1}^n \lambda_i^* y_i x_i\\
-\beta_0^* &amp;= y_{\hat i} - &lt;x_{\hat i}, \beta^*&gt;, \text{ where } \hat{i} \text{ s.t. } \lambda^*_{\hat{i}} &gt; 0
+\beta_0^* &amp;= y_{\hat i} - &lt;x_{\hat i}, \beta^*&gt;\\
+&amp;= y_{\hat i} - \sum_{j=1}^n \lambda_j^* y_j &lt;x_j, x_{\hat i}&gt;, \text{ where } \hat{i} \text{ s.t. } \lambda^*_{\hat{i}} &gt; 0
 \end{aligned}
 \]</span></p>
+<p>One can show that the primal problem <em>(P)</em> has a unique solution as shown above (Use strictly convex to show uniqueness for <span class="math inline">\(\beta^*\)</span>).</p>
+<p>Thus the classifier is:</p>
+<p><span class="math display">\[
+\begin{aligned}
+l(x)&amp;=
+\begin{cases}
+1 &amp; &lt;\beta^*, x&gt; + \beta_0^* &gt; 0\\
+-1 &amp; &lt;\beta^*, x&gt; + \beta_0^* &lt; 0
+\end{cases}\\
+&amp;=
+\begin{cases}
+1 &amp; \sum_{j=1}^n \lambda_j^* y_j (&lt;x_j, x&gt; - &lt;x_j, x_i&gt;) + y_i &gt; 0\\
+-1 &amp; o.w.
+\end{cases}, \text{ where }i \text{ s.t. } \lambda_i^*&gt;0\\
+\end{aligned}
+\]</span></p>
+<p>which depends on <span class="math inline">\(x\)</span> and <span class="math inline">\(x_i\)</span> only through inner products. This is a crucial property that we will exploit to define a larger class of SVM classifiers.</p>
+<div class="remark">
+<p><span id="unlabeled-div-28" class="remark"><em>Remark</em>. </span></p>
+<ol style="list-style-type: decimal">
+<li><p>Hard Margin SVM problem has a solution (primal problem is feasible) if data is linearly separable .</p></li>
+<li><p>In KKT, primal problem is feasible iff dual problem is bounded (in which case both primal and dual have solution and it makes sense to talk about <span class="math inline">\(z^*\)</span> and <span class="math inline">\(\lambda^*\)</span>).</p></li>
+</ol>
+</div>
+<div class="definition">
+<p><span id="def:SV" class="definition"><strong>Definition 6.1  (Support Vectors) </strong></span>Under the assumptions, let <span class="math inline">\(\beta^*, \beta_0^*, \lambda^*\)</span> be the solution to <em>(P)</em>. We say <span class="math inline">\(x_i\)</span> is a support vector if <span class="math inline">\(y_i (&lt;x_i, \beta^*&gt; + \beta_0^*) = 1\)</span>.</p>
+</div>
+<p>In particular, the minimum distance between <span class="math inline">\(\{x_1, \cdots, x_n\}\)</span> and the optimal hyperplane <span class="math inline">\(\mathcal H_{\beta^*, \beta_0^*}\)</span> is achieved at the support vectors.</p>
+<div class="theorem">
+<p><span id="thm:SPofSVM" class="theorem"><strong>Theorem 6.2  (Stability Property of SVMs) </strong></span>Let <span class="math inline">\(x_i\)</span> be a training data point and not a support vector. Suppose <span class="math inline">\(x_i\)</span> is changed for a point <span class="math inline">\(\tilde x_i\)</span> s.t. <span class="math inline">\(y_i (&lt;x_i, \beta^*&gt; + \beta_0^*) \geq 1\)</span>. Then the solution for the new data set is the same for the original data set.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-29" class="proof"><em>Proof</em>. </span><span class="math inline">\((\lambda^*, \beta_0^*, \beta^*)\)</span> from the original problem still satisfy KKT condition for new data set:</p>
+<ol style="list-style-type: decimal">
+<li><p>(Stationarity) As <span class="math inline">\(x_i\)</span> is not a support vector, we have <span class="math inline">\(\lambda^*_i = 0\)</span>. Thus, <span class="math inline">\(\beta^* = \sum_{j=1}^n \lambda_j^* y_j x_j = \sum_{j \neq i} \lambda_j^* y_j x_j + \lambda_i^* y_i x_i = \sum_{j \neq i} \lambda_j^* y_j x_j + \lambda_i^* y_i \tilde x_i\)</span>, which means that <span class="math inline">\(\beta^*\)</span> doesn’t change.</p></li>
+<li><p>(Primal Feasibility) <span class="math inline">\(y_j (&lt;\beta^*, x_j&gt; + \beta_0^*) \geq 1\)</span>, <span class="math inline">\(\forall j \neq i\)</span> and <span class="math inline">\(y_i (&lt;\beta^*, x_j&gt; + \beta_0^*) \geq 1\)</span> by the assumption above.</p></li>
+<li><p>(Dual Feasibility) <span class="math inline">\(\lambda_j \geq 0\)</span>, <span class="math inline">\(\forall j\)</span>.</p></li>
+<li><p>(Complementary Slackness) As <span class="math inline">\(\lambda_i^* = 0\)</span>, <span class="math inline">\(\lambda_i^* (1-y_i(&lt;\tilde x_i, \beta^*&gt; + \beta_0^*)) = 0\)</span>.</p></li>
+</ol>
+<p>As we didn’t change any <span class="math inline">\(y_i\)</span>, we still have <span class="math inline">\(\sum_{j=1}^n \lambda_i^* y_i = 0\)</span>. As a result, <span class="math inline">\((\beta_0^*, \beta^*)\)</span> is still a solution for the primal problem for the new data set.</p>
+</div>
+<div class="remark">
+<p><span id="unlabeled-div-30" class="remark"><em>Remark</em>. </span>The robustness associated to SVMs is markedly different to what happens with LDA or Logistic Regression, where outliers can change completely the decision boundaries. It depends only on support vectors.</p>
+</div>
+</div>
+<div id="soft-margin-svm" class="section level3 hasAnchor" number="6.3.3">
+<h3><span class="header-section-number">6.3.3</span> Soft Margin SVM<a href="linear-classifiers.html#soft-margin-svm" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>What if the data set is not linearly separable?</p>
+<ul>
+<li>Case 1:</li>
+</ul>
+<p><img src="figures/smSVM1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The data set is not linearly separable mildly. This case will motivate the soft margin SVM (generalizes Hard Margin SVM).</p>
+<ul>
+<li>Case 2:</li>
+</ul>
+<p><img src="figures/smSVM2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The data set is not linearly separable but by a lot. After a transformation, we will be able to transform the data into a linearly separable data set.</p>
+<ul>
+<li>Case 3:</li>
+</ul>
+<p><img src="figures/smSVM3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Use the kernelized version of Soft Margin SVM.</p>
 
+</div>
 </div>
 </div>
             </section>

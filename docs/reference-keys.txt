@@ -43,6 +43,8 @@ exm:unlabeled-div-26
 exm:mle
 exm:perceptron
 thm:KKT
+def:SV
+thm:SPofSVM
 about
 usage
 render-book
@@ -80,3 +82,6 @@ linear-classifiers
 lda-or-qda
 logistic-regression
 perceptrons-and-svms
+perceptrons
+hard-margin-svm
+soft-margin-svm
