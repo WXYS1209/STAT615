@@ -119,12 +119,199 @@ p1+p2 + plot_layout(guides = "collect")
 Hyperplane 2 seems to be more robust.
 :::
 
-**SVMs**: Let's suppose that \((x_i, y_i)_{i=1,\cdots,n}\) is linearly separable (for motivation for now). Then there exists at least one \(\vec \beta, \beta_0\) s.t. \(\mathcal M_{\vec \beta, \beta_0} = \emptyset\).
+**SVMs**: Let's suppose that \((x_i, y_i)_{i=1,\cdots,n}\) is linearly separable (for motivation for now). Then there exists at least one \(\vec \beta, \beta_0\) s.t. \(\mathcal M_{\vec \beta, \beta_0} = \emptyset\). What we want is to find
 
-What we want is to find \(\underset{(\vec \beta, \beta_{0})}{\operatorname{max}} Margin(\vec \beta, \beta_0)\) s.t. \(\mathcal M_{\vec \beta, \beta_0} = \emptyset\), 
-where \(Margin(\vec \beta, \beta_0):= min\{C^+_{\vec \beta, \beta_0}, C^-_{\vec \beta, \beta_0}\}\), 
+$$
+\begin{aligned}
+\underset{(\vec \beta, \beta_{0})}{\operatorname{max}} &~margin(\vec \beta, \beta_0)\\
+s.t. &~\mathcal M_{\vec \beta, \beta_0} = \emptyset
+\end{aligned}
+$$
+
+where \(margin(\vec \beta, \beta_0):= min\{C^+_{\vec \beta, \beta_0}, C^-_{\vec \beta, \beta_0}\}\), 
 \(C^+_{\vec \beta, \beta_0} = \underset{x_i \text{ s.t. } y_i = 1}{\operatorname{min}} dist(x_i, \mathcal H_{\vec \beta, \beta_0})\) and
 \(C^-_{\vec \beta, \beta_0} = \underset{x_i \text{ s.t. } y_i = -1}{\operatorname{min}} dist(x_i, \mathcal H_{\vec \beta, \beta_0})\).
+
+Let \(\tilde \beta = \frac{\vec \beta}{|| \vec \beta ||}\), \(\tilde \beta_0 = \frac{\beta_0}{|| \vec \beta ||}\), where \(||\tilde \beta || = 1\). Then we have \(\mathcal H_{\tilde \beta, \tilde \beta_0} = \mathcal H_{\vec \beta, \beta_0}\), \(\mathcal H^+_{\tilde \beta, \tilde \beta_0} = \mathcal H^+_{\vec \beta, \beta_0}\), and \(\mathcal H^-_{\tilde \beta, \tilde \beta_0} = \mathcal H^-_{\vec \beta, \beta_0}\). Thus, the *Geometric Formulation of SVM* is:
+
+$$
+\begin{aligned}
+\underset{(\vec \beta, \beta_{0})}{\operatorname{max}} &~margin(\tilde \beta, \tilde \beta_0)\\
+s.t. &~\mathcal M_{\tilde \beta, \tilde \beta_0} = \emptyset\\
+&~||\tilde \beta|| = 1
+\end{aligned}
+$$
+
+As \(dist(x, \mathcal H_{\tilde \beta, \tilde \beta_0}) = | <x, \tilde \beta> + \tilde \beta_0|\), 
+we have \(margin(\tilde \beta, \tilde \beta_0) = \underset{i=1.\cdots,n}{\operatorname{min}} | <x_i, \tilde \beta> + \tilde \beta_0|\). 
+
+As \(\mathcal M_{\tilde \beta, \tilde \beta_0} = \emptyset\), 
+we have \(sign(<x_i, \tilde \beta> + \tilde \beta_0) = y_i\), \(\forall i=1, \cdots, n\).
+
+Then, \(y_i (<x_i, \tilde \beta> + \tilde \beta_0) \geq 0\), \(\forall i=1,\cdots,n\). 
+
+Thus, \(| <x_i, \tilde \beta> + \tilde \beta_0| = y_i (<x_i, \tilde \beta> + \tilde \beta_0)\), \(\forall i=1, \cdots, n\).
+
+As a result, the margin becomes:
+
+$$
+\begin{aligned}
+m &= \underset{i=1.\cdots,n}{\operatorname{min}} y_i(<x_i, \tilde \beta> + \tilde \beta_0)\\
+&\qquad \qquad \Updownarrow\\
+1 &= \underset{i=1.\cdots,n}{\operatorname{min}} y_i(<x_i, \frac{\tilde \beta}{m}> + \frac{\tilde \beta_0}{m})
+\end{aligned}
+$$
+
+Let \(\beta = \frac{\tilde \beta}{m}\), \(\beta_0 = \frac{\tilde \beta_0}{m}\), 
+then we also have \(1 \leq y_i(<x_i, \beta> + \beta_0)\), \(\forall i=1, \cdots, n\). 
+
+As \(|| \beta || = || \frac{\tilde \beta}{m} || = \frac{1}{m}\), 
+we have \(m = \frac{1}{|| \beta ||}\).
+
+Thus, the geometric formulation of SVM becomes:
+
+$$
+\begin{aligned}
+\underset{(\beta, \beta_{0})}{\operatorname{max}} &~\frac{1}{|| \beta ||}\\
+s.t. &~y_i(<x_i, \beta> + \beta_0) \geq 1 ~\forall i=1,\cdots,n\\
+&\qquad \qquad \Updownarrow\\
+\underset{(\beta, \beta_{0})}{\operatorname{min}} &~|| \beta ||\\
+s.t. &~y_i(<x_i, \beta> + \beta_0) \geq 1 ~\forall i=1,\cdots,n\\
+&\qquad \qquad \Updownarrow\\
+\underset{(\beta, \beta_{0})}{\operatorname{min}} &~|| \beta ||^2\\
+s.t. &~y_i(<x_i, \beta> + \beta_0) \geq 1 ~\forall i=1,\cdots,n
+\end{aligned}
+$$
+
+which is the *Convex Optimization Formulation of SVM*.
+
+:::{.remark}
+
+1. SVM problem is fessible only when data set is linearly separable.
+
+2. SVM problem is a convex optimization problem.
+
+:::
+
+
+**Duality for Convex Optimization**:
+
+Primal problem *(P)*:
+
+$$
+\begin{aligned}
+\underset{z\in R^s}{\operatorname{min}} &~f(z)\\
+s.t. &~h_i(z) \leq 0 \text{ (constraints) }~\forall i=1,\cdots,n
+\end{aligned}
+$$
+
+We first introduce the notion of Lagrangian: 
+
+$$
+\mathcal L(z, \lambda) = f(z) + \sum_{i=1}^n \lambda_i h_i(z)
+$$
+
+where \(\lambda \in R^n\), \(n\) is the number of constraints and \(\lambda = (\lambda_1, \cdots, \lambda_n)\) is the vector of Lagrangian multipliers.
+
+Let \(g(h) = \underset{z\in R^s}{\operatorname{min}} ~\mathcal L(z, \lambda)\), where \(\lambda\) is fixed, then we have the *Dual Problem of (P) ((D))*:
+
+$$
+\begin{aligned}
+\underset{\lambda}{\operatorname{max}} &~g(\lambda)\\
+s.t. &~\lambda_i \geq 0 ~\forall i=1,\cdots,n
+\end{aligned}
+$$
+
+Let's suppose that \(f:R^s \to R\) and \(h_i:R^s \to R\) are all differentiable and convex functions. Then,
+
+$$
+\begin{aligned}
+\underset{\lambda \geq 0}{\operatorname{max}} g(\lambda) &= \underset{\lambda \geq 0}{\operatorname{max}} \underset{z\in R^s}{\operatorname{min}} \mathcal L(z,\lambda)\\
+&= \underset{z\in R^s}{\operatorname{min}} \underset{\lambda \geq 0}{\operatorname{max}} \mathcal L(z,\lambda)\\
+&= \underset{z\in R^s}{\operatorname{min}} f(z) ~(\text{suppose min and max can be swapped})\\
+&\qquad s.t. ~h_i(z) \leq 0 ~\forall i=1,\cdots,n
+\end{aligned}
+$$
+
+For the equation mentioned above:
+
+$$
+\underset{\lambda \geq 0}{\operatorname{max}} \mathcal L(z,\lambda) = \underset{\lambda \geq 0}{\operatorname{max}} f(z) + \sum_{i=1}^n \lambda_i h_i(z) = \begin{cases}\infty& \exists i, \text{ s.t. } ~h_i(z) > 0\\f(z) & \forall i, ~h_i(z) \leq 0\end{cases}
+$$
+
+
+:::{.theorem #KKT name="Karush-Kuhn-Tucker"}
+
+- Suppose \(\exists \tilde z\), s.t. \(h_i(\tilde z) \leq 0\), \(\forall i=1,\cdots, n\) (Slatter's condition)
+
+- Suppose \(f, h_i\) are differentiable and convex functions.
+
+Then,  \(\forall z^*\) solution to *(P)*, \(\exists \lambda^*\) solution to *(D)*, s.t.
+
+1. \(\vec 0 ~(\in R^s) = \nabla f(z^*) + \sum_{i=1}^n \lambda_i^* \nabla h_i(z^*)\) (Stationarity)
+
+1. \(h_i(z^*) \geq 0\), \(\forall i=1,\cdots,n\) (Primal Feasibility)
+
+1. \(\lambda_i^* \geq 0\), \(\forall i=1,\cdots,n\) (Dual Feasibility)
+
+1. \(\lambda_i^* h_i(z^*) = 0\), \(\forall i=1,\cdots,n\) (Complementary Slackness)
+
+Conversely, if \((z^*, \lambda^*)\) satisfy 1-4, then \(z^*\) is a solution to *(P)* and \(\lambda^*\) is a solution to *(D)*.
+:::
+
+Back to **SVM** problem:
+
+$$
+\begin{aligned}
+\underset{(\beta, \beta_{0})}{\operatorname{min}} &~\frac{|| \beta ||^2}{2}\\
+s.t. &~y_i(<x_i, \beta> + \beta_0) \geq 1 ~\forall i=1,\cdots,n
+\end{aligned}
+$$
+
+Let \(z = (\beta, \beta_0)\), \(f(z) = \frac{|| \beta ||^2}{2}\), \(h_i(z) = 1 - y_i(<x_i, \beta> + \beta_0)\).
+
+Then we have \(\mathcal L(\beta, \beta_0, \lambda) = \frac{|| \beta ||^2}{2} + \sum_{i=1}^n \lambda_i \Big(1 - y_i(<x_i, \beta> + \beta_0)\Big)\) and \(g(\lambda) = \underset{(\beta, \beta_{0})}{\operatorname{min}} \{\frac{|| \beta ||^2}{2} + \sum_{i=1}^n \lambda_i \Big(1 - y_i(<x_i, \beta> + \beta_0)\Big)\}\)
+
+Case 1: If \(\sum_{i=1}^n \lambda_iy_i \neq 0\), \(g(\lambda) = -\infty\)
+
+Case 2: If \(\sum_{i=1}^n \lambda_iy_i = 0\), \(g(\lambda) = \underset{\beta}{\operatorname{min}} \{\frac{|| \beta ||^2}{2} + \sum_{i=1}^n \lambda_i \Big(1 - y_i(<x_i, \beta>)\Big)\}\).
+
+To find this, we can find the critical point for the above problem: \(\vec 0 = \beta - \sum_{i=1}^n \lambda_i y_i x_i\). Thus, plug the \(\beta\) back to the above expression, we have: \(g(\lambda) = -\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \lambda_i \lambda_j y_i y_j <x_i, x_j> + \sum_{i=1}^n \lambda_i\).
+
+As a result, we have the Dual of SVM *(D)*: 
+
+$$
+\begin{aligned}
+\underset{\lambda \geq 0}{\operatorname{max}} g(\lambda) &= \underset{\lambda \in R^n}{\operatorname{max}} \{-\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \lambda_i \lambda_j y_i y_j <x_i, x_j> + \sum_{i=1}^n \lambda_i \}\\
+&\qquad s.t. ~
+\begin{cases}\sum_{i=1}^n \lambda_iy_i = 0\\
+\lambda_i \geq 0
+\end{cases}~\forall i=1,\cdots,n
+\end{aligned}
+$$
+
+Now, using KKT conditions: let \(\lambda^*\) be a solution to *(D)*. From the (Stationarity), we have \(\beta^* = \sum_{i=1}^n \lambda_i^* y_i x_i\). From the (Complementary Slackness), we have
+
+$$
+\begin{aligned}
+&\lambda_i^*\Big(1-y_i(<x_i, \beta^*> + \beta_0^*)\Big) = 0,  ~\forall i\\
+\underset{\text{choose } \hat{i} \text{ s.t. } \lambda^*_{\hat{i}} > 0}{\Rightarrow} &~ 1 - y_{\hat i} (<x_{\hat i}, \beta^*> + \beta_0^*) = 0\\
+\Rightarrow &~ 1 = y_{\hat i} (<x_{\hat i}, \beta^*> + \beta_0^*)\\
+\underset{y_i^2=1}{\Rightarrow} &~ y_{\hat i} = (<x_{\hat i}, \beta^*> + \beta_0^*)\\
+\Rightarrow &~ (y_{\hat i} - <x_{\hat i}, \beta^*>) = \beta_0^*
+\end{aligned}
+$$
+
+Then, we go from \(\lambda^*\) to \((\beta^*, \beta_0^*)\):
+
+$$
+\begin{aligned}
+\beta^* &= \sum_{i=1}^n \lambda_i^* y_i x_i\\
+\beta_0^* &= y_{\hat i} - <x_{\hat i}, \beta^*>, \text{ where } \hat{i} \text{ s.t. } \lambda^*_{\hat{i}} > 0
+\end{aligned}
+$$
+
+
 
 
 

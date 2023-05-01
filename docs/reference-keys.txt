@@ -42,6 +42,7 @@ thm:radtil
 exm:unlabeled-div-26
 exm:mle
 exm:perceptron
+thm:KKT
 about
 usage
 render-book

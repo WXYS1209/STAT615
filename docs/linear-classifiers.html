@@ -23,7 +23,7 @@
 <meta name="author" content="Peter Wang" />
 
 
-<meta name="date" content="2023-04-30" />
+<meta name="date" content="2023-05-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -227,14 +227,153 @@ A: Three different ways to tune <span class="math inline">\(\beta, \beta_0\)</sp
 where <span class="math inline">\(\mathcal M_{\vec \beta, \beta_0} = \{i \text{ s.t. } \mathfrak f_{\vec \beta, \beta_0} (x_i) \neq y_i\}\)</span></p>
 <p><strong>Perceptrons</strong>: Let <span class="math inline">\((\vec \beta^*, \beta_0^*) := \underset{(\vec \beta, \beta_{0})}{\operatorname{min}} \sigma(\vec \beta, \beta_0)\)</span>, then the perceptron classifier is <span class="math inline">\(\mathfrak f_{\vec \beta^*, \beta_0^*} (x)\)</span>. There exist many solutions of perceptron problems but some hyperplanes seem to be more robust:</p>
 <div class="example">
-<p><span id="exm:perceptron" class="example"><strong>Example 6.3  </strong></span><img src="figures/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><span id="exm:perceptron" class="example"><strong>Example 6.3  </strong></span><img src="figures/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Hyperplane 2 seems to be more robust.</p>
 </div>
-<p><strong>SVMs</strong>: Let’s suppose that <span class="math inline">\((x_i, y_i)_{i=1,\cdots,n}\)</span> is linearly separable (for motivation for now). Then there exists at least one <span class="math inline">\(\vec \beta, \beta_0\)</span> s.t. <span class="math inline">\(\mathcal M_{\vec \beta, \beta_0} = \emptyset\)</span>.</p>
-<p>What we want is to find <span class="math inline">\(\underset{(\vec \beta, \beta_{0})}{\operatorname{max}} Margin(\vec \beta, \beta_0)\)</span> s.t. <span class="math inline">\(\mathcal M_{\vec \beta, \beta_0} = \emptyset\)</span>,
-where <span class="math inline">\(Margin(\vec \beta, \beta_0):= min\{C^+_{\vec \beta, \beta_0}, C^-_{\vec \beta, \beta_0}\}\)</span>,
+<p><strong>SVMs</strong>: Let’s suppose that <span class="math inline">\((x_i, y_i)_{i=1,\cdots,n}\)</span> is linearly separable (for motivation for now). Then there exists at least one <span class="math inline">\(\vec \beta, \beta_0\)</span> s.t. <span class="math inline">\(\mathcal M_{\vec \beta, \beta_0} = \emptyset\)</span>. What we want is to find</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{(\vec \beta, \beta_{0})}{\operatorname{max}} &amp;~margin(\vec \beta, \beta_0)\\
+s.t. &amp;~\mathcal M_{\vec \beta, \beta_0} = \emptyset
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(margin(\vec \beta, \beta_0):= min\{C^+_{\vec \beta, \beta_0}, C^-_{\vec \beta, \beta_0}\}\)</span>,
 <span class="math inline">\(C^+_{\vec \beta, \beta_0} = \underset{x_i \text{ s.t. } y_i = 1}{\operatorname{min}} dist(x_i, \mathcal H_{\vec \beta, \beta_0})\)</span> and
 <span class="math inline">\(C^-_{\vec \beta, \beta_0} = \underset{x_i \text{ s.t. } y_i = -1}{\operatorname{min}} dist(x_i, \mathcal H_{\vec \beta, \beta_0})\)</span>.</p>
+<p>Let <span class="math inline">\(\tilde \beta = \frac{\vec \beta}{|| \vec \beta ||}\)</span>, <span class="math inline">\(\tilde \beta_0 = \frac{\beta_0}{|| \vec \beta ||}\)</span>, where <span class="math inline">\(||\tilde \beta || = 1\)</span>. Then we have <span class="math inline">\(\mathcal H_{\tilde \beta, \tilde \beta_0} = \mathcal H_{\vec \beta, \beta_0}\)</span>, <span class="math inline">\(\mathcal H^+_{\tilde \beta, \tilde \beta_0} = \mathcal H^+_{\vec \beta, \beta_0}\)</span>, and <span class="math inline">\(\mathcal H^-_{\tilde \beta, \tilde \beta_0} = \mathcal H^-_{\vec \beta, \beta_0}\)</span>. Thus, the <em>Geometric Formulation of SVM</em> is:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{(\vec \beta, \beta_{0})}{\operatorname{max}} &amp;~margin(\tilde \beta, \tilde \beta_0)\\
+s.t. &amp;~\mathcal M_{\tilde \beta, \tilde \beta_0} = \emptyset\\
+&amp;~||\tilde \beta|| = 1
+\end{aligned}
+\]</span></p>
+<p>As <span class="math inline">\(dist(x, \mathcal H_{\tilde \beta, \tilde \beta_0}) = | &lt;x, \tilde \beta&gt; + \tilde \beta_0|\)</span>,
+we have <span class="math inline">\(margin(\tilde \beta, \tilde \beta_0) = \underset{i=1.\cdots,n}{\operatorname{min}} | &lt;x_i, \tilde \beta&gt; + \tilde \beta_0|\)</span>.</p>
+<p>As <span class="math inline">\(\mathcal M_{\tilde \beta, \tilde \beta_0} = \emptyset\)</span>,
+we have <span class="math inline">\(sign(&lt;x_i, \tilde \beta&gt; + \tilde \beta_0) = y_i\)</span>, <span class="math inline">\(\forall i=1, \cdots, n\)</span>.</p>
+<p>Then, <span class="math inline">\(y_i (&lt;x_i, \tilde \beta&gt; + \tilde \beta_0) \geq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span>.</p>
+<p>Thus, <span class="math inline">\(| &lt;x_i, \tilde \beta&gt; + \tilde \beta_0| = y_i (&lt;x_i, \tilde \beta&gt; + \tilde \beta_0)\)</span>, <span class="math inline">\(\forall i=1, \cdots, n\)</span>.</p>
+<p>As a result, the margin becomes:</p>
+<p><span class="math display">\[
+\begin{aligned}
+m &amp;= \underset{i=1.\cdots,n}{\operatorname{min}} y_i(&lt;x_i, \tilde \beta&gt; + \tilde \beta_0)\\
+&amp;\qquad \qquad \Updownarrow\\
+1 &amp;= \underset{i=1.\cdots,n}{\operatorname{min}} y_i(&lt;x_i, \frac{\tilde \beta}{m}&gt; + \frac{\tilde \beta_0}{m})
+\end{aligned}
+\]</span></p>
+<p>Let <span class="math inline">\(\beta = \frac{\tilde \beta}{m}\)</span>, <span class="math inline">\(\beta_0 = \frac{\tilde \beta_0}{m}\)</span>,
+then we also have <span class="math inline">\(1 \leq y_i(&lt;x_i, \beta&gt; + \beta_0)\)</span>, <span class="math inline">\(\forall i=1, \cdots, n\)</span>.</p>
+<p>As <span class="math inline">\(|| \beta || = || \frac{\tilde \beta}{m} || = \frac{1}{m}\)</span>,
+we have <span class="math inline">\(m = \frac{1}{|| \beta ||}\)</span>.</p>
+<p>Thus, the geometric formulation of SVM becomes:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{(\beta, \beta_{0})}{\operatorname{max}} &amp;~\frac{1}{|| \beta ||}\\
+s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n\\
+&amp;\qquad \qquad \Updownarrow\\
+\underset{(\beta, \beta_{0})}{\operatorname{min}} &amp;~|| \beta ||\\
+s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n\\
+&amp;\qquad \qquad \Updownarrow\\
+\underset{(\beta, \beta_{0})}{\operatorname{min}} &amp;~|| \beta ||^2\\
+s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>which is the <em>Convex Optimization Formulation of SVM</em>.</p>
+<div class="remark">
+<p><span id="unlabeled-div-27" class="remark"><em>Remark</em>. </span></p>
+<ol style="list-style-type: decimal">
+<li><p>SVM problem is fessible only when data set is linearly separable.</p></li>
+<li><p>SVM problem is a convex optimization problem.</p></li>
+</ol>
+</div>
+<p><strong>Duality for Convex Optimization</strong>:</p>
+<p>Primal problem <em>(P)</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{z\in R^s}{\operatorname{min}} &amp;~f(z)\\
+s.t. &amp;~h_i(z) \leq 0 \text{ (constraints) }~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>We first introduce the notion of Lagrangian:</p>
+<p><span class="math display">\[
+\mathcal L(z, \lambda) = f(z) + \sum_{i=1}^n \lambda_i h_i(z)
+\]</span></p>
+<p>where <span class="math inline">\(\lambda \in R^n\)</span>, <span class="math inline">\(n\)</span> is the number of constraints and <span class="math inline">\(\lambda = (\lambda_1, \cdots, \lambda_n)\)</span> is the vector of Lagrangian multipliers.</p>
+<p>Let <span class="math inline">\(g(h) = \underset{z\in R^s}{\operatorname{min}} ~\mathcal L(z, \lambda)\)</span>, where <span class="math inline">\(\lambda\)</span> is fixed, then we have the <em>Dual Problem of (P) ((D))</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\lambda}{\operatorname{max}} &amp;~g(\lambda)\\
+s.t. &amp;~\lambda_i \geq 0 ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>Let’s suppose that <span class="math inline">\(f:R^s \to R\)</span> and <span class="math inline">\(h_i:R^s \to R\)</span> are all differentiable and convex functions. Then,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\lambda \geq 0}{\operatorname{max}} g(\lambda) &amp;= \underset{\lambda \geq 0}{\operatorname{max}} \underset{z\in R^s}{\operatorname{min}} \mathcal L(z,\lambda)\\
+&amp;= \underset{z\in R^s}{\operatorname{min}} \underset{\lambda \geq 0}{\operatorname{max}} \mathcal L(z,\lambda)\\
+&amp;= \underset{z\in R^s}{\operatorname{min}} f(z) ~(\text{suppose min and max can be swapped})\\
+&amp;\qquad s.t. ~h_i(z) \leq 0 ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>For the equation mentioned above:</p>
+<p><span class="math display">\[
+\underset{\lambda \geq 0}{\operatorname{max}} \mathcal L(z,\lambda) = \underset{\lambda \geq 0}{\operatorname{max}} f(z) + \sum_{i=1}^n \lambda_i h_i(z) = \begin{cases}\infty&amp; \exists i, \text{ s.t. } ~h_i(z) &gt; 0\\f(z) &amp; \forall i, ~h_i(z) \leq 0\end{cases}
+\]</span></p>
+<div class="theorem">
+<p><span id="thm:KKT" class="theorem"><strong>Theorem 6.1  (Karush-Kuhn-Tucker) </strong></span></p>
+<ul>
+<li><p>Suppose <span class="math inline">\(\exists \tilde z\)</span>, s.t. <span class="math inline">\(h_i(\tilde z) \leq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots, n\)</span> (Slatter’s condition)</p></li>
+<li><p>Suppose <span class="math inline">\(f, h_i\)</span> are differentiable and convex functions.</p></li>
+</ul>
+<p>Then, <span class="math inline">\(\forall z^*\)</span> solution to <em>(P)</em>, <span class="math inline">\(\exists \lambda^*\)</span> solution to <em>(D)</em>, s.t.</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(\vec 0 ~(\in R^s) = \nabla f(z^*) + \sum_{i=1}^n \lambda_i^* \nabla h_i(z^*)\)</span> (Stationarity)</p></li>
+<li><p><span class="math inline">\(h_i(z^*) \geq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Primal Feasibility)</p></li>
+<li><p><span class="math inline">\(\lambda_i^* \geq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Dual Feasibility)</p></li>
+<li><p><span class="math inline">\(\lambda_i^* h_i(z^*) = 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Complementary Slackness)</p></li>
+</ol>
+<p>Conversely, if <span class="math inline">\((z^*, \lambda^*)\)</span> satisfy 1-4, then <span class="math inline">\(z^*\)</span> is a solution to <em>(P)</em> and <span class="math inline">\(\lambda^*\)</span> is a solution to <em>(D)</em>.</p>
+</div>
+<p>Back to <strong>SVM</strong> problem:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{(\beta, \beta_{0})}{\operatorname{min}} &amp;~\frac{|| \beta ||^2}{2}\\
+s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>Let <span class="math inline">\(z = (\beta, \beta_0)\)</span>, <span class="math inline">\(f(z) = \frac{|| \beta ||^2}{2}\)</span>, <span class="math inline">\(h_i(z) = 1 - y_i(&lt;x_i, \beta&gt; + \beta_0)\)</span>.</p>
+<p>Then we have <span class="math inline">\(\mathcal L(\beta, \beta_0, \lambda) = \frac{|| \beta ||^2}{2} + \sum_{i=1}^n \lambda_i \Big(1 - y_i(&lt;x_i, \beta&gt; + \beta_0)\Big)\)</span> and <span class="math inline">\(g(\lambda) = \underset{(\beta, \beta_{0})}{\operatorname{min}} \{\frac{|| \beta ||^2}{2} + \sum_{i=1}^n \lambda_i \Big(1 - y_i(&lt;x_i, \beta&gt; + \beta_0)\Big)\}\)</span></p>
+<p>Case 1: If <span class="math inline">\(\sum_{i=1}^n \lambda_iy_i \neq 0\)</span>, <span class="math inline">\(g(\lambda) = -\infty\)</span></p>
+<p>Case 2: If <span class="math inline">\(\sum_{i=1}^n \lambda_iy_i = 0\)</span>, <span class="math inline">\(g(\lambda) = \underset{\beta}{\operatorname{min}} \{\frac{|| \beta ||^2}{2} + \sum_{i=1}^n \lambda_i \Big(1 - y_i(&lt;x_i, \beta&gt;)\Big)\}\)</span>.</p>
+<p>To find this, we can find the critical point for the above problem: <span class="math inline">\(\vec 0 = \beta - \sum_{i=1}^n \lambda_i y_i x_i\)</span>. Thus, plug the <span class="math inline">\(\beta\)</span> back to the above expression, we have: <span class="math inline">\(g(\lambda) = -\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \lambda_i \lambda_j y_i y_j &lt;x_i, x_j&gt; + \sum_{i=1}^n \lambda_i\)</span>.</p>
+<p>As a result, we have the Dual of SVM <em>(D)</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\lambda \geq 0}{\operatorname{max}} g(\lambda) &amp;= \underset{\lambda \in R^n}{\operatorname{max}} \{-\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \lambda_i \lambda_j y_i y_j &lt;x_i, x_j&gt; + \sum_{i=1}^n \lambda_i \}\\
+&amp;\qquad s.t. ~
+\begin{cases}\sum_{i=1}^n \lambda_iy_i = 0\\
+\lambda_i \geq 0
+\end{cases}~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>Now, using KKT conditions: let <span class="math inline">\(\lambda^*\)</span> be a solution to <em>(D)</em>. From the (Stationarity), we have <span class="math inline">\(\beta^* = \sum_{i=1}^n \lambda_i^* y_i x_i\)</span>. From the (Complementary Slackness), we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\lambda_i^*\Big(1-y_i(&lt;x_i, \beta^*&gt; + \beta_0^*)\Big) = 0,  ~\forall i\\
+\underset{\text{choose } \hat{i} \text{ s.t. } \lambda^*_{\hat{i}} &gt; 0}{\Rightarrow} &amp;~ 1 - y_{\hat i} (&lt;x_{\hat i}, \beta^*&gt; + \beta_0^*) = 0\\
+\Rightarrow &amp;~ 1 = y_{\hat i} (&lt;x_{\hat i}, \beta^*&gt; + \beta_0^*)\\
+\underset{y_i^2=1}{\Rightarrow} &amp;~ y_{\hat i} = (&lt;x_{\hat i}, \beta^*&gt; + \beta_0^*)\\
+\Rightarrow &amp;~ (y_{\hat i} - &lt;x_{\hat i}, \beta^*&gt;) = \beta_0^*
+\end{aligned}
+\]</span></p>
+<p>Then, we go from <span class="math inline">\(\lambda^*\)</span> to <span class="math inline">\((\beta^*, \beta_0^*)\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\beta^* &amp;= \sum_{i=1}^n \lambda_i^* y_i x_i\\
+\beta_0^* &amp;= y_{\hat i} - &lt;x_{\hat i}, \beta^*&gt;, \text{ where } \hat{i} \text{ s.t. } \lambda^*_{\hat{i}} &gt; 0
+\end{aligned}
+\]</span></p>
 
 </div>
 </div>
