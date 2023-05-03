@@ -23,7 +23,7 @@
 <meta name="author" content="Peter Wang" />
 
 
-<meta name="date" content="2023-05-01" />
+<meta name="date" content="2023-05-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -435,22 +435,144 @@ l(x)&amp;=
 <div id="soft-margin-svm" class="section level3 hasAnchor" number="6.3.3">
 <h3><span class="header-section-number">6.3.3</span> Soft Margin SVM<a href="linear-classifiers.html#soft-margin-svm" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>What if the data set is not linearly separable?</p>
-<ul>
-<li>Case 1:</li>
-</ul>
+<div id="case-1" class="section level4 hasAnchor" number="6.3.3.1">
+<h4><span class="header-section-number">6.3.3.1</span> Case 1<a href="linear-classifiers.html#case-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p><img src="figures/smSVM1-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The data set is not linearly separable mildly. This case will motivate the soft margin SVM (generalizes Hard Margin SVM).</p>
-<ul>
-<li>Case 2:</li>
-</ul>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\beta_0, \beta, \xi_1, \cdots, \xi_n}{\operatorname{min}} &amp;~\frac{|| \beta ||^2}{2} + C \sum_{i=1}^n \xi_i\\
+s.t. &amp;~
+\begin{cases}
+y_i(&lt;x_i, \beta&gt;) \geq 1 - \xi_i\\
+\xi_i \geq 0
+\end{cases}, ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(C\)</span> is a parameter of the problem: as <span class="math inline">\(C \nearrow \infty\)</span> we recover the hard margin problem (in case the data is linearly separable). However, for <span class="math inline">\(C \in (0, \infty)\)</span>, the problem is always feasible.</p>
+</div>
+<div id="case-2" class="section level4 hasAnchor" number="6.3.3.2">
+<h4><span class="header-section-number">6.3.3.2</span> Case 2:<a href="linear-classifiers.html#case-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p><img src="figures/smSVM2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The data set is not linearly separable but by a lot. After a transformation, we will be able to transform the data into a linearly separable data set.</p>
+<p>Let <span class="math inline">\(\begin{aligned}\psi: R^2 &amp;\to \mathcal H( = R^3)\\(x,y) &amp;\to (x,y,x^2+y^2)\end{aligned}\)</span>. Then the data set <span class="math inline">\((\psi(x_1), y_1), \cdots, (\psi(x_n), y_n)\)</span> is now linearly separable, and we will work on the embedded space:</p>
+<p><em>(P)</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\beta_0 \in R, \beta \in \mathcal H}{\operatorname{min}} &amp;~\frac{|| \beta ||_{\mathcal H}^2}{2}\\
+s.t. &amp;~y_i(&lt;\beta, \psi(x_i)&gt;_{\mathcal H}) \geq 1, ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p><em>(D)</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\lambda \in R^n}{\operatorname{max}} &amp;~ -\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \lambda_i \lambda_j y_i y_j &lt;\psi(x_i), \psi(x_j)&gt;_{\mathcal H} + \sum_{i=1}^n \lambda_i\\
+&amp;s.t. ~
+\begin{cases}\sum_{i=1}^n \lambda_iy_i = 0\\
+\lambda_i \geq 0
+\end{cases},~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
 <ul>
-<li>Case 3:</li>
+<li><p>From <span class="math inline">\(\lambda^*\)</span>, we can obtain <span class="math inline">\(\beta^* = \sum_{j=1}^n \lambda_j^* y_j \psi(x_j)\)</span></p></li>
+<li><p>Given <span class="math inline">\(i\)</span> s.t. <span class="math inline">\(\lambda_i^* &gt; 0\)</span>, <span class="math inline">\(\beta_0^*\)</span> can then be computed: <span class="math inline">\(\beta_0^* = y_i - &lt;\beta^*, \psi(x_i)&gt;_{\mathcal H} = y_i - \sum_{j=1}^n \lambda_j^* y_j &lt;\psi(x_j), \psi(x_i)&gt;_{\mathcal H}\)</span>.</p></li>
+<li><p>The classifier is (<span class="math inline">\(x \in R^d\)</span>):</p></li>
 </ul>
+<p><span class="math display">\[
+\begin{aligned}
+l_{\psi}(x):&amp;=
+\begin{cases}
+1 &amp; &lt;\beta^*, \psi(x)&gt;_{\mathcal H} + \beta_0^* &gt; 0\\
+-1 &amp; &lt;\beta^*, \psi(x)&gt;_{\mathcal H} + \beta_0^* &lt; 0
+\end{cases}\\
+&amp;= \begin{cases}
+1 &amp; \sum_{j=1}^n \lambda_j^* y_j (&lt;\psi(x_j), \psi(x)&gt;_{\mathcal H} - &lt;\psi(x_j), \psi(x_i)&gt;_{\mathcal H}) + y_i &gt; 0\\
+-1 &amp; o.w.
+\end{cases}\\
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(i\)</span> s.t. <span class="math inline">\(\lambda_i^* &gt; 0\)</span>, and <span class="math inline">\(\lambda_j^*\)</span> only depends on <span class="math inline">\(&lt;\psi(x_j), \psi(x_l)&gt;_{\mathcal H}\)</span></p>
+<p>Let <span class="math inline">\(K(x, \tilde x) = &lt;\psi(x), \psi(\tilde x)&gt;_{\mathcal H}\)</span> for arbitrary <span class="math inline">\(x, \tilde x \in R^d\)</span>. Then the only thing we need to build <span class="math inline">\(l_\psi\)</span> is the function <span class="math inline">\(K\)</span>. In particular, we don’t need <span class="math inline">\(\psi\)</span> explicitly. Thus, it is fair to write <span class="math inline">\(l_\psi = l_K\)</span>.</p>
+<p>In particular, to produce more general SVM classifiers, we can either:</p>
+<ol style="list-style-type: decimal">
+<li><p>Pick a “Hilbert Space” <span class="math inline">\(\mathcal H\)</span> and define a map <span class="math inline">\(\psi: R^d \to \mathcal H\)</span>, then we can build the function <span class="math inline">\(K\)</span>, which is all we need to compute <span class="math inline">\(l_\psi\)</span>.</p></li>
+<li><p>Pick a “Kernel” <span class="math inline">\(K\)</span> and produce the classifier <span class="math inline">\(l_K\)</span>.</p></li>
+</ol>
+<p>Question: If we start with a “Kernel” <span class="math inline">\(K\)</span>, can we implicitly picking <span class="math inline">\(\mathcal H\)</span> and <span class="math inline">\(\psi\)</span>?</p>
+<p>Answer: Under fairly general condition, yes.</p>
+<div class="definition">
+<p><span id="def:kernel" class="definition"><strong>Definition 6.2  (Kernels) </strong></span>A kernel over a set <span class="math inline">\(\mathcal X\)</span> is a function <span class="math inline">\(K: \mathcal X \times \mathcal X \to R\)</span> with the following property:</p>
+<p><span class="math inline">\(\forall n \in N\)</span> and <span class="math inline">\(\forall\)</span> sequence of points <span class="math inline">\(x_1, \cdots, x_n \in \mathcal X\)</span>, the matrix</p>
+<p><span class="math display">\[
+A:=
+\left(
+\begin{matrix} K(x_1,x_1) &amp; \cdots &amp; K(x_1, x_n)\\
+\vdots &amp; \ddots &amp; \vdots\\
+K(x_n ,x_1) &amp; \cdots &amp; K(x_n, x_n)
+\end{matrix}
+\right)
+\]</span></p>
+<p>is symmetric (<span class="math inline">\(A = A^T\)</span>) and positive semi-definite <span class="math inline">\(&lt;Av, v&gt;_{R^n} \geq 0\)</span>, <span class="math inline">\(\forall b \in R^n\)</span>.</p>
+</div>
+<div class="remark">
+<p><span id="unlabeled-div-31" class="remark"><em>Remark</em>. </span></p>
+<ol style="list-style-type: decimal">
+<li><p>Kernels must be symmetric functions: <span class="math inline">\(K(x,y) = K(y,x)\)</span>, <span class="math inline">\(\forall x,y \in \mathcal X\)</span>.</p></li>
+<li><p>But there are symmetric functions that are not kernels. In particular, we need to check the positive semi-definiteness condition.</p></li>
+</ol>
+</div>
+<div class="proposition">
+<p><span id="prp:unlabeled-div-32" class="proposition"><strong>Proposition 6.1  </strong></span></p>
+<ol style="list-style-type: decimal">
+<li><p>Inner products are kernels: <span class="math inline">\(K(x, y) = &lt;x,y&gt;_{R^d}\)</span>.</p></li>
+<li><p>If <span class="math inline">\(K_1: \mathcal X \times \mathcal X \to R\)</span> and <span class="math inline">\(K_2: \mathcal X \times \mathcal X \to R\)</span> are two kernels, then <span class="math inline">\(K(x,y):= a_1 K_1(x,y) + a_2 K_2(x,y)\)</span> is also a kernel, provided <span class="math inline">\(a_1, a_2\)</span> are two non-negative numbers.</p></li>
+<li><p>If <span class="math inline">\(K: \mathcal X \times \mathcal X \to R\)</span> is a kernel and <span class="math inline">\(f:\mathcal X \to R\)</span> is a function, then <span class="math inline">\(\tilde K(x,y) := f(x) \cdot \f(y) \cdot K(x,y)\)</span> is also a kernel.</p></li>
+<li><p>If <span class="math inline">\(K_1: \mathcal X \times \mathcal X \to R\)</span> and <span class="math inline">\(K_1: \mathcal X \times \mathcal X \to R\)</span> are two kernels, then <span class="math inline">\(K(x,y) := K_1(x,y) \cdot K_2(x,y)\)</span> is also a kernel.</p></li>
+</ol>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-33" class="proof"><em>Proof</em>. </span>(of 1)</p>
+<p>Let <span class="math inline">\(n \in N\)</span> and <span class="math inline">\(x_1, \cdots, x_n \in R^d\)</span> be arbitrary. Consider the matrix <span class="math inline">\(A \in R^{n \times n}\)</span> with entries <span class="math inline">\(A_{ij} = &lt;x_i, x_j&gt;_{R^d}\)</span>, then</p>
+<ul>
+<li><p>It is symmetric: <span class="math inline">\(A_{ij} = &lt;x_i, x_j&gt;_{R^d} = &lt;x_j, x_i&gt;_{R^d} = A_{ji}\)</span></p></li>
+<li><p>It is positive semi-definite:<br />
+Let <span class="math inline">\(v = (v_1, \cdots, v_n) \in R^n\)</span>. Then<br />
+<span class="math display">\[
+\begin{aligned}
+&lt;Av, v&gt;_{R^d} &amp;= \sum_{i=1}^n \sum_{j=1}^n A_{ij} v_i v_j\\
+&amp;= \sum_{i=1}^n \sum_{j=1}^n &lt;x_i, x_j&gt;_{R^d} v_i v_j\\
+&amp;= \sum_{i=1}^n \sum_{j=1}^n &lt;v_i x_i, v_j x_j&gt;_{R^d}\\
+&amp;= &lt;\sum_{i=1}^n v_i x_i, \sum_{j=1}^n v_j x_j&gt;_{R^d}\\
+&amp;= || \sum_{i=1}^n v_i x_i ||^2_{R_d}\\
+&amp;\geq 0
+\end{aligned}
+\]</span></p></li>
+</ul>
+</div>
+<p>By the above proof, we can build the kernel <span class="math inline">\(K(x,y) = &lt;\psi(x), \psi(y)&gt;_{\mathcal H}\)</span> given <span class="math inline">\(\mathcal H\)</span> and <span class="math inline">\(\psi :R^d \to \mathcal H\)</span>.</p>
+<div class="corollary">
+<p><span id="cor:unlabeled-div-34" class="corollary"><strong>Corollary 6.1  </strong></span>The following are kernels in <span class="math inline">\(R^d\)</span>:</p>
+<ol style="list-style-type: decimal">
+<li><p>Inner product: <span class="math inline">\(K(x,y) = &lt;x,y&gt;_{R^d}\)</span>.</p></li>
+<li><p>Polynomial: <span class="math inline">\(K(x,y) = a_0 + a_1 &lt;x,y&gt;_{R^d} + \cdots + a_l (&lt;x,y&gt;_{R^d})^l\)</span> as long as <span class="math inline">\(a_0, \cdots, a_l \geq 0\)</span>. (<span class="math inline">\((&lt;x,y&gt;_{R^d})^l\)</span> is a kernel)</p></li>
+<li><p>Radial Basis Kernel or Gaussian Kernel: <span class="math inline">\(K(x,y) = \operatorname{exp} (-\frac{|| x-y ||^2}{\sigma})\)</span> for <span class="math inline">\(\sigma &gt; 0\)</span>.</p></li>
+</ol>
+</div>
+<div class="remark">
+<p><span id="unlabeled-div-35" class="remark"><em>Remark</em>. </span></p>
+<ol style="list-style-type: decimal">
+<li><p>For every kernel we will have a different classification rule. Try the simplest classifiers first (linear classifiers or soft margin SVMs).</p></li>
+<li><p>Any classifier that can be purely defined in terms of inner products can be kernelized.</p></li>
+<li><p>For a given kernel, how do we know if the embedded data set <span class="math inline">\((\psi(x_1), y_1), \cdots, (\psi(x_n), y_n)\)</span> is linearly separable? In some cases it is always the case. But even if the data set is not linearly separable, we mat be in the Case 3 mentioned below, where we should use the kernelized version of SVMs.</p></li>
+</ol>
+</div>
+</div>
+<div id="case-3" class="section level4 hasAnchor" number="6.3.3.3">
+<h4><span class="header-section-number">6.3.3.3</span> Case 3:<a href="linear-classifiers.html#case-3" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p><img src="figures/smSVM3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Use the kernelized version of Soft Margin SVM.</p>
 
+</div>
 </div>
 </div>
 </div>

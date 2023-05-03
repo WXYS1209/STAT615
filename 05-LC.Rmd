@@ -377,7 +377,7 @@ The robustness associated to SVMs is markedly different to what happens with LDA
 
 What if the data set is not linearly separable?
 
-- Case 1:
+#### Case 1
 
 ```{r smSVM1, message=F, warning=F, echo=F}
 library(tidyverse)
@@ -403,7 +403,20 @@ p1+p2 + plot_layout(guides = "collect")
 
 The data set is not linearly separable mildly. This case will motivate the soft margin SVM (generalizes Hard Margin SVM).
 
-- Case 2:
+$$
+\begin{aligned}
+\underset{\beta_0, \beta, \xi_1, \cdots, \xi_n}{\operatorname{min}} &~\frac{|| \beta ||^2}{2} + C \sum_{i=1}^n \xi_i\\
+s.t. &~
+\begin{cases}
+y_i(<x_i, \beta>) \geq 1 - \xi_i\\
+\xi_i \geq 0
+\end{cases}, ~\forall i=1,\cdots,n
+\end{aligned}
+$$
+
+where \(C\) is a parameter of the problem: as \(C \nearrow \infty\) we recover the hard margin problem (in case the data is linearly separable). However, for \(C \in (0, \infty)\), the problem is always feasible.
+
+#### Case 2:
 
 ```{r smSVM2, message=F, warning=F, echo=F}
 radius1 <- 5
@@ -428,7 +441,144 @@ ggplot(circle_points) +
 
 The data set is not linearly separable but by a lot. After a transformation, we will be able to transform the data into a linearly separable data set.
 
-- Case 3:
+Let $\begin{aligned}\psi: R^2 &\to \mathcal H( = R^3)\\(x,y) &\to (x,y,x^2+y^2)\end{aligned}$. Then the data set \((\psi(x_1), y_1), \cdots, (\psi(x_n), y_n)\) is now linearly separable, and we will work on the embedded space:
+
+*(P)*: 
+
+$$
+\begin{aligned}
+\underset{\beta_0 \in R, \beta \in \mathcal H}{\operatorname{min}} &~\frac{|| \beta ||_{\mathcal H}^2}{2}\\
+s.t. &~y_i(<\beta, \psi(x_i)>_{\mathcal H}) \geq 1, ~\forall i=1,\cdots,n
+\end{aligned}
+$$
+
+*(D)*:
+
+$$
+\begin{aligned}
+\underset{\lambda \in R^n}{\operatorname{max}} &~ -\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \lambda_i \lambda_j y_i y_j <\psi(x_i), \psi(x_j)>_{\mathcal H} + \sum_{i=1}^n \lambda_i\\
+&s.t. ~
+\begin{cases}\sum_{i=1}^n \lambda_iy_i = 0\\
+\lambda_i \geq 0
+\end{cases},~\forall i=1,\cdots,n
+\end{aligned}
+$$
+
+- From \(\lambda^*\), we can obtain \(\beta^* = \sum_{j=1}^n \lambda_j^* y_j \psi(x_j)\)
+
+- Given \(i\) s.t. \(\lambda_i^* > 0\), \(\beta_0^*\) can then be computed: \(\beta_0^* = y_i - <\beta^*, \psi(x_i)>_{\mathcal H} = y_i - \sum_{j=1}^n \lambda_j^* y_j <\psi(x_j), \psi(x_i)>_{\mathcal H}\).
+
+- The classifier is (\(x \in R^d\)):
+
+$$
+\begin{aligned}
+l_{\psi}(x):&=
+\begin{cases}
+1 & <\beta^*, \psi(x)>_{\mathcal H} + \beta_0^* > 0\\
+-1 & <\beta^*, \psi(x)>_{\mathcal H} + \beta_0^* < 0
+\end{cases}\\
+&= \begin{cases}
+1 & \sum_{j=1}^n \lambda_j^* y_j (<\psi(x_j), \psi(x)>_{\mathcal H} - <\psi(x_j), \psi(x_i)>_{\mathcal H}) + y_i > 0\\
+-1 & o.w.
+\end{cases}\\
+\end{aligned}
+$$
+
+where \(i\) s.t. \(\lambda_i^* > 0\), and \(\lambda_j^*\) only depends on \(<\psi(x_j), \psi(x_l)>_{\mathcal H}\)
+
+
+Let \(K(x, \tilde x) = <\psi(x), \psi(\tilde x)>_{\mathcal H}\) for arbitrary \(x, \tilde x \in R^d\). Then the only thing we need to build \(l_\psi\) is the function \(K\). In particular, we don't need \(\psi\) explicitly. Thus, it is fair to write \(l_\psi = l_K\).
+
+In particular, to produce more general SVM classifiers, we can either:
+
+1. Pick a "Hilbert Space" \(\mathcal H\) and define a map \(\psi: R^d \to \mathcal H\), then we can build the function \(K\), which is all we need to compute \(l_\psi\).
+
+2. Pick a "Kernel" \(K\) and produce the classifier \(l_K\).
+
+Question: If we start with a "Kernel" \(K\), can we implicitly picking \(\mathcal H\) and \(\psi\)?
+
+Answer: Under fairly general condition, yes.
+
+:::{.definition #kernel name="Kernels"}
+A kernel over a set \(\mathcal X\) is a function \(K: \mathcal X \times \mathcal X \to R\) with the following property:
+
+\(\forall n \in N\) and \(\forall\) sequence of points \(x_1, \cdots, x_n \in \mathcal X\), the matrix 
+
+$$
+A:= 
+\left(
+\begin{matrix} K(x_1,x_1) & \cdots & K(x_1, x_n)\\
+\vdots & \ddots & \vdots\\
+K(x_n ,x_1) & \cdots & K(x_n, x_n)
+\end{matrix}
+\right)
+$$
+
+is symmetric (\(A = A^T\)) and positive semi-definite \(<Av, v>_{R^n} \geq 0\), \(\forall b \in R^n\).
+:::
+
+:::{.remark}
+
+1. Kernels must be symmetric functions: \(K(x,y) = K(y,x)\), \(\forall x,y \in \mathcal X\).
+
+2. But there are symmetric functions that are not kernels. In particular, we need to check the positive semi-definiteness condition.
+:::
+
+:::{.proposition}
+1. Inner products are kernels: \(K(x, y) = <x,y>_{R^d}\).
+
+2. If \(K_1: \mathcal X \times \mathcal X \to R\) and \(K_2: \mathcal X \times \mathcal X \to R\) are two kernels, then \(K(x,y):= a_1 K_1(x,y) + a_2 K_2(x,y)\) is also a kernel, provided \(a_1, a_2\) are two non-negative numbers.
+
+3. If \(K: \mathcal X \times \mathcal X \to R\) is a kernel and \(f:\mathcal X \to R\) is a function, then \(\tilde K(x,y) := f(x) \cdot \f(y) \cdot K(x,y)\) is also a kernel.
+
+4. If \(K_1: \mathcal X \times \mathcal X \to R\) and \(K_1: \mathcal X \times \mathcal X \to R\) are two kernels, then \(K(x,y) := K_1(x,y) \cdot K_2(x,y)\) is also a kernel.
+:::
+
+:::{.proof} 
+(of 1)
+
+Let \(n \in N\) and \(x_1, \cdots, x_n \in R^d\) be arbitrary. Consider the matrix \(A \in R^{n \times n}\) with entries \(A_{ij} = <x_i, x_j>_{R^d}\), then
+
+- It is symmetric: \(A_{ij} = <x_i, x_j>_{R^d} = <x_j, x_i>_{R^d} = A_{ji}\)
+
+- It is positive semi-definite:  
+Let \(v = (v_1, \cdots, v_n) \in R^n\). Then  
+$$
+\begin{aligned}
+<Av, v>_{R^d} &= \sum_{i=1}^n \sum_{j=1}^n A_{ij} v_i v_j\\
+&= \sum_{i=1}^n \sum_{j=1}^n <x_i, x_j>_{R^d} v_i v_j\\
+&= \sum_{i=1}^n \sum_{j=1}^n <v_i x_i, v_j x_j>_{R^d}\\
+&= <\sum_{i=1}^n v_i x_i, \sum_{j=1}^n v_j x_j>_{R^d}\\
+&= || \sum_{i=1}^n v_i x_i ||^2_{R_d}\\
+&\geq 0
+\end{aligned}
+$$
+
+:::
+
+By the above proof, we can build the kernel \(K(x,y) = <\psi(x), \psi(y)>_{\mathcal H}\) given \(\mathcal H\) and \(\psi :R^d \to \mathcal H\).
+
+:::{.corollary}
+The following are kernels in \(R^d\):
+
+1. Inner product: \(K(x,y) = <x,y>_{R^d}\).
+
+2. Polynomial: \(K(x,y) = a_0 + a_1 <x,y>_{R^d} + \cdots + a_l (<x,y>_{R^d})^l\) as long as \(a_0, \cdots, a_l \geq 0\). (\((<x,y>_{R^d})^l\) is a kernel)
+
+3. Radial Basis Kernel or Gaussian Kernel: \(K(x,y) = \operatorname{exp} (-\frac{|| x-y ||^2}{\sigma})\) for \(\sigma > 0\).
+:::
+
+:::{.remark}
+
+1. For every kernel we will have a different classification rule. Try the simplest classifiers first (linear classifiers or soft margin SVMs).
+
+2. Any classifier that can be purely defined in terms of inner products can be kernelized.
+
+3. For a given kernel, how do we know if the embedded data set \((\psi(x_1), y_1), \cdots, (\psi(x_n), y_n)\) is linearly separable? In some cases it is always the case. But even if the data set is not linearly separable, we mat be in the Case 3 mentioned below, where we should use the kernelized version of SVMs.
+:::
+
+
+#### Case 3:
 
 ```{r smSVM3, message=F, warning=F, echo=F}
 radius1 <- 5

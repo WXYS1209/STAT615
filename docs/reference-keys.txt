@@ -45,6 +45,9 @@ exm:perceptron
 thm:KKT
 def:SV
 thm:SPofSVM
+def:kernel
+prp:unlabeled-div-32
+cor:unlabeled-div-34
 about
 usage
 render-book
@@ -85,3 +88,6 @@ perceptrons-and-svms
 perceptrons
 hard-margin-svm
 soft-margin-svm
+case-1
+case-2
+case-3
