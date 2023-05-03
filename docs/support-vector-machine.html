@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Support Vector Machine | STAT 615 Note Book</title>
+  <meta name="description" content="This is a notebook for STAT 615." />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Support Vector Machine | STAT 615 Note Book" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This is a notebook for STAT 615." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Support Vector Machine | STAT 615 Note Book" />
+  
+  <meta name="twitter:description" content="This is a notebook for STAT 615." />
+  
+
+<meta name="author" content="Peter Wang" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="linear-classifiers.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">STAT615 Notebook</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#usage"><i class="fa fa-check"></i><b>1.1</b> Usage</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#render-book"><i class="fa fa-check"></i><b>1.2</b> Render book</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#preview-book"><i class="fa fa-check"></i><b>1.3</b> Preview book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html"><i class="fa fa-check"></i><b>2</b> Classification Problem &amp; Bayes Classifier</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#notation"><i class="fa fa-check"></i><b>2.1</b> Notation</a></li>
+<li class="chapter" data-level="2.2" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#classification-problem"><i class="fa fa-check"></i><b>2.2</b> Classification Problem</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#goal"><i class="fa fa-check"></i><b>2.2.1</b> Goal</a></li>
+<li class="chapter" data-level="2.2.2" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#questions"><i class="fa fa-check"></i><b>2.2.2</b> Questions</a></li>
+<li class="chapter" data-level="2.2.3" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#the-0-1-loss"><i class="fa fa-check"></i><b>2.2.3</b> The 0-1 Loss</a></li>
+<li class="chapter" data-level="2.2.4" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#observations"><i class="fa fa-check"></i><b>2.2.4</b> Observations</a></li>
+<li class="chapter" data-level="2.2.5" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#examples"><i class="fa fa-check"></i><b>2.2.5</b> Examples</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="classification-problem-bayes-classifier.html"><a href="classification-problem-bayes-classifier.html#other-topics"><i class="fa fa-check"></i><b>2.3</b> Other Topics</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html"><i class="fa fa-check"></i><b>3</b> Plug-in Classifiers (Similarity Classifier)</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#notions-of-consistency-for-families-of-binary-classifier"><i class="fa fa-check"></i><b>3.1</b> Notions of Consistency for Families of Binary Classifier</a></li>
+<li class="chapter" data-level="3.2" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#functions-of-hateta_n"><i class="fa fa-check"></i><b>3.2</b> Functions of <span class="math inline">\(\hat{\eta}_n\)</span></a></li>
+<li class="chapter" data-level="3.3" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#consistency"><i class="fa fa-check"></i><b>3.3</b> Consistency</a></li>
+<li class="chapter" data-level="3.4" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#strong-consistency"><i class="fa fa-check"></i><b>3.4</b> Strong Consistency</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#theorems-from-probability-theory"><i class="fa fa-check"></i><b>3.4.1</b> Theorems from probability theory:</a></li>
+<li class="chapter" data-level="3.4.2" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#concentration-inequalities"><i class="fa fa-check"></i><b>3.4.2</b> Concentration Inequalities</a></li>
+<li class="chapter" data-level="3.4.3" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#more-about-con-ineq"><i class="fa fa-check"></i><b>3.4.3</b> More about Con-Ineq</a></li>
+<li class="chapter" data-level="3.4.4" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#strong-consistency-1"><i class="fa fa-check"></i><b>3.4.4</b> Strong Consistency</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html"><i class="fa fa-check"></i><b>4</b> Empirical Risk Minimization</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#questions-1"><i class="fa fa-check"></i><b>4.1</b> Questions</a></li>
+<li class="chapter" data-level="4.2" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#concentration-bounds-for-undersetmathfrak-f-in-mathcal-foperatornamesup-r_nmathfrak-f---rmathfrak-f"><i class="fa fa-check"></i><b>4.2</b> Concentration Bounds for <span class="math inline">\(\underset{\mathfrak f \in \mathcal F}{\operatorname{sup}} | R_n(\mathfrak f) - R(\mathfrak f) |\)</span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#in-terms-of-shattering-number"><i class="fa fa-check"></i><b>4.2.1</b> In terms of Shattering Number</a></li>
+<li class="chapter" data-level="4.2.2" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#in-terms-of-vc-dimension"><i class="fa fa-check"></i><b>4.2.2</b> In terms of VC Dimension</a></li>
+<li class="chapter" data-level="4.2.3" data-path="empirical-risk-minimization.html"><a href="empirical-risk-minimization.html#in-terms-of-rademacher-complexity"><i class="fa fa-check"></i><b>4.2.3</b> In terms of Rademacher Complexity</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>5</b> Summary</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="summary.html"><a href="summary.html#classification-problem-1"><i class="fa fa-check"></i><b>5.1</b> Classification Problem</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="summary.html"><a href="summary.html#similarity-classifiers"><i class="fa fa-check"></i><b>5.1.1</b> Similarity Classifiers</a></li>
+<li class="chapter" data-level="5.1.2" data-path="summary.html"><a href="summary.html#emprirical-risk-minimization"><i class="fa fa-check"></i><b>5.1.2</b> Emprirical Risk Minimization</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="summary.html"><a href="summary.html#no-free-lunch-theorem"><i class="fa fa-check"></i><b>5.2</b> No Free Lunch Theorem</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="linear-classifiers.html"><a href="linear-classifiers.html"><i class="fa fa-check"></i><b>6</b> Linear Classifiers</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="linear-classifiers.html"><a href="linear-classifiers.html#lda-or-qda"><i class="fa fa-check"></i><b>6.1</b> LDA or QDA</a></li>
+<li class="chapter" data-level="6.2" data-path="linear-classifiers.html"><a href="linear-classifiers.html#logistic-regression"><i class="fa fa-check"></i><b>6.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="linear-classifiers.html"><a href="linear-classifiers.html#perceptrons-and-svms"><i class="fa fa-check"></i><b>6.3</b> Perceptrons and SVMs</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="linear-classifiers.html"><a href="linear-classifiers.html#perceptrons"><i class="fa fa-check"></i><b>6.3.1</b> Perceptrons</a></li>
+<li class="chapter" data-level="6.3.2" data-path="linear-classifiers.html"><a href="linear-classifiers.html#svms"><i class="fa fa-check"></i><b>6.3.2</b> SVMs</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="support-vector-machine.html"><a href="support-vector-machine.html"><i class="fa fa-check"></i><b>7</b> Support Vector Machine</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="support-vector-machine.html"><a href="support-vector-machine.html#hard-margin-svm"><i class="fa fa-check"></i><b>7.1</b> Hard Margin SVM</a></li>
+<li class="chapter" data-level="7.2" data-path="support-vector-machine.html"><a href="support-vector-machine.html#soft-margin-svm"><i class="fa fa-check"></i><b>7.2</b> Soft Margin SVM</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="support-vector-machine.html"><a href="support-vector-machine.html#case-1"><i class="fa fa-check"></i><b>7.2.1</b> Case 1</a></li>
+<li class="chapter" data-level="7.2.2" data-path="support-vector-machine.html"><a href="support-vector-machine.html#case-2"><i class="fa fa-check"></i><b>7.2.2</b> Case 2</a></li>
+<li class="chapter" data-level="7.2.3" data-path="support-vector-machine.html"><a href="support-vector-machine.html#case-3"><i class="fa fa-check"></i><b>7.2.3</b> Case 3</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 615 Note Book</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="support-vector-machine" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Support Vector Machine<a href="support-vector-machine.html#support-vector-machine" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="hard-margin-svm" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Hard Margin SVM<a href="support-vector-machine.html#hard-margin-svm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let’s suppose that <span class="math inline">\((x_i, y_i)_{i=1,\cdots,n}\)</span> is linearly separable (for motivation for now). Then there exists at least one <span class="math inline">\(\vec \beta, \beta_0\)</span> s.t. <span class="math inline">\(\mathcal M_{\vec \beta, \beta_0} = \emptyset\)</span>. What we want is to find</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{(\vec \beta, \beta_{0})}{\operatorname{max}} &amp;~margin(\vec \beta, \beta_0)\\
+s.t. &amp;~\mathcal M_{\vec \beta, \beta_0} = \emptyset
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(margin(\vec \beta, \beta_0):= min\{C^+_{\vec \beta, \beta_0}, C^-_{\vec \beta, \beta_0}\}\)</span>,
+<span class="math inline">\(C^+_{\vec \beta, \beta_0} = \underset{x_i \text{ s.t. } y_i = 1}{\operatorname{min}} dist(x_i, \mathcal H_{\vec \beta, \beta_0})\)</span> and
+<span class="math inline">\(C^-_{\vec \beta, \beta_0} = \underset{x_i \text{ s.t. } y_i = -1}{\operatorname{min}} dist(x_i, \mathcal H_{\vec \beta, \beta_0})\)</span>.</p>
+<p>Let <span class="math inline">\(\tilde \beta = \frac{\vec \beta}{|| \vec \beta ||}\)</span>, <span class="math inline">\(\tilde \beta_0 = \frac{\beta_0}{|| \vec \beta ||}\)</span>, where <span class="math inline">\(||\tilde \beta || = 1\)</span>. Then we have <span class="math inline">\(\mathcal H_{\tilde \beta, \tilde \beta_0} = \mathcal H_{\vec \beta, \beta_0}\)</span>, <span class="math inline">\(\mathcal H^+_{\tilde \beta, \tilde \beta_0} = \mathcal H^+_{\vec \beta, \beta_0}\)</span>, and <span class="math inline">\(\mathcal H^-_{\tilde \beta, \tilde \beta_0} = \mathcal H^-_{\vec \beta, \beta_0}\)</span>. Thus, the <em>Geometric Formulation of SVM</em> is:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{(\vec \beta, \beta_{0})}{\operatorname{max}} &amp;~margin(\tilde \beta, \tilde \beta_0)\\
+s.t. &amp;~\mathcal M_{\tilde \beta, \tilde \beta_0} = \emptyset\\
+&amp;~||\tilde \beta|| = 1
+\end{aligned}
+\]</span></p>
+<p>As <span class="math inline">\(dist(x, \mathcal H_{\tilde \beta, \tilde \beta_0}) = | &lt;x, \tilde \beta&gt; + \tilde \beta_0|\)</span>,
+we have <span class="math inline">\(margin(\tilde \beta, \tilde \beta_0) = \underset{i=1.\cdots,n}{\operatorname{min}} | &lt;x_i, \tilde \beta&gt; + \tilde \beta_0|\)</span>.</p>
+<p>As <span class="math inline">\(\mathcal M_{\tilde \beta, \tilde \beta_0} = \emptyset\)</span>,
+we have <span class="math inline">\(sign(&lt;x_i, \tilde \beta&gt; + \tilde \beta_0) = y_i\)</span>, <span class="math inline">\(\forall i=1, \cdots, n\)</span>.</p>
+<p>Then, <span class="math inline">\(y_i (&lt;x_i, \tilde \beta&gt; + \tilde \beta_0) \geq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span>.</p>
+<p>Thus, <span class="math inline">\(| &lt;x_i, \tilde \beta&gt; + \tilde \beta_0| = y_i (&lt;x_i, \tilde \beta&gt; + \tilde \beta_0)\)</span>, <span class="math inline">\(\forall i=1, \cdots, n\)</span>.</p>
+<p>As a result, the margin becomes:</p>
+<p><span class="math display">\[
+\begin{aligned}
+m &amp;= \underset{i=1.\cdots,n}{\operatorname{min}} y_i(&lt;x_i, \tilde \beta&gt; + \tilde \beta_0)\\
+&amp;\qquad \qquad \Updownarrow\\
+1 &amp;= \underset{i=1.\cdots,n}{\operatorname{min}} y_i(&lt;x_i, \frac{\tilde \beta}{m}&gt; + \frac{\tilde \beta_0}{m})
+\end{aligned}
+\]</span></p>
+<p>Let <span class="math inline">\(\beta = \frac{\tilde \beta}{m}\)</span>, <span class="math inline">\(\beta_0 = \frac{\tilde \beta_0}{m}\)</span>,
+then we also have <span class="math inline">\(1 \leq y_i(&lt;x_i, \beta&gt; + \beta_0)\)</span>, <span class="math inline">\(\forall i=1, \cdots, n\)</span>.</p>
+<p>As <span class="math inline">\(|| \beta || = || \frac{\tilde \beta}{m} || = \frac{1}{m}\)</span>,
+we have <span class="math inline">\(m = \frac{1}{|| \beta ||}\)</span>.</p>
+<p>Thus, the geometric formulation of SVM becomes:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{(\beta, \beta_{0})}{\operatorname{max}} &amp;~\frac{1}{|| \beta ||}\\
+s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n\\
+&amp;\qquad \qquad \Updownarrow\\
+\underset{(\beta, \beta_{0})}{\operatorname{min}} &amp;~|| \beta ||\\
+s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n\\
+&amp;\qquad \qquad \Updownarrow\\
+\underset{(\beta, \beta_{0})}{\operatorname{min}} &amp;~|| \beta ||^2\\
+s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>which is the <em>Convex Optimization Formulation of SVM</em>.</p>
+<div class="remark">
+<p><span id="unlabeled-div-27" class="remark"><em>Remark</em>. </span></p>
+<ol style="list-style-type: decimal">
+<li><p>SVM problem is fessible only when data set is linearly separable.</p></li>
+<li><p>SVM problem is a convex optimization problem.</p></li>
+</ol>
+</div>
+<hr />
+<p><strong>Duality for Convex Optimization</strong>:</p>
+<p>Primal problem <em>(P)</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{z\in R^s}{\operatorname{min}} &amp;~f(z)\\
+s.t. &amp;~h_i(z) \leq 0 \text{ (constraints) }~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>We first introduce the notion of Lagrangian:</p>
+<p><span class="math display">\[
+\mathcal L(z, \lambda) = f(z) + \sum_{i=1}^n \lambda_i h_i(z)
+\]</span></p>
+<p>where <span class="math inline">\(\lambda \in R^n\)</span>, <span class="math inline">\(n\)</span> is the number of constraints and <span class="math inline">\(\lambda = (\lambda_1, \cdots, \lambda_n)\)</span> is the vector of Lagrangian multipliers.</p>
+<p>Let <span class="math inline">\(g(h) = \underset{z\in R^s}{\operatorname{min}} ~\mathcal L(z, \lambda)\)</span>, where <span class="math inline">\(\lambda\)</span> is fixed, then we have the <em>Dual Problem of (P) ((D))</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\lambda}{\operatorname{max}} &amp;~g(\lambda)\\
+s.t. &amp;~\lambda_i \geq 0 ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>Let’s suppose that <span class="math inline">\(f:R^s \to R\)</span> and <span class="math inline">\(h_i:R^s \to R\)</span> are all differentiable and convex functions. Then,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\lambda \geq 0}{\operatorname{max}} g(\lambda) &amp;= \underset{\lambda \geq 0}{\operatorname{max}} \underset{z\in R^s}{\operatorname{min}} \mathcal L(z,\lambda)\\
+&amp;= \underset{z\in R^s}{\operatorname{min}} \underset{\lambda \geq 0}{\operatorname{max}} \mathcal L(z,\lambda)\\
+&amp;= \underset{z\in R^s}{\operatorname{min}} f(z) ~(\text{suppose min and max can be swapped})\\
+&amp;\qquad s.t. ~h_i(z) \leq 0 ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>For the equation mentioned above:</p>
+<p><span class="math display">\[
+\underset{\lambda \geq 0}{\operatorname{max}} \mathcal L(z,\lambda) = \underset{\lambda \geq 0}{\operatorname{max}} f(z) + \sum_{i=1}^n \lambda_i h_i(z) = \begin{cases}\infty&amp; \exists i, \text{ s.t. } ~h_i(z) &gt; 0\\f(z) &amp; \forall i, ~h_i(z) \leq 0\end{cases}
+\]</span></p>
+<div class="theorem">
+<p><span id="thm:KKT" class="theorem"><strong>Theorem 7.1  (Karush-Kuhn-Tucker) </strong></span></p>
+<ul>
+<li><p>Suppose <span class="math inline">\(\exists \tilde z\)</span>, s.t. <span class="math inline">\(h_i(\tilde z) \leq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots, n\)</span> (Slatter’s condition)</p></li>
+<li><p>Suppose <span class="math inline">\(f, h_i\)</span> are differentiable and convex functions.</p></li>
+</ul>
+<p>Then, <span class="math inline">\(\forall z^*\)</span> solution to <em>(P)</em>, <span class="math inline">\(\exists \lambda^*\)</span> solution to <em>(D)</em>, s.t.</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(\vec 0 ~(\in R^s) = \nabla f(z^*) + \sum_{i=1}^n \lambda_i^* \nabla h_i(z^*)\)</span> (Stationarity)</p></li>
+<li><p><span class="math inline">\(h_i(z^*) \geq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Primal Feasibility)</p></li>
+<li><p><span class="math inline">\(\lambda_i^* \geq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Dual Feasibility)</p></li>
+<li><p><span class="math inline">\(\lambda_i^* h_i(z^*) = 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Complementary Slackness)</p></li>
+</ol>
+<p>Conversely, if <span class="math inline">\((z^*, \lambda^*)\)</span> satisfy 1-4, then <span class="math inline">\(z^*\)</span> is a solution to <em>(P)</em> and <span class="math inline">\(\lambda^*\)</span> is a solution to <em>(D)</em>.</p>
+</div>
+<hr />
+<p>Back to <strong>SVM</strong> problem:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{(\beta, \beta_{0})}{\operatorname{min}} &amp;~\frac{|| \beta ||^2}{2}\\
+s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>Let <span class="math inline">\(z = (\beta, \beta_0)\)</span>, <span class="math inline">\(f(z) = \frac{|| \beta ||^2}{2}\)</span>, <span class="math inline">\(h_i(z) = 1 - y_i(&lt;x_i, \beta&gt; + \beta_0)\)</span>.</p>
+<p>Then we have <span class="math inline">\(\mathcal L(\beta, \beta_0, \lambda) = \frac{|| \beta ||^2}{2} + \sum_{i=1}^n \lambda_i \Big(1 - y_i(&lt;x_i, \beta&gt; + \beta_0)\Big)\)</span> and <span class="math inline">\(g(\lambda) = \underset{(\beta, \beta_{0})}{\operatorname{min}} \{\frac{|| \beta ||^2}{2} + \sum_{i=1}^n \lambda_i \Big(1 - y_i(&lt;x_i, \beta&gt; + \beta_0)\Big)\}\)</span></p>
+<p>Case 1: If <span class="math inline">\(\sum_{i=1}^n \lambda_iy_i \neq 0\)</span>, <span class="math inline">\(g(\lambda) = -\infty\)</span></p>
+<p>Case 2: If <span class="math inline">\(\sum_{i=1}^n \lambda_iy_i = 0\)</span>, <span class="math inline">\(g(\lambda) = \underset{\beta}{\operatorname{min}} \{\frac{|| \beta ||^2}{2} + \sum_{i=1}^n \lambda_i \Big(1 - y_i(&lt;x_i, \beta&gt;)\Big)\}\)</span>.</p>
+<p>To find this, we can find the critical point for the above problem: <span class="math inline">\(\vec 0 = \beta - \sum_{i=1}^n \lambda_i y_i x_i\)</span>. Thus, plug the <span class="math inline">\(\beta\)</span> back to the above expression, we have: <span class="math inline">\(g(\lambda) = -\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \lambda_i \lambda_j y_i y_j &lt;x_i, x_j&gt; + \sum_{i=1}^n \lambda_i\)</span>.</p>
+<p>As a result, we have the Dual of SVM <em>(D)</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\lambda \geq 0}{\operatorname{max}} g(\lambda) &amp;= \underset{\lambda \in R^n}{\operatorname{max}} \{-\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \lambda_i \lambda_j y_i y_j &lt;x_i, x_j&gt; + \sum_{i=1}^n \lambda_i \}\\
+&amp;\qquad s.t. ~
+\begin{cases}\sum_{i=1}^n \lambda_iy_i = 0\\
+\lambda_i \geq 0
+\end{cases}~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>Now, using KKT conditions: let <span class="math inline">\(\lambda^*\)</span> be a solution to <em>(D)</em>. From the (Stationarity), we have <span class="math inline">\(\beta^* = \sum_{i=1}^n \lambda_i^* y_i x_i\)</span>. From the (Complementary Slackness), we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\lambda_i^*\Big(1-y_i(&lt;x_i, \beta^*&gt; + \beta_0^*)\Big) = 0,  ~\forall i\\
+\underset{\text{choose } \hat{i} \text{ s.t. } \lambda^*_{\hat{i}} &gt; 0}{\Rightarrow} &amp;~ 1 - y_{\hat i} (&lt;x_{\hat i}, \beta^*&gt; + \beta_0^*) = 0\\
+\Rightarrow &amp;~ 1 = y_{\hat i} (&lt;x_{\hat i}, \beta^*&gt; + \beta_0^*)\\
+\underset{y_i^2=1}{\Rightarrow} &amp;~ y_{\hat i} = (&lt;x_{\hat i}, \beta^*&gt; + \beta_0^*)\\
+\Rightarrow &amp;~ (y_{\hat i} - &lt;x_{\hat i}, \beta^*&gt;) = \beta_0^*
+\end{aligned}
+\]</span></p>
+<p>Then, we go from <span class="math inline">\(\lambda^*\)</span> to <span class="math inline">\((\beta^*, \beta_0^*)\)</span> or <em>(D)</em> to <em>(P)</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\beta^* &amp;= \sum_{i=1}^n \lambda_i^* y_i x_i\\
+\beta_0^* &amp;= y_{\hat i} - &lt;x_{\hat i}, \beta^*&gt;\\
+&amp;= y_{\hat i} - \sum_{j=1}^n \lambda_j^* y_j &lt;x_j, x_{\hat i}&gt;, \text{ where } \hat{i} \text{ s.t. } \lambda^*_{\hat{i}} &gt; 0
+\end{aligned}
+\]</span></p>
+<p>One can show that the primal problem <em>(P)</em> has a unique solution as shown above (Use strictly convex to show uniqueness for <span class="math inline">\(\beta^*\)</span>).</p>
+<p>Thus the classifier is:</p>
+<p><span class="math display">\[
+\begin{aligned}
+l(x)&amp;=
+\begin{cases}
+1 &amp; &lt;\beta^*, x&gt; + \beta_0^* &gt; 0\\
+-1 &amp; &lt;\beta^*, x&gt; + \beta_0^* &lt; 0
+\end{cases}\\
+&amp;=
+\begin{cases}
+1 &amp; \sum_{j=1}^n \lambda_j^* y_j (&lt;x_j, x&gt; - &lt;x_j, x_i&gt;) + y_i &gt; 0\\
+-1 &amp; o.w.
+\end{cases}, \text{ where }i \text{ s.t. } \lambda_i^*&gt;0\\
+\end{aligned}
+\]</span></p>
+<p>which depends on <span class="math inline">\(x\)</span> and <span class="math inline">\(x_i\)</span> only through inner products. This is a crucial property that we will exploit to define a larger class of SVM classifiers.</p>
+<div class="remark">
+<p><span id="unlabeled-div-28" class="remark"><em>Remark</em>. </span></p>
+<ol style="list-style-type: decimal">
+<li><p>Hard Margin SVM problem has a solution (primal problem is feasible) if data is linearly separable .</p></li>
+<li><p>In KKT, primal problem is feasible iff dual problem is bounded (in which case both primal and dual have solution and it makes sense to talk about <span class="math inline">\(z^*\)</span> and <span class="math inline">\(\lambda^*\)</span>).</p></li>
+</ol>
+</div>
+<div class="definition">
+<p><span id="def:SV" class="definition"><strong>Definition 7.1  (Support Vectors) </strong></span>Under the assumptions, let <span class="math inline">\(\beta^*, \beta_0^*, \lambda^*\)</span> be the solution to <em>(P)</em>. We say <span class="math inline">\(x_i\)</span> is a support vector if <span class="math inline">\(y_i (&lt;x_i, \beta^*&gt; + \beta_0^*) = 1\)</span>.</p>
+</div>
+<p>In particular, the minimum distance between <span class="math inline">\(\{x_1, \cdots, x_n\}\)</span> and the optimal hyperplane <span class="math inline">\(\mathcal H_{\beta^*, \beta_0^*}\)</span> is achieved at the support vectors.</p>
+<div class="theorem">
+<p><span id="thm:SPofSVM" class="theorem"><strong>Theorem 7.2  (Stability Property of SVMs) </strong></span>Let <span class="math inline">\(x_i\)</span> be a training data point and not a support vector. Suppose <span class="math inline">\(x_i\)</span> is changed for a point <span class="math inline">\(\tilde x_i\)</span> s.t. <span class="math inline">\(y_i (&lt;x_i, \beta^*&gt; + \beta_0^*) \geq 1\)</span>. Then the solution for the new data set is the same for the original data set.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-29" class="proof"><em>Proof</em>. </span><span class="math inline">\((\lambda^*, \beta_0^*, \beta^*)\)</span> from the original problem still satisfy KKT condition for new data set:</p>
+<ol style="list-style-type: decimal">
+<li><p>(Stationarity) As <span class="math inline">\(x_i\)</span> is not a support vector, we have <span class="math inline">\(\lambda^*_i = 0\)</span>. Thus, <span class="math inline">\(\beta^* = \sum_{j=1}^n \lambda_j^* y_j x_j = \sum_{j \neq i} \lambda_j^* y_j x_j + \lambda_i^* y_i x_i = \sum_{j \neq i} \lambda_j^* y_j x_j + \lambda_i^* y_i \tilde x_i\)</span>, which means that <span class="math inline">\(\beta^*\)</span> doesn’t change.</p></li>
+<li><p>(Primal Feasibility) <span class="math inline">\(y_j (&lt;\beta^*, x_j&gt; + \beta_0^*) \geq 1\)</span>, <span class="math inline">\(\forall j \neq i\)</span> and <span class="math inline">\(y_i (&lt;\beta^*, x_j&gt; + \beta_0^*) \geq 1\)</span> by the assumption above.</p></li>
+<li><p>(Dual Feasibility) <span class="math inline">\(\lambda_j \geq 0\)</span>, <span class="math inline">\(\forall j\)</span>.</p></li>
+<li><p>(Complementary Slackness) As <span class="math inline">\(\lambda_i^* = 0\)</span>, <span class="math inline">\(\lambda_i^* (1-y_i(&lt;\tilde x_i, \beta^*&gt; + \beta_0^*)) = 0\)</span>.</p></li>
+</ol>
+<p>As we didn’t change any <span class="math inline">\(y_i\)</span>, we still have <span class="math inline">\(\sum_{j=1}^n \lambda_i^* y_i = 0\)</span>. As a result, <span class="math inline">\((\beta_0^*, \beta^*)\)</span> is still a solution for the primal problem for the new data set.</p>
+</div>
+<div class="remark">
+<p><span id="unlabeled-div-30" class="remark"><em>Remark</em>. </span>The robustness associated to SVMs is markedly different to what happens with LDA or Logistic Regression, where outliers can change completely the decision boundaries. It depends only on support vectors.</p>
+</div>
+</div>
+<div id="soft-margin-svm" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Soft Margin SVM<a href="support-vector-machine.html#soft-margin-svm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>What if the data set is not linearly separable?</p>
+<div id="case-1" class="section level3 hasAnchor" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> Case 1<a href="support-vector-machine.html#case-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="figures/smSVM1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The data set is not linearly separable mildly. This case will motivate the soft margin SVM (generalizes Hard Margin SVM).</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\beta_0, \beta, \xi_1, \cdots, \xi_n}{\operatorname{min}} &amp;~\frac{|| \beta ||^2}{2} + C \sum_{i=1}^n \xi_i\\
+s.t. &amp;~
+\begin{cases}
+y_i(&lt;x_i, \beta&gt;) \geq 1 - \xi_i\\
+\xi_i \geq 0
+\end{cases}, ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(C\)</span> is a parameter of the problem: as <span class="math inline">\(C \nearrow \infty\)</span> we recover the hard margin problem (in case the data is linearly separable). However, for <span class="math inline">\(C \in (0, \infty)\)</span>, the problem is always feasible.</p>
+</div>
+<div id="case-2" class="section level3 hasAnchor" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> Case 2<a href="support-vector-machine.html#case-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="figures/smSVM2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The data set is not linearly separable but by a lot. After a transformation, we will be able to transform the data into a linearly separable data set.</p>
+<p>Let <span class="math inline">\(\begin{aligned}\psi: R^2 &amp;\to \mathcal H( = R^3)\\(x,y) &amp;\to (x,y,x^2+y^2)\end{aligned}\)</span>. Then the data set <span class="math inline">\((\psi(x_1), y_1), \cdots, (\psi(x_n), y_n)\)</span> is now linearly separable, and we will work on the embedded space:</p>
+<p><em>(P)</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\beta_0 \in R, \beta \in \mathcal H}{\operatorname{min}} &amp;~\frac{|| \beta ||_{\mathcal H}^2}{2}\\
+s.t. &amp;~y_i(&lt;\beta, \psi(x_i)&gt;_{\mathcal H}) \geq 1, ~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<p><em>(D)</em>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\lambda \in R^n}{\operatorname{max}} &amp;~ -\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \lambda_i \lambda_j y_i y_j &lt;\psi(x_i), \psi(x_j)&gt;_{\mathcal H} + \sum_{i=1}^n \lambda_i\\
+&amp;s.t. ~
+\begin{cases}\sum_{i=1}^n \lambda_iy_i = 0\\
+\lambda_i \geq 0
+\end{cases},~\forall i=1,\cdots,n
+\end{aligned}
+\]</span></p>
+<ul>
+<li><p>From <span class="math inline">\(\lambda^*\)</span>, we can obtain <span class="math inline">\(\beta^* = \sum_{j=1}^n \lambda_j^* y_j \psi(x_j)\)</span></p></li>
+<li><p>Given <span class="math inline">\(i\)</span> s.t. <span class="math inline">\(\lambda_i^* &gt; 0\)</span>, <span class="math inline">\(\beta_0^*\)</span> can then be computed: <span class="math inline">\(\beta_0^* = y_i - &lt;\beta^*, \psi(x_i)&gt;_{\mathcal H} = y_i - \sum_{j=1}^n \lambda_j^* y_j &lt;\psi(x_j), \psi(x_i)&gt;_{\mathcal H}\)</span>.</p></li>
+<li><p>The classifier is (<span class="math inline">\(x \in R^d\)</span>):</p></li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+l_{\psi}(x):&amp;=
+\begin{cases}
+1 &amp; &lt;\beta^*, \psi(x)&gt;_{\mathcal H} + \beta_0^* &gt; 0\\
+-1 &amp; &lt;\beta^*, \psi(x)&gt;_{\mathcal H} + \beta_0^* &lt; 0
+\end{cases}\\
+&amp;= \begin{cases}
+1 &amp; \sum_{j=1}^n \lambda_j^* y_j (&lt;\psi(x_j), \psi(x)&gt;_{\mathcal H} - &lt;\psi(x_j), \psi(x_i)&gt;_{\mathcal H}) + y_i &gt; 0\\
+-1 &amp; o.w.
+\end{cases}\\
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(i\)</span> s.t. <span class="math inline">\(\lambda_i^* &gt; 0\)</span>, and <span class="math inline">\(\lambda_j^*\)</span> only depends on <span class="math inline">\(&lt;\psi(x_j), \psi(x_l)&gt;_{\mathcal H}\)</span></p>
+<p>Let <span class="math inline">\(K(x, \tilde x) = &lt;\psi(x), \psi(\tilde x)&gt;_{\mathcal H}\)</span> for arbitrary <span class="math inline">\(x, \tilde x \in R^d\)</span>. Then the only thing we need to build <span class="math inline">\(l_\psi\)</span> is the function <span class="math inline">\(K\)</span>. In particular, we don’t need <span class="math inline">\(\psi\)</span> explicitly. Thus, it is fair to write <span class="math inline">\(l_\psi = l_K\)</span>.</p>
+<p>In particular, to produce more general SVM classifiers, we can either:</p>
+<ol style="list-style-type: decimal">
+<li><p>Pick a “Hilbert Space” <span class="math inline">\(\mathcal H\)</span> and define a map <span class="math inline">\(\psi: R^d \to \mathcal H\)</span>, then we can build the function <span class="math inline">\(K\)</span>, which is all we need to compute <span class="math inline">\(l_\psi\)</span>.</p></li>
+<li><p>Pick a “Kernel” <span class="math inline">\(K\)</span> and produce the classifier <span class="math inline">\(l_K\)</span>.</p></li>
+</ol>
+<p>Question: If we start with a “Kernel” <span class="math inline">\(K\)</span>, can we implicitly picking <span class="math inline">\(\mathcal H\)</span> and <span class="math inline">\(\psi\)</span>?</p>
+<p>Answer: Under fairly general condition, yes.</p>
+<div class="definition">
+<p><span id="def:kernel" class="definition"><strong>Definition 7.2  (Kernels) </strong></span>A kernel over a set <span class="math inline">\(\mathcal X\)</span> is a function <span class="math inline">\(K: \mathcal X \times \mathcal X \to R\)</span> with the following property:</p>
+<p><span class="math inline">\(\forall n \in N\)</span> and <span class="math inline">\(\forall\)</span> sequence of points <span class="math inline">\(x_1, \cdots, x_n \in \mathcal X\)</span>, the matrix</p>
+<p><span class="math display">\[
+A:=
+\left(
+\begin{matrix} K(x_1,x_1) &amp; \cdots &amp; K(x_1, x_n)\\
+\vdots &amp; \ddots &amp; \vdots\\
+K(x_n ,x_1) &amp; \cdots &amp; K(x_n, x_n)
+\end{matrix}
+\right)
+\]</span></p>
+<p>is symmetric (<span class="math inline">\(A = A^T\)</span>) and positive semi-definite <span class="math inline">\(&lt;Av, v&gt;_{R^n} \geq 0\)</span>, <span class="math inline">\(\forall b \in R^n\)</span>.</p>
+</div>
+<div class="remark">
+<p><span id="unlabeled-div-31" class="remark"><em>Remark</em>. </span></p>
+<ol style="list-style-type: decimal">
+<li><p>Kernels must be symmetric functions: <span class="math inline">\(K(x,y) = K(y,x)\)</span>, <span class="math inline">\(\forall x,y \in \mathcal X\)</span>.</p></li>
+<li><p>But there are symmetric functions that are not kernels. In particular, we need to check the positive semi-definiteness condition.</p></li>
+</ol>
+</div>
+<div class="proposition">
+<p><span id="prp:unlabeled-div-32" class="proposition"><strong>Proposition 7.1  </strong></span></p>
+<ol style="list-style-type: decimal">
+<li><p>Inner products are kernels: <span class="math inline">\(K(x, y) = &lt;x,y&gt;_{R^d}\)</span>.</p></li>
+<li><p>If <span class="math inline">\(K_1: \mathcal X \times \mathcal X \to R\)</span> and <span class="math inline">\(K_2: \mathcal X \times \mathcal X \to R\)</span> are two kernels, then <span class="math inline">\(K(x,y):= a_1 K_1(x,y) + a_2 K_2(x,y)\)</span> is also a kernel, provided <span class="math inline">\(a_1, a_2\)</span> are two non-negative numbers.</p></li>
+<li><p>If <span class="math inline">\(K: \mathcal X \times \mathcal X \to R\)</span> is a kernel and <span class="math inline">\(f:\mathcal X \to R\)</span> is a function, then <span class="math inline">\(\tilde K(x,y) := f(x) \cdot f(y) \cdot K(x,y)\)</span> is also a kernel.</p></li>
+<li><p>If <span class="math inline">\(K_1: \mathcal X \times \mathcal X \to R\)</span> and <span class="math inline">\(K_1: \mathcal X \times \mathcal X \to R\)</span> are two kernels, then <span class="math inline">\(K(x,y) := K_1(x,y) \cdot K_2(x,y)\)</span> is also a kernel.</p></li>
+</ol>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-33" class="proof"><em>Proof</em>. </span>(of 1)</p>
+<p>Let <span class="math inline">\(n \in N\)</span> and <span class="math inline">\(x_1, \cdots, x_n \in R^d\)</span> be arbitrary. Consider the matrix <span class="math inline">\(A \in R^{n \times n}\)</span> with entries <span class="math inline">\(A_{ij} = &lt;x_i, x_j&gt;_{R^d}\)</span>, then</p>
+<ul>
+<li><p>It is symmetric: <span class="math inline">\(A_{ij} = &lt;x_i, x_j&gt;_{R^d} = &lt;x_j, x_i&gt;_{R^d} = A_{ji}\)</span></p></li>
+<li><p>It is positive semi-definite:<br />
+Let <span class="math inline">\(v = (v_1, \cdots, v_n) \in R^n\)</span>. Then<br />
+<span class="math display">\[
+\begin{aligned}
+&lt;Av, v&gt;_{R^d} &amp;= \sum_{i=1}^n \sum_{j=1}^n A_{ij} v_i v_j\\
+&amp;= \sum_{i=1}^n \sum_{j=1}^n &lt;x_i, x_j&gt;_{R^d} v_i v_j\\
+&amp;= \sum_{i=1}^n \sum_{j=1}^n &lt;v_i x_i, v_j x_j&gt;_{R^d}\\
+&amp;= &lt;\sum_{i=1}^n v_i x_i, \sum_{j=1}^n v_j x_j&gt;_{R^d}\\
+&amp;= || \sum_{i=1}^n v_i x_i ||^2_{R_d}\\
+&amp;\geq 0
+\end{aligned}
+\]</span></p></li>
+</ul>
+</div>
+<p>By the above proof, we can build the kernel <span class="math inline">\(K(x,y) = &lt;\psi(x), \psi(y)&gt;_{\mathcal H}\)</span> given <span class="math inline">\(\mathcal H\)</span> and <span class="math inline">\(\psi :R^d \to \mathcal H\)</span>.</p>
+<div class="corollary">
+<p><span id="cor:unlabeled-div-34" class="corollary"><strong>Corollary 7.1  </strong></span>The following are kernels in <span class="math inline">\(R^d\)</span>:</p>
+<ol style="list-style-type: decimal">
+<li><p>Inner product: <span class="math inline">\(K(x,y) = &lt;x,y&gt;_{R^d}\)</span>.</p></li>
+<li><p>Polynomial: <span class="math inline">\(K(x,y) = a_0 + a_1 &lt;x,y&gt;_{R^d} + \cdots + a_l (&lt;x,y&gt;_{R^d})^l\)</span> as long as <span class="math inline">\(a_0, \cdots, a_l \geq 0\)</span>. (<span class="math inline">\((&lt;x,y&gt;_{R^d})^l\)</span> is a kernel)</p></li>
+<li><p>Radial Basis Kernel or Gaussian Kernel: <span class="math inline">\(K(x,y) = \operatorname{exp} (-\frac{|| x-y ||^2}{\sigma})\)</span> for <span class="math inline">\(\sigma &gt; 0\)</span>.</p></li>
+</ol>
+</div>
+<div class="remark">
+<p><span id="unlabeled-div-35" class="remark"><em>Remark</em>. </span></p>
+<ol style="list-style-type: decimal">
+<li><p>For every kernel we will have a different classification rule. Try the simplest classifiers first (linear classifiers or soft margin SVMs).</p></li>
+<li><p>Any classifier that can be purely defined in terms of inner products can be kernelized.</p></li>
+<li><p>For a given kernel, how do we know if the embedded data set <span class="math inline">\((\psi(x_1), y_1), \cdots, (\psi(x_n), y_n)\)</span> is linearly separable? In some cases it is always the case. But even if the data set is not linearly separable, we mat be in the Case 3 mentioned below, where we should use the kernelized version of SVMs.</p></li>
+</ol>
+</div>
+<div class="definition">
+<p><span id="def:HS" class="definition"><strong>Definition 7.3  (Hilbert Space) </strong></span>A Hilbert Space is a <em>vector space</em> (1) <span class="math inline">\(\mathcal H\)</span> together with an <em>inner product</em> (2) <span class="math inline">\(&lt;\cdot, \cdot&gt;_{\mathcal H}\)</span>, under which <span class="math inline">\(\mathcal H\)</span> is a <em>complete</em> (3) metric space.</p>
+<ul>
+<li><p>Vector Space: We can add together objects in <span class="math inline">\(\mathcal H\)</span> and multiply by scales (<span class="math inline">\(v, \tilde v \in \mathcal H\)</span>, then <span class="math inline">\(av + \tilde v \in \mathcal H\)</span>).</p></li>
+<li><p>Inner Product:</p>
+<ul>
+<li><span class="math inline">\(&lt;f,g&gt;_{\mathcal H} = &lt;g,f&gt;_{\mathcal H}\)</span> (symmetry)<br />
+</li>
+<li><span class="math inline">\(&lt;af + b\tilde f, g&gt;_{\mathcal H} = a&lt;f,g&gt;_{\mathcal H} + b&lt;\tilde f, g&gt;_{\mathcal H}\)</span> (linear in each entry)<br />
+</li>
+<li><span class="math inline">\(|| f ||^2_{\mathcal H} := &lt;f, f&gt;_{\mathcal H} \geq 0\)</span>, <span class="math inline">\(\forall f\in \mathcal H\)</span>. And <span class="math inline">\(&lt;f, f&gt;_{\mathcal H} = 0 \Leftrightarrow f = 0\)</span>.</li>
+</ul></li>
+<li><p>Completeness: An inner product induces a norm and thus a metric: <span class="math inline">\(||f-g||^2_{\mathcal H} := &lt;f-g, f-g&gt;_{\mathcal H}\)</span>. Under this metric, <span class="math inline">\(\mathcal H\)</span> must be a complete metric space.</p></li>
+</ul>
+</div>
+<ul>
+<li>Properties of Hilbert Space (Cauthy-Schwartz Ineq): <span class="math inline">\(|&lt;f,g&gt;_{\mathcal H}| \leq ||f||_{\mathcal H} ||g||_{\mathcal H}\)</span>, <span class="math inline">\(||f||_{\mathcal H}:= \sqrt{&lt;f, f&gt;_{\mathcal H}}\)</span>.</li>
+</ul>
+<div class="example">
+<p><span id="exm:unlabeled-div-36" class="example"><strong>Example 7.1  </strong></span></p>
+<ol style="list-style-type: decimal">
+<li><p>Basic example: <span class="math inline">\((R^m, &lt;\cdot, \cdot&gt;_{R^m})\)</span></p></li>
+<li><p>The space of “square integrable measurable function” defined on R: <span class="math inline">\(\mathcal L^2(R) := \{f \text{ measurbale s.t. } \int_R f^2dx &lt; \infty\}\)</span>.<br />
+Note: <span class="math inline">\(\mathcal L^2(R)\)</span> is not correctly defined as above, and in fact one has to work with “equivalent classes”. So for the example, a measurable function <span class="math inline">\(f\)</span> is identified with another function <span class="math inline">\(\tilde f\)</span> if <span class="math inline">\(f = \tilde f\)</span> a.e. (almost everywhere).<br />
+In any cases, with this technical detail in mind: <span class="math inline">\(&lt;f,g&gt;_{\mathcal L^2(R)} := \int_R fg ~dx\)</span>.</p></li>
+<li><p>RKHS (Reproducing Kernel Hilbert Spaces):<br />
+<img src="figures/RKHS.png" width="70%" style="display: block; margin: auto;" /></p></li>
+</ol>
+</div>
+<div class="definition">
+<p><span id="def:cont" class="definition"><strong>Definition 7.4  (Continuous) </strong></span>Let <span class="math inline">\(\mathcal H\)</span> be Hilbert Space, then a linear function <span class="math inline">\(L: \mathcal H \to R\)</span> is <em>continuous</em> if there is a constant <span class="math inline">\(C\)</span> s.t <span class="math inline">\(|L(f)| \leq C ||f||_{\mathcal H}\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-37" class="example"><strong>Example 7.2  </strong></span>Fix <span class="math inline">\(g \in \mathcal H\)</span> and define <span class="math inline">\(L_g(f) := &lt;f,g&gt;_\mathcal H\)</span>. Then <span class="math inline">\(L_g\)</span> is linear and continuous:</p>
+<p><span class="math inline">\(L_g(f + a\tilde f) = &lt;f+a\tilde f, g&gt;_\mathcal H = &lt;f,g&gt;_\mathcal H + a&lt;\tilde f, g&gt;_\mathcal H = L_g(f) + aL_g(\tilde f)\)</span>.
+And by Cauthy-Schwartz Ineq, we have <span class="math inline">\(|L_g(f)| = |&lt;f,g&gt;_\mathcal H| \leq ||g||_\mathcal H \cdot ||f||_\mathcal H\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>.</p>
+</div>
+<div class="theorem">
+<p><span id="thm:RRT" class="theorem"><strong>Theorem 7.3  (Riesz Representation Theorem) </strong></span>If <span class="math inline">\(\mathcal H\)</span> is a Hilbert Space and <span class="math inline">\(L:\mathcal \to R\)</span> is linear and continuous, then <span class="math inline">\(\exists\)</span> a unique <span class="math inline">\(g \in \mathcal H\)</span> s.t <span class="math inline">\(L(f) = L_g(f)\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>.</p>
+</div>
+<div class="definition">
+<p><span id="def:RKHS" class="definition"><strong>Definition 7.5  (Reproducing Kernel Hilbert Space) </strong></span>Let <span class="math inline">\(\mathcal X\)</span> be a set, <span class="math inline">\(\mathcal H\)</span> be a Hilbert Space of real valued functions <span class="math inline">\(f: \mathcal X \to R\)</span> (i.e. elements in <span class="math inline">\(\mathcal H\)</span> are functions from <span class="math inline">\(\mathcal X\)</span> into <span class="math inline">\(R\)</span>). <span class="math inline">\(\mathcal H\)</span> is said to be a RKHS if <span class="math inline">\(\forall x \in \mathcal X\)</span>, the “evaluation map” <span class="math inline">\(L_x: f \in \mathcal H \to f(x) \in R\)</span> is a linear and continuous map. In particular, <span class="math inline">\(|f(x) - \tilde f(x)| \leq C_x || f - \tilde f ||_\mathcal H\)</span>, <span class="math inline">\(\forall f, \tilde f\)</span>.</p>
+</div>
+<p><strong>Why “Reproducing Kernel”?</strong>:</p>
+<p><span class="math inline">\(L_x\)</span> is clearly linear, and if in addition it is continuous, then by <strong>Theorem <a href="support-vector-machine.html#thm:RRT">7.3</a></strong>, <span class="math inline">\(\exists\)</span> a unique <span class="math inline">\(K_x \in \mathcal H\)</span> s.t <span class="math inline">\(f(x) = L_x(f) = &lt;f, K_x&gt;_\mathcal H\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>. That is, to evaluate <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span>, it is enough to take the inner product of <span class="math inline">\(f\)</span> with <span class="math inline">\(K_x\)</span>.</p>
+<p>Now, let <span class="math inline">\(\tilde x \in \mathcal X\)</span>, then <span class="math inline">\(K_{\tilde x} (x) = &lt;K_{\tilde x}, K_x&gt;_\mathcal H\)</span>. Let’s call them <span class="math inline">\(K(\tilde x, x)\)</span>. Then the function <span class="math inline">\(K\)</span> defined above is a kernel: take <span class="math inline">\(\psi: \begin{matrix} \mathcal X \to \mathcal H\\x \to K_x\end{matrix}\)</span>, then <span class="math inline">\(K(\tilde x, x) = &lt;K_{\tilde x}, K_x&gt;_\mathcal H = &lt;\psi(\tilde x), \psi(x)&gt;_\mathcal H\)</span>.</p>
+<p>So far, we have gone from RKHS to Kernel (<span class="math inline">\(K\)</span>). And the Kernel <span class="math inline">\(K\)</span> has the reproducing property: <span class="math inline">\(&lt;f, K(\cdot, x)&gt;_\mathcal H \ f(x)\)</span>, <span class="math inline">\(\forall f\)</span>.</p>
+<p>How about we go from Kernel (<span class="math inline">\(K\)</span>) to RKHS?</p>
+<div class="theorem">
+<p><span id="thm:MAT" class="theorem"><strong>Theorem 7.4  (Moore-Aronszjan Theorem) </strong></span>Let <span class="math inline">\(K\)</span> be a kernel defined on <span class="math inline">\(\mathcal X\)</span>. Define</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathcal H = \Big \{\sum_{i=1}^\infty a_i K(\cdot, x_i): &amp;\text{for some colletcion }a_i \in R, x_i \in \mathcal X \\
+&amp;\text{with } \sum_{i,j}a_i a_j K(x_i, x_j) &lt; \infty\Big \}
+\end{aligned}
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+&lt;\sum_{i=1}^\infty a_i K(\cdot, x_i), \sum_{j=1}^\infty b_j K(\cdot, y_j)&gt;_\mathcal H := \sum_{i=1}^\infty\sum_{j=1}^\infty a_i b_j K(x_i, y_j).
+\]</span></p>
+<p>Think of this as <span class="math inline">\(a^T K b\)</span> where <span class="math inline">\(a = (a_1, \cdots)^T\)</span>, <span class="math inline">\(b = (b_1, \cdots)^T\)</span>, <span class="math inline">\(K = \left( \begin{matrix}K(x_1,y_1) &amp; \cdots\\\vdots &amp; \ddots \end{matrix}\right)\)</span>.</p>
+<p>It can be shown that <span class="math inline">\(\mathcal H\)</span> with this inner product is a Hilbert Space and <span class="math inline">\(K\)</span> is a reproducing kernel.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-38" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(f \in \mathcal H\)</span>, <span class="math inline">\(f = \sum_{i=1}^\infty a_i K(\cdot, x_i)\)</span>. Then, <span class="math inline">\(&lt;f, K(\cdot, x)&gt;_\mathcal H = &lt;\sum_{i=1}^\infty a_i K(\cdot, x_i), K(\cdot, x)&gt; = \sum_{i=1}^\infty a_i K(x, x_i) = f(x)\)</span>.</p>
+</div>
+</div>
+<div id="case-3" class="section level3 hasAnchor" number="7.2.3">
+<h3><span class="header-section-number">7.2.3</span> Case 3<a href="support-vector-machine.html#case-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="figures/smSVM3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Use the kernelized version of Soft Margin SVM.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="linear-classifiers.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/06-SVM.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

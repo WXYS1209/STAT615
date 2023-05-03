@@ -48,6 +48,13 @@ thm:SPofSVM
 def:kernel
 prp:unlabeled-div-32
 cor:unlabeled-div-34
+def:HS
+exm:unlabeled-div-36
+def:cont
+exm:unlabeled-div-37
+thm:RRT
+def:RKHS
+thm:MAT
 about
 usage
 render-book
@@ -86,6 +93,8 @@ lda-or-qda
 logistic-regression
 perceptrons-and-svms
 perceptrons
+svms
+support-vector-machine
 hard-margin-svm
 soft-margin-svm
 case-1
