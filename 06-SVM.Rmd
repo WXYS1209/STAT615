@@ -453,7 +453,7 @@ The following are kernels in \(R^d\):
 
 2. Any classifier that can be purely defined in terms of inner products can be kernelized.
 
-3. For a given kernel, how do we know if the embedded data set \((\psi(x_1), y_1), \cdots, (\psi(x_n), y_n)\) is linearly separable? In some cases it is always the case. But even if the data set is not linearly separable, we mat be in the Case 3 mentioned below, where we should use the kernelized version of SVMs.
+3. For a given kernel, how do we know if the embedded data set \((\psi(x_1), y_1), \cdots, (\psi(x_n), y_n)\) is linearly separable? In some cases it is always the case. But even if the data set is not linearly separable, we may be in the Case 3 mentioned below, where we should use the kernelized version of SVMs.
 :::
 
 :::{.definition #HS name="Hilbert Space"}

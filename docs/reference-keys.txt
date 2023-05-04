@@ -55,6 +55,7 @@ exm:unlabeled-div-37
 thm:RRT
 def:RKHS
 thm:MAT
+exm:J
 about
 usage
 render-book
@@ -100,3 +101,5 @@ soft-margin-svm
 case-1
 case-2
 case-3
+regularized-empirical-risk-minimization
+ill-posed-problems

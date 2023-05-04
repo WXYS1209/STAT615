@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 7 Support Vector Machine | STAT 615 Note Book</title>
+  <title>Chapter 8 Support Vector Machine | STAT 615 Note Book</title>
   <meta name="description" content="This is a notebook for STAT 615." />
   <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 7 Support Vector Machine | STAT 615 Note Book" />
+  <meta property="og:title" content="Chapter 8 Support Vector Machine | STAT 615 Note Book" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This is a notebook for STAT 615." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 7 Support Vector Machine | STAT 615 Note Book" />
+  <meta name="twitter:title" content="Chapter 8 Support Vector Machine | STAT 615 Note Book" />
   
   <meta name="twitter:description" content="This is a notebook for STAT 615." />
   
@@ -23,15 +23,15 @@
 <meta name="author" content="Peter Wang" />
 
 
-<meta name="date" content="2023-05-04" />
+<meta name="date" content="2023-05-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="linear-classifiers.html"/>
-<link rel="next" href="regularized-empirical-risk-minimization.html"/>
+<link rel="prev" href="support-vector-machine.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -143,9 +143,15 @@
 <li class="chapter" data-level="7.2.3" data-path="support-vector-machine.html"><a href="support-vector-machine.html#case-3"><i class="fa fa-check"></i><b>7.2.3</b> Case 3</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="regularized-empirical-risk-minimization.html"><a href="regularized-empirical-risk-minimization.html"><i class="fa fa-check"></i><b>8</b> Regularized Empirical Risk Minimization</a>
+<li class="chapter" data-level="8" data-path="support-vector-machine-1.html"><a href="support-vector-machine-1.html"><i class="fa fa-check"></i><b>8</b> Support Vector Machine</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="regularized-empirical-risk-minimization.html"><a href="regularized-empirical-risk-minimization.html#ill-posed-problems"><i class="fa fa-check"></i><b>8.1</b> ill Posed Problems</a></li>
+<li class="chapter" data-level="8.1" data-path="support-vector-machine-1.html"><a href="support-vector-machine-1.html#hard-margin-svm-1"><i class="fa fa-check"></i><b>8.1</b> Hard Margin SVM</a></li>
+<li class="chapter" data-level="8.2" data-path="support-vector-machine-1.html"><a href="support-vector-machine-1.html#soft-margin-svm-1"><i class="fa fa-check"></i><b>8.2</b> Soft Margin SVM</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="support-vector-machine-1.html"><a href="support-vector-machine-1.html#case-1-1"><i class="fa fa-check"></i><b>8.2.1</b> Case 1</a></li>
+<li class="chapter" data-level="8.2.2" data-path="support-vector-machine-1.html"><a href="support-vector-machine-1.html#case-2-1"><i class="fa fa-check"></i><b>8.2.2</b> Case 2</a></li>
+<li class="chapter" data-level="8.2.3" data-path="support-vector-machine-1.html"><a href="support-vector-machine-1.html#case-3-1"><i class="fa fa-check"></i><b>8.2.3</b> Case 3</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -167,10 +173,10 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="support-vector-machine" class="section level1 hasAnchor" number="7">
-<h1><span class="header-section-number">Chapter 7</span> Support Vector Machine<a href="support-vector-machine.html#support-vector-machine" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="hard-margin-svm" class="section level2 hasAnchor" number="7.1">
-<h2><span class="header-section-number">7.1</span> Hard Margin SVM<a href="support-vector-machine.html#hard-margin-svm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="support-vector-machine-1" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Support Vector Machine<a href="support-vector-machine-1.html#support-vector-machine-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="hard-margin-svm-1" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Hard Margin SVM<a href="support-vector-machine-1.html#hard-margin-svm-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Let’s suppose that <span class="math inline">\((x_i, y_i)_{i=1,\cdots,n}\)</span> is linearly separable (for motivation for now). Then there exists at least one <span class="math inline">\(\vec \beta, \beta_0\)</span> s.t. <span class="math inline">\(\mathcal M_{\vec \beta, \beta_0} = \emptyset\)</span>. What we want is to find</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -222,7 +228,7 @@ s.t. &amp;~y_i(&lt;x_i, \beta&gt; + \beta_0) \geq 1 ~\forall i=1,\cdots,n
 \]</span></p>
 <p>which is the <em>Convex Optimization Formulation of SVM</em>.</p>
 <div class="remark">
-<p><span id="unlabeled-div-27" class="remark"><em>Remark</em>. </span></p>
+<p><span id="unlabeled-div-1" class="remark"><em>Remark</em>. </span></p>
 <ol style="list-style-type: decimal">
 <li><p>SVM problem is fessible only when data set is linearly separable.</p></li>
 <li><p>SVM problem is a convex optimization problem.</p></li>
@@ -263,7 +269,7 @@ s.t. &amp;~\lambda_i \geq 0 ~\forall i=1,\cdots,n
 \underset{\lambda \geq 0}{\operatorname{max}} \mathcal L(z,\lambda) = \underset{\lambda \geq 0}{\operatorname{max}} f(z) + \sum_{i=1}^n \lambda_i h_i(z) = \begin{cases}\infty&amp; \exists i, \text{ s.t. } ~h_i(z) &gt; 0\\f(z) &amp; \forall i, ~h_i(z) \leq 0\end{cases}
 \]</span></p>
 <div class="theorem">
-<p><span id="thm:KKT" class="theorem"><strong>Theorem 7.1  (Karush-Kuhn-Tucker) </strong></span></p>
+<p><span id="thm:KKT" class="theorem"><strong>Theorem 8.1  (Karush-Kuhn-Tucker) </strong></span></p>
 <ul>
 <li><p>Suppose <span class="math inline">\(\exists \tilde z\)</span>, s.t. <span class="math inline">\(h_i(\tilde z) \leq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots, n\)</span> (Slatter’s condition)</p></li>
 <li><p>Suppose <span class="math inline">\(f, h_i\)</span> are differentiable and convex functions.</p></li>
@@ -336,21 +342,21 @@ l(x)&amp;=
 \]</span></p>
 <p>which depends on <span class="math inline">\(x\)</span> and <span class="math inline">\(x_i\)</span> only through inner products. This is a crucial property that we will exploit to define a larger class of SVM classifiers.</p>
 <div class="remark">
-<p><span id="unlabeled-div-28" class="remark"><em>Remark</em>. </span></p>
+<p><span id="unlabeled-div-2" class="remark"><em>Remark</em>. </span></p>
 <ol style="list-style-type: decimal">
 <li><p>Hard Margin SVM problem has a solution (primal problem is feasible) if data is linearly separable .</p></li>
 <li><p>In KKT, primal problem is feasible iff dual problem is bounded (in which case both primal and dual have solution and it makes sense to talk about <span class="math inline">\(z^*\)</span> and <span class="math inline">\(\lambda^*\)</span>).</p></li>
 </ol>
 </div>
 <div class="definition">
-<p><span id="def:SV" class="definition"><strong>Definition 7.1  (Support Vectors) </strong></span>Under the assumptions, let <span class="math inline">\(\beta^*, \beta_0^*, \lambda^*\)</span> be the solution to <em>(P)</em>. We say <span class="math inline">\(x_i\)</span> is a support vector if <span class="math inline">\(y_i (&lt;x_i, \beta^*&gt; + \beta_0^*) = 1\)</span>.</p>
+<p><span id="def:SV" class="definition"><strong>Definition 8.1  (Support Vectors) </strong></span>Under the assumptions, let <span class="math inline">\(\beta^*, \beta_0^*, \lambda^*\)</span> be the solution to <em>(P)</em>. We say <span class="math inline">\(x_i\)</span> is a support vector if <span class="math inline">\(y_i (&lt;x_i, \beta^*&gt; + \beta_0^*) = 1\)</span>.</p>
 </div>
 <p>In particular, the minimum distance between <span class="math inline">\(\{x_1, \cdots, x_n\}\)</span> and the optimal hyperplane <span class="math inline">\(\mathcal H_{\beta^*, \beta_0^*}\)</span> is achieved at the support vectors.</p>
 <div class="theorem">
-<p><span id="thm:SPofSVM" class="theorem"><strong>Theorem 7.2  (Stability Property of SVMs) </strong></span>Let <span class="math inline">\(x_i\)</span> be a training data point and not a support vector. Suppose <span class="math inline">\(x_i\)</span> is changed for a point <span class="math inline">\(\tilde x_i\)</span> s.t. <span class="math inline">\(y_i (&lt;x_i, \beta^*&gt; + \beta_0^*) \geq 1\)</span>. Then the solution for the new data set is the same for the original data set.</p>
+<p><span id="thm:SPofSVM" class="theorem"><strong>Theorem 8.2  (Stability Property of SVMs) </strong></span>Let <span class="math inline">\(x_i\)</span> be a training data point and not a support vector. Suppose <span class="math inline">\(x_i\)</span> is changed for a point <span class="math inline">\(\tilde x_i\)</span> s.t. <span class="math inline">\(y_i (&lt;x_i, \beta^*&gt; + \beta_0^*) \geq 1\)</span>. Then the solution for the new data set is the same for the original data set.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-29" class="proof"><em>Proof</em>. </span><span class="math inline">\((\lambda^*, \beta_0^*, \beta^*)\)</span> from the original problem still satisfy KKT condition for new data set:</p>
+<p><span id="unlabeled-div-3" class="proof"><em>Proof</em>. </span><span class="math inline">\((\lambda^*, \beta_0^*, \beta^*)\)</span> from the original problem still satisfy KKT condition for new data set:</p>
 <ol style="list-style-type: decimal">
 <li><p>(Stationarity) As <span class="math inline">\(x_i\)</span> is not a support vector, we have <span class="math inline">\(\lambda^*_i = 0\)</span>. Thus, <span class="math inline">\(\beta^* = \sum_{j=1}^n \lambda_j^* y_j x_j = \sum_{j \neq i} \lambda_j^* y_j x_j + \lambda_i^* y_i x_i = \sum_{j \neq i} \lambda_j^* y_j x_j + \lambda_i^* y_i \tilde x_i\)</span>, which means that <span class="math inline">\(\beta^*\)</span> doesn’t change.</p></li>
 <li><p>(Primal Feasibility) <span class="math inline">\(y_j (&lt;\beta^*, x_j&gt; + \beta_0^*) \geq 1\)</span>, <span class="math inline">\(\forall j \neq i\)</span> and <span class="math inline">\(y_i (&lt;\beta^*, x_j&gt; + \beta_0^*) \geq 1\)</span> by the assumption above.</p></li>
@@ -360,15 +366,15 @@ l(x)&amp;=
 <p>As we didn’t change any <span class="math inline">\(y_i\)</span>, we still have <span class="math inline">\(\sum_{j=1}^n \lambda_i^* y_i = 0\)</span>. As a result, <span class="math inline">\((\beta_0^*, \beta^*)\)</span> is still a solution for the primal problem for the new data set.</p>
 </div>
 <div class="remark">
-<p><span id="unlabeled-div-30" class="remark"><em>Remark</em>. </span>The robustness associated to SVMs is markedly different to what happens with LDA or Logistic Regression, where outliers can change completely the decision boundaries. It depends only on support vectors.</p>
+<p><span id="unlabeled-div-4" class="remark"><em>Remark</em>. </span>The robustness associated to SVMs is markedly different to what happens with LDA or Logistic Regression, where outliers can change completely the decision boundaries. It depends only on support vectors.</p>
 </div>
 </div>
-<div id="soft-margin-svm" class="section level2 hasAnchor" number="7.2">
-<h2><span class="header-section-number">7.2</span> Soft Margin SVM<a href="support-vector-machine.html#soft-margin-svm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="soft-margin-svm-1" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Soft Margin SVM<a href="support-vector-machine-1.html#soft-margin-svm-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>What if the data set is not linearly separable?</p>
-<div id="case-1" class="section level3 hasAnchor" number="7.2.1">
-<h3><span class="header-section-number">7.2.1</span> Case 1<a href="support-vector-machine.html#case-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><img src="figures/smSVM1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="case-1-1" class="section level3 hasAnchor" number="8.2.1">
+<h3><span class="header-section-number">8.2.1</span> Case 1<a href="support-vector-machine-1.html#case-1-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="_main_files/figure-html/smSVM1-1.png" width="672" /></p>
 <p>The data set is not linearly separable mildly. This case will motivate the soft margin SVM (generalizes Hard Margin SVM).</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -382,9 +388,9 @@ y_i(&lt;x_i, \beta&gt;) \geq 1 - \xi_i\\
 \]</span></p>
 <p>where <span class="math inline">\(C\)</span> is a parameter of the problem: as <span class="math inline">\(C \nearrow \infty\)</span> we recover the hard margin problem (in case the data is linearly separable). However, for <span class="math inline">\(C \in (0, \infty)\)</span>, the problem is always feasible.</p>
 </div>
-<div id="case-2" class="section level3 hasAnchor" number="7.2.2">
-<h3><span class="header-section-number">7.2.2</span> Case 2<a href="support-vector-machine.html#case-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><img src="figures/smSVM2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="case-2-1" class="section level3 hasAnchor" number="8.2.2">
+<h3><span class="header-section-number">8.2.2</span> Case 2<a href="support-vector-machine-1.html#case-2-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="_main_files/figure-html/smSVM2-1.png" width="672" /></p>
 <p>The data set is not linearly separable but by a lot. After a transformation, we will be able to transform the data into a linearly separable data set.</p>
 <p>Let <span class="math inline">\(\begin{aligned}\psi: R^2 &amp;\to \mathcal H( = R^3)\\(x,y) &amp;\to (x,y,x^2+y^2)\end{aligned}\)</span>. Then the data set <span class="math inline">\((\psi(x_1), y_1), \cdots, (\psi(x_n), y_n)\)</span> is now linearly separable, and we will work on the embedded space:</p>
 <p><em>(P)</em>:</p>
@@ -432,7 +438,7 @@ l_{\psi}(x):&amp;=
 <p>Question: If we start with a “Kernel” <span class="math inline">\(K\)</span>, can we implicitly picking <span class="math inline">\(\mathcal H\)</span> and <span class="math inline">\(\psi\)</span>?</p>
 <p>Answer: Under fairly general condition, yes.</p>
 <div class="definition">
-<p><span id="def:kernel" class="definition"><strong>Definition 7.2  (Kernels) </strong></span>A kernel over a set <span class="math inline">\(\mathcal X\)</span> is a function <span class="math inline">\(K: \mathcal X \times \mathcal X \to R\)</span> with the following property:</p>
+<p><span id="def:kernel" class="definition"><strong>Definition 8.2  (Kernels) </strong></span>A kernel over a set <span class="math inline">\(\mathcal X\)</span> is a function <span class="math inline">\(K: \mathcal X \times \mathcal X \to R\)</span> with the following property:</p>
 <p><span class="math inline">\(\forall n \in N\)</span> and <span class="math inline">\(\forall\)</span> sequence of points <span class="math inline">\(x_1, \cdots, x_n \in \mathcal X\)</span>, the matrix</p>
 <p><span class="math display">\[
 A:=
@@ -446,14 +452,14 @@ K(x_n ,x_1) &amp; \cdots &amp; K(x_n, x_n)
 <p>is symmetric (<span class="math inline">\(A = A^T\)</span>) and positive semi-definite <span class="math inline">\(&lt;Av, v&gt;_{R^n} \geq 0\)</span>, <span class="math inline">\(\forall b \in R^n\)</span>.</p>
 </div>
 <div class="remark">
-<p><span id="unlabeled-div-31" class="remark"><em>Remark</em>. </span></p>
+<p><span id="unlabeled-div-5" class="remark"><em>Remark</em>. </span></p>
 <ol style="list-style-type: decimal">
 <li><p>Kernels must be symmetric functions: <span class="math inline">\(K(x,y) = K(y,x)\)</span>, <span class="math inline">\(\forall x,y \in \mathcal X\)</span>.</p></li>
 <li><p>But there are symmetric functions that are not kernels. In particular, we need to check the positive semi-definiteness condition.</p></li>
 </ol>
 </div>
 <div class="proposition">
-<p><span id="prp:unlabeled-div-32" class="proposition"><strong>Proposition 7.1  </strong></span></p>
+<p><span id="prp:unlabeled-div-6" class="proposition"><strong>Proposition 8.1  </strong></span></p>
 <ol style="list-style-type: decimal">
 <li><p>Inner products are kernels: <span class="math inline">\(K(x, y) = &lt;x,y&gt;_{R^d}\)</span>.</p></li>
 <li><p>If <span class="math inline">\(K_1: \mathcal X \times \mathcal X \to R\)</span> and <span class="math inline">\(K_2: \mathcal X \times \mathcal X \to R\)</span> are two kernels, then <span class="math inline">\(K(x,y):= a_1 K_1(x,y) + a_2 K_2(x,y)\)</span> is also a kernel, provided <span class="math inline">\(a_1, a_2\)</span> are two non-negative numbers.</p></li>
@@ -462,7 +468,7 @@ K(x_n ,x_1) &amp; \cdots &amp; K(x_n, x_n)
 </ol>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-33" class="proof"><em>Proof</em>. </span>(of 1)</p>
+<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>(of 1)</p>
 <p>Let <span class="math inline">\(n \in N\)</span> and <span class="math inline">\(x_1, \cdots, x_n \in R^d\)</span> be arbitrary. Consider the matrix <span class="math inline">\(A \in R^{n \times n}\)</span> with entries <span class="math inline">\(A_{ij} = &lt;x_i, x_j&gt;_{R^d}\)</span>, then</p>
 <ul>
 <li><p>It is symmetric: <span class="math inline">\(A_{ij} = &lt;x_i, x_j&gt;_{R^d} = &lt;x_j, x_i&gt;_{R^d} = A_{ji}\)</span></p></li>
@@ -482,7 +488,7 @@ Let <span class="math inline">\(v = (v_1, \cdots, v_n) \in R^n\)</span>. Then<br
 </div>
 <p>By the above proof, we can build the kernel <span class="math inline">\(K(x,y) = &lt;\psi(x), \psi(y)&gt;_{\mathcal H}\)</span> given <span class="math inline">\(\mathcal H\)</span> and <span class="math inline">\(\psi :R^d \to \mathcal H\)</span>.</p>
 <div class="corollary">
-<p><span id="cor:unlabeled-div-34" class="corollary"><strong>Corollary 7.1  </strong></span>The following are kernels in <span class="math inline">\(R^d\)</span>:</p>
+<p><span id="cor:unlabeled-div-8" class="corollary"><strong>Corollary 8.1  </strong></span>The following are kernels in <span class="math inline">\(R^d\)</span>:</p>
 <ol style="list-style-type: decimal">
 <li><p>Inner product: <span class="math inline">\(K(x,y) = &lt;x,y&gt;_{R^d}\)</span>.</p></li>
 <li><p>Polynomial: <span class="math inline">\(K(x,y) = a_0 + a_1 &lt;x,y&gt;_{R^d} + \cdots + a_l (&lt;x,y&gt;_{R^d})^l\)</span> as long as <span class="math inline">\(a_0, \cdots, a_l \geq 0\)</span>. (<span class="math inline">\((&lt;x,y&gt;_{R^d})^l\)</span> is a kernel)</p></li>
@@ -490,7 +496,7 @@ Let <span class="math inline">\(v = (v_1, \cdots, v_n) \in R^n\)</span>. Then<br
 </ol>
 </div>
 <div class="remark">
-<p><span id="unlabeled-div-35" class="remark"><em>Remark</em>. </span></p>
+<p><span id="unlabeled-div-9" class="remark"><em>Remark</em>. </span></p>
 <ol style="list-style-type: decimal">
 <li><p>For every kernel we will have a different classification rule. Try the simplest classifiers first (linear classifiers or soft margin SVMs).</p></li>
 <li><p>Any classifier that can be purely defined in terms of inner products can be kernelized.</p></li>
@@ -498,7 +504,7 @@ Let <span class="math inline">\(v = (v_1, \cdots, v_n) \in R^n\)</span>. Then<br
 </ol>
 </div>
 <div class="definition">
-<p><span id="def:HS" class="definition"><strong>Definition 7.3  (Hilbert Space) </strong></span>A Hilbert Space is a <em>vector space</em> (1) <span class="math inline">\(\mathcal H\)</span> together with an <em>inner product</em> (2) <span class="math inline">\(&lt;\cdot, \cdot&gt;_{\mathcal H}\)</span>, under which <span class="math inline">\(\mathcal H\)</span> is a <em>complete</em> (3) metric space.</p>
+<p><span id="def:HS" class="definition"><strong>Definition 8.3  (Hilbert Space) </strong></span>A Hilbert Space is a <em>vector space</em> (1) <span class="math inline">\(\mathcal H\)</span> together with an <em>inner product</em> (2) <span class="math inline">\(&lt;\cdot, \cdot&gt;_{\mathcal H}\)</span>, under which <span class="math inline">\(\mathcal H\)</span> is a <em>complete</em> (3) metric space.</p>
 <ul>
 <li><p>Vector Space: We can add together objects in <span class="math inline">\(\mathcal H\)</span> and multiply by scales (<span class="math inline">\(v, \tilde v \in \mathcal H\)</span>, then <span class="math inline">\(av + \tilde v \in \mathcal H\)</span>).</p></li>
 <li><p>Inner Product:</p>
@@ -516,7 +522,7 @@ Let <span class="math inline">\(v = (v_1, \cdots, v_n) \in R^n\)</span>. Then<br
 <li>Properties of Hilbert Space (Cauthy-Schwartz Ineq): <span class="math inline">\(|&lt;f,g&gt;_{\mathcal H}| \leq ||f||_{\mathcal H} ||g||_{\mathcal H}\)</span>, <span class="math inline">\(||f||_{\mathcal H}:= \sqrt{&lt;f, f&gt;_{\mathcal H}}\)</span>.</li>
 </ul>
 <div class="example">
-<p><span id="exm:unlabeled-div-36" class="example"><strong>Example 7.1  </strong></span></p>
+<p><span id="exm:unlabeled-div-10" class="example"><strong>Example 8.1  </strong></span></p>
 <ol style="list-style-type: decimal">
 <li><p>Basic example: <span class="math inline">\((R^m, &lt;\cdot, \cdot&gt;_{R^m})\)</span></p></li>
 <li><p>The space of “square integrable measurable function” defined on R: <span class="math inline">\(\mathcal L^2(R) := \{f \text{ measurbale s.t. } \int_R f^2dx &lt; \infty\}\)</span>.<br />
@@ -527,26 +533,26 @@ In any cases, with this technical detail in mind: <span class="math inline">\(&l
 </ol>
 </div>
 <div class="definition">
-<p><span id="def:cont" class="definition"><strong>Definition 7.4  (Continuous) </strong></span>Let <span class="math inline">\(\mathcal H\)</span> be Hilbert Space, then a linear function <span class="math inline">\(L: \mathcal H \to R\)</span> is <em>continuous</em> if there is a constant <span class="math inline">\(C\)</span> s.t <span class="math inline">\(|L(f)| \leq C ||f||_{\mathcal H}\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>.</p>
+<p><span id="def:cont" class="definition"><strong>Definition 8.4  (Continuous) </strong></span>Let <span class="math inline">\(\mathcal H\)</span> be Hilbert Space, then a linear function <span class="math inline">\(L: \mathcal H \to R\)</span> is <em>continuous</em> if there is a constant <span class="math inline">\(C\)</span> s.t <span class="math inline">\(|L(f)| \leq C ||f||_{\mathcal H}\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>.</p>
 </div>
 <div class="example">
-<p><span id="exm:unlabeled-div-37" class="example"><strong>Example 7.2  </strong></span>Fix <span class="math inline">\(g \in \mathcal H\)</span> and define <span class="math inline">\(L_g(f) := &lt;f,g&gt;_\mathcal H\)</span>. Then <span class="math inline">\(L_g\)</span> is linear and continuous:</p>
+<p><span id="exm:unlabeled-div-11" class="example"><strong>Example 8.2  </strong></span>Fix <span class="math inline">\(g \in \mathcal H\)</span> and define <span class="math inline">\(L_g(f) := &lt;f,g&gt;_\mathcal H\)</span>. Then <span class="math inline">\(L_g\)</span> is linear and continuous:</p>
 <p><span class="math inline">\(L_g(f + a\tilde f) = &lt;f+a\tilde f, g&gt;_\mathcal H = &lt;f,g&gt;_\mathcal H + a&lt;\tilde f, g&gt;_\mathcal H = L_g(f) + aL_g(\tilde f)\)</span>.
 And by Cauthy-Schwartz Ineq, we have <span class="math inline">\(|L_g(f)| = |&lt;f,g&gt;_\mathcal H| \leq ||g||_\mathcal H \cdot ||f||_\mathcal H\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>.</p>
 </div>
 <div class="theorem">
-<p><span id="thm:RRT" class="theorem"><strong>Theorem 7.3  (Riesz Representation Theorem) </strong></span>If <span class="math inline">\(\mathcal H\)</span> is a Hilbert Space and <span class="math inline">\(L:\mathcal \to R\)</span> is linear and continuous, then <span class="math inline">\(\exists\)</span> a unique <span class="math inline">\(g \in \mathcal H\)</span> s.t <span class="math inline">\(L(f) = L_g(f)\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>.</p>
+<p><span id="thm:RRT" class="theorem"><strong>Theorem 8.3  (Riesz Representation Theorem) </strong></span>If <span class="math inline">\(\mathcal H\)</span> is a Hilbert Space and <span class="math inline">\(L:\mathcal \to R\)</span> is linear and continuous, then <span class="math inline">\(\exists\)</span> a unique <span class="math inline">\(g \in \mathcal H\)</span> s.t <span class="math inline">\(L(f) = L_g(f)\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>.</p>
 </div>
 <div class="definition">
-<p><span id="def:RKHS" class="definition"><strong>Definition 7.5  (Reproducing Kernel Hilbert Space) </strong></span>Let <span class="math inline">\(\mathcal X\)</span> be a set, <span class="math inline">\(\mathcal H\)</span> be a Hilbert Space of real valued functions <span class="math inline">\(f: \mathcal X \to R\)</span> (i.e. elements in <span class="math inline">\(\mathcal H\)</span> are functions from <span class="math inline">\(\mathcal X\)</span> into <span class="math inline">\(R\)</span>). <span class="math inline">\(\mathcal H\)</span> is said to be a RKHS if <span class="math inline">\(\forall x \in \mathcal X\)</span>, the “evaluation map” <span class="math inline">\(L_x: f \in \mathcal H \to f(x) \in R\)</span> is a linear and continuous map. In particular, <span class="math inline">\(|f(x) - \tilde f(x)| \leq C_x || f - \tilde f ||_\mathcal H\)</span>, <span class="math inline">\(\forall f, \tilde f\)</span>.</p>
+<p><span id="def:RKHS" class="definition"><strong>Definition 8.5  (Reproducing Kernel Hilbert Space) </strong></span>Let <span class="math inline">\(\mathcal X\)</span> be a set, <span class="math inline">\(\mathcal H\)</span> be a Hilbert Space of real valued functions <span class="math inline">\(f: \mathcal X \to R\)</span> (i.e. elements in <span class="math inline">\(\mathcal H\)</span> are functions from <span class="math inline">\(\mathcal X\)</span> into <span class="math inline">\(R\)</span>). <span class="math inline">\(\mathcal H\)</span> is said to be a RKHS if <span class="math inline">\(\forall x \in \mathcal X\)</span>, the “evaluation map” <span class="math inline">\(L_x: f \in \mathcal H \to f(x) \in R\)</span> is a linear and continuous map. In particular, <span class="math inline">\(|f(x) - \tilde f(x)| \leq C_x || f - \tilde f ||_\mathcal H\)</span>, <span class="math inline">\(\forall f, \tilde f\)</span>.</p>
 </div>
 <p><strong>Why “Reproducing Kernel”?</strong>:</p>
-<p><span class="math inline">\(L_x\)</span> is clearly linear, and if in addition it is continuous, then by <strong>Theorem <a href="support-vector-machine.html#thm:RRT">7.3</a></strong>, <span class="math inline">\(\exists\)</span> a unique <span class="math inline">\(K_x \in \mathcal H\)</span> s.t <span class="math inline">\(f(x) = L_x(f) = &lt;f, K_x&gt;_\mathcal H\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>. That is, to evaluate <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span>, it is enough to take the inner product of <span class="math inline">\(f\)</span> with <span class="math inline">\(K_x\)</span>.</p>
+<p><span class="math inline">\(L_x\)</span> is clearly linear, and if in addition it is continuous, then by <strong>Theorem <a href="support-vector-machine-1.html#thm:RRT">8.3</a></strong>, <span class="math inline">\(\exists\)</span> a unique <span class="math inline">\(K_x \in \mathcal H\)</span> s.t <span class="math inline">\(f(x) = L_x(f) = &lt;f, K_x&gt;_\mathcal H\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>. That is, to evaluate <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span>, it is enough to take the inner product of <span class="math inline">\(f\)</span> with <span class="math inline">\(K_x\)</span>.</p>
 <p>Now, let <span class="math inline">\(\tilde x \in \mathcal X\)</span>, then <span class="math inline">\(K_{\tilde x} (x) = &lt;K_{\tilde x}, K_x&gt;_\mathcal H\)</span>. Let’s call them <span class="math inline">\(K(\tilde x, x)\)</span>. Then the function <span class="math inline">\(K\)</span> defined above is a kernel: take <span class="math inline">\(\psi: \begin{matrix} \mathcal X \to \mathcal H\\x \to K_x\end{matrix}\)</span>, then <span class="math inline">\(K(\tilde x, x) = &lt;K_{\tilde x}, K_x&gt;_\mathcal H = &lt;\psi(\tilde x), \psi(x)&gt;_\mathcal H\)</span>.</p>
 <p>So far, we have gone from RKHS to Kernel (<span class="math inline">\(K\)</span>). And the Kernel <span class="math inline">\(K\)</span> has the reproducing property: <span class="math inline">\(&lt;f, K(\cdot, x)&gt;_\mathcal H \ f(x)\)</span>, <span class="math inline">\(\forall f\)</span>.</p>
 <p>How about we go from Kernel (<span class="math inline">\(K\)</span>) to RKHS?</p>
 <div class="theorem">
-<p><span id="thm:MAT" class="theorem"><strong>Theorem 7.4  (Moore-Aronszjan Theorem) </strong></span>Let <span class="math inline">\(K\)</span> be a kernel defined on <span class="math inline">\(\mathcal X\)</span>. Define</p>
+<p><span id="thm:MAT" class="theorem"><strong>Theorem 8.4  (Moore-Aronszjan Theorem) </strong></span>Let <span class="math inline">\(K\)</span> be a kernel defined on <span class="math inline">\(\mathcal X\)</span>. Define</p>
 <p><span class="math display">\[
 \begin{aligned}
 \mathcal H = \Big \{\sum_{i=1}^\infty a_i K(\cdot, x_i): &amp;\text{for some colletcion }a_i \in R, x_i \in \mathcal X \\
@@ -561,12 +567,12 @@ And by Cauthy-Schwartz Ineq, we have <span class="math inline">\(|L_g(f)| = |&lt
 <p>It can be shown that <span class="math inline">\(\mathcal H\)</span> with this inner product is a Hilbert Space and <span class="math inline">\(K\)</span> is a reproducing kernel.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-38" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(f \in \mathcal H\)</span>, <span class="math inline">\(f = \sum_{i=1}^\infty a_i K(\cdot, x_i)\)</span>. Then, <span class="math inline">\(&lt;f, K(\cdot, x)&gt;_\mathcal H = &lt;\sum_{i=1}^\infty a_i K(\cdot, x_i), K(\cdot, x)&gt; = \sum_{i=1}^\infty a_i K(x, x_i) = f(x)\)</span>.</p>
+<p><span id="unlabeled-div-12" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(f \in \mathcal H\)</span>, <span class="math inline">\(f = \sum_{i=1}^\infty a_i K(\cdot, x_i)\)</span>. Then, <span class="math inline">\(&lt;f, K(\cdot, x)&gt;_\mathcal H = &lt;\sum_{i=1}^\infty a_i K(\cdot, x_i), K(\cdot, x)&gt; = \sum_{i=1}^\infty a_i K(x, x_i) = f(x)\)</span>.</p>
 </div>
 </div>
-<div id="case-3" class="section level3 hasAnchor" number="7.2.3">
-<h3><span class="header-section-number">7.2.3</span> Case 3<a href="support-vector-machine.html#case-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><img src="figures/smSVM3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="case-3-1" class="section level3 hasAnchor" number="8.2.3">
+<h3><span class="header-section-number">8.2.3</span> Case 3<a href="support-vector-machine-1.html#case-3-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="_main_files/figure-html/smSVM3-1.png" width="672" /></p>
 <p>Use the kernelized version of Soft Margin SVM.</p>
 
 </div>
@@ -577,8 +583,8 @@ And by Cauthy-Schwartz Ineq, we have <span class="math inline">\(|L_g(f)| = |&lt
           </div>
         </div>
       </div>
-<a href="linear-classifiers.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="regularized-empirical-risk-minimization.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="support-vector-machine.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -609,7 +615,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/USERNAME/REPO/edit/BRANCH/06-SVM.Rmd",
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/07-RERM.Rmd",
 "text": "Edit"
 },
 "history": {

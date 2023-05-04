@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>STAT 615 Note Book</title>
+  <title>Chapter 8 Regularized Empirical Risk Minimization | STAT 615 Note Book</title>
   <meta name="description" content="This is a notebook for STAT 615." />
   <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="STAT 615 Note Book" />
+  <meta property="og:title" content="Chapter 8 Regularized Empirical Risk Minimization | STAT 615 Note Book" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This is a notebook for STAT 615." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="STAT 615 Note Book" />
+  <meta name="twitter:title" content="Chapter 8 Regularized Empirical Risk Minimization | STAT 615 Note Book" />
   
   <meta name="twitter:description" content="This is a notebook for STAT 615." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="support-vector-machine.html"/>
 
-<link rel="next" href="classification-problem-bayes-classifier.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -167,32 +167,74 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">STAT 615 Note Book</h1>
-<p class="author"><em>Peter Wang</em></p>
-<p class="date"><em>2023-05-04</em></p>
+<div id="regularized-empirical-risk-minimization" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Regularized Empirical Risk Minimization<a href="regularized-empirical-risk-minimization.html#regularized-empirical-risk-minimization" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="ill-posed-problems" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> ill Posed Problems<a href="regularized-empirical-risk-minimization.html#ill-posed-problems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let’s start with a simple example: in linear regression, we try to find <span class="math inline">\(\beta \in \mathcal R^d\)</span> s.t <span class="math inline">\(\sum_{i=1}^n (y_i - &lt;\beta, x_i&gt;_{\mathcal R^d})^2\)</span> is minimized. The solution <span class="math inline">\(\beta^* = (X^T X)^{-1} X^T Y\)</span> only make sense when <span class="math inline">\((X^TX)^{-1}\)</span> is invertible, or the optimization problem has a unique solution. The ill posed problems are the situation where there is no unique solution or <span class="math inline">\((X^TX)^{-1}\)</span> is not invertible (<span class="math inline">\(d &gt;&gt; n\)</span>, not full rank, …).</p>
+<p>Ridge regression aims at tackling this problem by adding a “regularizer” to the optimization problem: <span class="math inline">\(\underset{\beta}{\operatorname{min}} \lambda || \beta ||^2 + \sum_{i=1}^n (y_i - &lt;x_i, \beta&gt;)^2\)</span> with <span class="math inline">\(\beta^* = (X^T X + \lambda I)^{-1} X^T Y\)</span>, where higher <span class="math inline">\(\lambda\)</span> implies more “regular” and lower <span class="math inline">\(\lambda\)</span> implies lesser “regular”. Naturally, one needs to choose <span class="math inline">\(\lambda \in (0, \infty)\)</span> to balance between variance and bias.</p>
+<p>In more generality, suppose we wanted to fit a function <span class="math inline">\(f\)</span> that explains some observed data (<span class="math inline">\(f: [0,1] \to \mathcal R\)</span>):</p>
+<p><img src="figures/ridge-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We are trying to solve <span class="math inline">\(\underset{f \in Z}{\operatorname{min}} \sum_{i=1}^n (f(x_i) - y_i)^2\)</span>. How many functions are close to the observations is the ill posed problem.</p>
+<p>The idea in empirical risk minimization is to enforce “regularity” on the functions by adding a regularizer to the empirical risk object function: <span class="math inline">\(\underset{f \in Z}{\operatorname{min}} \sum_{i=1}^n (f(x_i) - y_i)^2 + \lambda R(f)\)</span>, where <span class="math inline">\(Z\)</span> is some family of functions for which the objective function makes sense and <span class="math inline">\(R\)</span> is some regularizer.</p>
+<div class="remark">
+<p><span id="unlabeled-div-39" class="remark"><em>Remark</em>. </span>It is important to make sure that the objective function makes sense for elements <span class="math inline">\(f \in Z\)</span>. For example, <span class="math inline">\(Z\)</span> can not be <span class="math inline">\(\mathcal L^2(\mathcal R)\)</span>, since for an arbitrary <span class="math inline">\(f \in \mathcal L^2(\mathcal R)\)</span>, we can not make sense of <span class="math inline">\(f(x_i)\)</span>.</p>
 </div>
-<div id="about" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Chapter 1</span> About<a href="index.html#about" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="usage" class="section level2 hasAnchor" number="1.1">
-<h2><span class="header-section-number">1.1</span> Usage<a href="index.html#usage" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Each <strong>bookdown</strong> chapter is an .Rmd file, and each .Rmd file can contain one (and only one) chapter. A chapter <em>must</em> start with a first-level heading: <code># A good chapter</code>, and can contain one (and only one) first-level heading.</p>
-<p>Use second-level and higher headings within chapters like: <code>## A short section</code> or <code>### An even shorter section</code>.</p>
-<p>The <code>index.Rmd</code> file is required, and is also your first book chapter. It will be the homepage when you render the book.</p>
+<p>In any case, after choosing <span class="math inline">\(Z\)</span> and <span class="math inline">\(R\)</span>, we consider the solution to the regularized empirical risk minimization problem as a regression function for the data. Notice that this approach is a non-parametric approach (<span class="math inline">\(f \in Z\)</span>).</p>
+<p>Q: What types of regularizers we could work with?</p>
+<p>A: Later we will consider <span class="math inline">\(Z = \mathcal H\)</span> (RKHS) and <span class="math inline">\(R(f) = ||f||^2_\mathcal H\)</span>, but for now let us consider an unrelated setting:</p>
+<div class="example">
+<p><span id="exm:J" class="example"><strong>Example 8.1  </strong></span>Let <span class="math inline">\(\mathcal X = [0,1]\)</span> and the data <span class="math inline">\(0&lt;x_1&lt;\cdots&lt;x_n&lt;1\)</span> with corresponding values <span class="math inline">\(y_1,\cdots,y_n \in \mathcal R\)</span>. Let <span class="math inline">\(Z\)</span> be the set of functions <span class="math inline">\(f:[0,1] \to \mathcal R\)</span> s.t <span class="math inline">\(f(x) = \int_0^x f&#39;(t)dt\)</span>, <span class="math inline">\(\forall x \in (0,1)\)</span> and s.t <span class="math inline">\(\int_0^1 (f&#39;(x))^2 dx &lt; \infty\)</span>. Define <span class="math inline">\(C_1([0,1])\)</span> as <em>Absolutely Continuous Functions defined on [0,1]</em>. Then, <span class="math inline">\(C_1([0,1]) \subset Z\)</span> i.e. <span class="math inline">\(f \in C_1([0,1]) \text{ and } f(0) = 0\Rightarrow f\in Z\)</span>.</p>
+<p>Now let <span class="math inline">\(J(f):= \lambda \int_0^1 (f&#39;(x))^2 dx (\text{ Regularization Term}) + \sum_{i=1}^n (f(x_i) - y_i)^2 (\text{Fidality Term})\)</span>. The goal is to:</p>
+<ul>
+<li>Minimize <span class="math inline">\(J\)</span>: <span class="math inline">\(\underset{f \in Z}{\operatorname{min}} J(f)\)</span>.</li>
+<li>Obtain a “first order” condition for optimality.</li>
+</ul>
 </div>
-<div id="render-book" class="section level2 hasAnchor" number="1.2">
-<h2><span class="header-section-number">1.2</span> Render book<a href="index.html#render-book" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>You can render the HTML version of this example book without changing anything:</p>
-<ol style="list-style-type: decimal">
-<li><p>Find the <strong>Build</strong> pane in the RStudio IDE, and</p></li>
-<li><p>Click on <strong>Build Book</strong>, then select your output format, or select “All formats” if you’d like to use multiple formats from the same book source files.</p></li>
-</ol>
-<p>Or build the book from the R console:</p>
-<p>To render this example to PDF as a <code>bookdown::pdf_book</code>, you’ll need to install XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <a href="https://yihui.org/tinytex/" class="uri">https://yihui.org/tinytex/</a>.</p>
-</div>
-<div id="preview-book" class="section level2 hasAnchor" number="1.3">
-<h2><span class="header-section-number">1.3</span> Preview book<a href="index.html#preview-book" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>As you work, you may start a local server to live preview this HTML book. This preview will update as you edit the book when you save individual .Rmd files. You can start the server in a work session by using the RStudio add-in “Preview book”, or from the R console:</p>
+<hr />
+<p>In search of inspiration, let’s go back to the Euclidean case: <span class="math inline">\(\underset{x \in \mathcal R^m}{\operatorname{min}} F(x)\)</span>.</p>
+<p>First order condition: <span class="math inline">\(\nabla F(x^*) = \vec 0\)</span>, that is <span class="math inline">\(\frac{\partial F}{\partial x_i}(x^*) = 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,m\)</span>.</p>
+<p>Moreover, if <span class="math inline">\(x^*\)</span> minimizes <span class="math inline">\(F\)</span> over the whole <span class="math inline">\(\mathcal R^m\)</span>, it certainly minimizes <span class="math inline">\(F\)</span> over the line <span class="math inline">\(\{x^* + tv: t\in \mathcal R\}\)</span>. Thus, fix <span class="math inline">\(v\)</span> and define the function <span class="math inline">\(\phi_v(t):= F(x^* + tv)\)</span>. Then this function has a minimum at <span class="math inline">\(t=0\)</span>, which means that</p>
+<p><span class="math display">\[
+0 = \phi&#39;_v(0) = \frac{d}{dt} F(x^* + tv) |_{t=0} = &lt;\nabla F(x^*), v&gt; = \partial_v F(x^*)
+\]</span></p>
+<p>The optimality condition in <span class="math inline">\(\mathcal R^m\)</span> is equivalent to the optimality condition fro a collection of functions in <span class="math inline">\(\mathcal R\)</span>.</p>
+<hr />
+<p>So, going back to <strong>Example <a href="regularized-empirical-risk-minimization.html#exm:J">8.1</a></strong>, suppose <span class="math inline">\(f^*\)</span> solves the problem (it is a minimizer). Pick an arbitrary <span class="math inline">\(g \in Z\)</span> and consider the function: <span class="math inline">\(\phi_g(t):= J(f^* + tg)\)</span>, <span class="math inline">\(t \in \mathcal R\)</span>. Then <span class="math inline">\(\phi_g\)</span> has a minimum at <span class="math inline">\(t=0\)</span> (<span class="math inline">\(\phi&#39;_g(0) = 0\)</span>). Thus, we have:</p>
+<p><span class="math display">\[
+\begin{aligned}
+J(f^* + tg) &amp;= \lambda \int_0^1 (f^{*\prime} + tg&#39;)^2 dx + \sum_{i=1}^n (f^*(x_i) + tg(x_i) - y_i)^2\\
+&amp;= \lambda \int_0^1 (f^{*\prime})^2 dx + 2 \lambda t \int_0^1 f^{*\prime} g&#39; dx + \lambda t^2 \int_0^1 (g&#39;)^2 dx + \sum_{i=1}^n (f^*(x_i) + tg(x_i) - y_i)^2
+\end{aligned}
+\]</span></p>
+<p>Then, <span class="math inline">\(0 = \phi&#39;_g(0) = 2 \lambda \int_0^1 f^{*\prime} g&#39; dx + 2\sum_{i=1}^n (f^*(x_i) - y_i)g(x_i)\)</span>, which means that</p>
+<p><span class="math display">\[
+\lambda \int_0^1 f^{*\prime} g&#39; dx = -\sum_{i=1}^n (f^*(x_i) - y_i)g(x_i)
+\]</span></p>
+<p>This has to be true <span class="math inline">\(\forall g \in Z\)</span>. These equations are called <em>Euler Lagrange Equations</em> or <em>First Order Optimality Conditions</em>.</p>
+<p>Above goes from <span class="math inline">\(f^*\)</span> to First Order Optimality Conditions. Now consider the opposite situation:</p>
+<p>Take <span class="math inline">\(g=g_1\)</span> where <span class="math inline">\(g_1(x):= \operatorname{min} \{x,x_1\}\)</span>. It follows that <span class="math inline">\(\lambda \int_0^{x_1} f^{*\prime} dx = -\sum_{i=1}^n (f^*(x_i) - y_i)(x_i \wedge x_1)\)</span>. As <span class="math inline">\(\int_0^{x_1} f^{*\prime} dx = f^*(x_1) - f^*(0) = f^*(x_1)\)</span>, we have:</p>
+<p><span class="math display">\[
+\lambda f^*(x_1) = -\sum_{i=1}^n (f^*(x_i) - y_i)(x_i \wedge x_1)
+\]</span></p>
+<p>Doing the same for <span class="math inline">\(j = 2, \cdots, n\)</span>, we obtain the system of equations:</p>
+<p><span class="math display">\[
+\lambda f^*(x_j) = -\sum_{i=1}^n (f^*(x_i) - y_i)(x_i \wedge x_j), ~j = 1, \cdots, n
+\]</span></p>
+<p>We can solve this system to get the values of <span class="math inline">\(f^*\)</span> at the points <span class="math inline">\(x_1, \cdots, x_n\)</span>. For the rest of <span class="math inline">\(f^*\)</span>, use linear interpolation for each interval and use a constant after <span class="math inline">\(x_n\)</span>:</p>
+<ul>
+<li><p>To see <span class="math inline">\(f^*\)</span> is linear in <span class="math inline">\([0,x_1]\)</span>, it is enough to show <span class="math inline">\((f^*)&#39;&#39; = 0\)</span> in the interval:<br />
+Take <span class="math inline">\(g: [0,1] \to \mathcal R\)</span> s.t <span class="math inline">\(g(x)=0\)</span>, <span class="math inline">\(\forall x \geq x_1\)</span> and <span class="math inline">\(g(0) = 0\)</span>, <span class="math inline">\(g \in Z\)</span>. Then, we must have <span class="math inline">\(\int_0^{x_1} (f^*)&#39; g&#39; dx = 0\)</span>.<br />
+As <span class="math inline">\(\int_0^{x_1}(f^*)&#39; g&#39; dx = -\int_0^{x_1}(f^*)&#39;&#39; g dx + (f^*)&#39; g |_0^{x_1} = -\int_0^{x_1}(f^*)&#39;&#39; g dx\)</span>, <span class="math inline">\(\forall g\)</span>. Thus, we have <span class="math inline">\((f^*)&#39;&#39; \equiv 0\)</span>.</p></li>
+<li><p>To see <span class="math inline">\(f^*\)</span> is constant in <span class="math inline">\([x_n, 1]\)</span>:<br />
+<span class="math display">\[
+\begin{aligned}
+J(f)&amp;= \lambda \int_0^1 (f&#39;(x))^2 dx + \sum_{i=1}^n (f(x_i) - y_i)^2\\
+&amp;= \lambda \int_0^{x_n} (f&#39;(x))^2 dx + \lambda \int_{x_n}^1 (f&#39;(x))^2 dx + \sum_{i=1}^n (f(x_i) - y_i)^2
+\end{aligned}
+\]</span></p></li>
+</ul>
+<p>As <span class="math inline">\(J(f)\)</span> has a minimum when <span class="math inline">\(f&#39;(x) = 0\)</span> at <span class="math inline">\([x_n, 1]\)</span> and <span class="math inline">\(f^*\)</span> minimizes <span class="math inline">\(J(f)\)</span>, we have <span class="math inline">\(f^*\)</span> is constant in <span class="math inline">\([x_n, 1]\)</span>.</p>
 
 </div>
 </div>
@@ -201,8 +243,8 @@
           </div>
         </div>
       </div>
+<a href="support-vector-machine.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="classification-problem-bayes-classifier.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -233,7 +275,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/USERNAME/REPO/edit/BRANCH/index.Rmd",
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/07-RERM.Rmd",
 "text": "Edit"
 },
 "history": {
