@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 8 Regularized Empirical Risk Minimization | STAT 615 Note Book</title>
+  <title>Chapter 9 Regularized Empirical Risk Minimization | STAT 615 Note Book</title>
   <meta name="description" content="This is a notebook for STAT 615." />
   <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 8 Regularized Empirical Risk Minimization | STAT 615 Note Book" />
+  <meta property="og:title" content="Chapter 9 Regularized Empirical Risk Minimization | STAT 615 Note Book" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This is a notebook for STAT 615." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 8 Regularized Empirical Risk Minimization | STAT 615 Note Book" />
+  <meta name="twitter:title" content="Chapter 9 Regularized Empirical Risk Minimization | STAT 615 Note Book" />
   
   <meta name="twitter:description" content="This is a notebook for STAT 615." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="support-vector-machine.html"/>
-<link rel="next" href="uncertainty-quantification.html"/>
+<link rel="prev" href="regularized-empirical-risk-minimization.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -152,9 +152,14 @@
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="regularized-empirical-risk-minimization.html"><a href="regularized-empirical-risk-minimization.html#regularity"><i class="fa fa-check"></i><b>8.3</b> Regularity</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="uncertainty-quantification.html"><a href="uncertainty-quantification.html"><i class="fa fa-check"></i><b>9</b> Uncertainty Quantification</a>
+<li class="chapter" data-level="9" data-path="regularized-empirical-risk-minimization-1.html"><a href="regularized-empirical-risk-minimization-1.html"><i class="fa fa-check"></i><b>9</b> Regularized Empirical Risk Minimization</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="uncertainty-quantification.html"><a href="uncertainty-quantification.html#bayes-perspective"><i class="fa fa-check"></i><b>9.1</b> Bayes Perspective</a></li>
+<li class="chapter" data-level="9.1" data-path="regularized-empirical-risk-minimization-1.html"><a href="regularized-empirical-risk-minimization-1.html#ill-posed-problems-1"><i class="fa fa-check"></i><b>9.1</b> ill Posed Problems</a></li>
+<li class="chapter" data-level="9.2" data-path="regularized-empirical-risk-minimization-1.html"><a href="regularized-empirical-risk-minimization-1.html#erm-with-kernels-1"><i class="fa fa-check"></i><b>9.2</b> ERM with Kernels</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="regularized-empirical-risk-minimization-1.html"><a href="regularized-empirical-risk-minimization-1.html#comparison-1"><i class="fa fa-check"></i><b>9.2.1</b> Comparison</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="regularized-empirical-risk-minimization-1.html"><a href="regularized-empirical-risk-minimization-1.html#regularity-1"><i class="fa fa-check"></i><b>9.3</b> Regularity</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -176,24 +181,24 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="regularized-empirical-risk-minimization" class="section level1 hasAnchor" number="8">
-<h1><span class="header-section-number">Chapter 8</span> Regularized Empirical Risk Minimization<a href="regularized-empirical-risk-minimization.html#regularized-empirical-risk-minimization" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="ill-posed-problems" class="section level2 hasAnchor" number="8.1">
-<h2><span class="header-section-number">8.1</span> ill Posed Problems<a href="regularized-empirical-risk-minimization.html#ill-posed-problems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="regularized-empirical-risk-minimization-1" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Chapter 9</span> Regularized Empirical Risk Minimization<a href="regularized-empirical-risk-minimization-1.html#regularized-empirical-risk-minimization-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="ill-posed-problems-1" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> ill Posed Problems<a href="regularized-empirical-risk-minimization-1.html#ill-posed-problems-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Let’s start with a simple example: in linear regression, we try to find <span class="math inline">\(\beta \in \mathcal R^d\)</span> s.t <span class="math inline">\(\sum_{i=1}^n (y_i - &lt;\beta, x_i&gt;_{\mathcal R^d})^2\)</span> is minimized. The solution <span class="math inline">\(\beta^* = (X^T X)^{-1} X^T Y\)</span> only make sense when <span class="math inline">\((X^TX)^{-1}\)</span> is invertible, or the optimization problem has a unique solution. The ill posed problems are the situation where there is no unique solution or <span class="math inline">\((X^TX)^{-1}\)</span> is not invertible (<span class="math inline">\(d &gt;&gt; n\)</span>, not full rank, …).</p>
 <p>Ridge regression aims at tackling this problem by adding a “regularizer” to the optimization problem: <span class="math inline">\(\underset{\beta}{\operatorname{min}} \lambda || \beta ||^2 + \sum_{i=1}^n (y_i - &lt;x_i, \beta&gt;)^2\)</span> with <span class="math inline">\(\beta^* = (X^T X + \lambda I)^{-1} X^T Y\)</span>, where higher <span class="math inline">\(\lambda\)</span> implies more “regular” and lower <span class="math inline">\(\lambda\)</span> implies lesser “regular”. Naturally, one needs to choose <span class="math inline">\(\lambda \in (0, \infty)\)</span> to balance between variance and bias.</p>
 <p>In more generality, suppose we wanted to fit a function <span class="math inline">\(f\)</span> that explains some observed data (<span class="math inline">\(f: [0,1] \to \mathcal R\)</span>):</p>
-<p><img src="figures/ridge-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="_main_files/figure-html/ridge-1.png" width="672" /></p>
 <p>We are trying to solve <span class="math inline">\(\underset{f \in Z}{\operatorname{min}} \sum_{i=1}^n (f(x_i) - y_i)^2\)</span>. How many functions are close to the observations is the ill posed problem.</p>
 <p>The idea in empirical risk minimization is to enforce “regularity” on the functions by adding a regularizer to the empirical risk object function: <span class="math inline">\(\underset{f \in Z}{\operatorname{min}} \sum_{i=1}^n (f(x_i) - y_i)^2 + \lambda R(f)\)</span>, where <span class="math inline">\(Z\)</span> is some family of functions for which the objective function makes sense and <span class="math inline">\(R\)</span> is some regularizer.</p>
 <div class="remark">
-<p><span id="unlabeled-div-39" class="remark"><em>Remark</em>. </span>It is important to make sure that the objective function makes sense for elements <span class="math inline">\(f \in Z\)</span>. For example, <span class="math inline">\(Z\)</span> can not be <span class="math inline">\(\mathcal L^2(\mathcal R)\)</span>, since for an arbitrary <span class="math inline">\(f \in \mathcal L^2(\mathcal R)\)</span>, we can not make sense of <span class="math inline">\(f(x_i)\)</span>.</p>
+<p><span id="unlabeled-div-1" class="remark"><em>Remark</em>. </span>It is important to make sure that the objective function makes sense for elements <span class="math inline">\(f \in Z\)</span>. For example, <span class="math inline">\(Z\)</span> can not be <span class="math inline">\(\mathcal L^2(\mathcal R)\)</span>, since for an arbitrary <span class="math inline">\(f \in \mathcal L^2(\mathcal R)\)</span>, we can not make sense of <span class="math inline">\(f(x_i)\)</span>.</p>
 </div>
 <p>In any case, after choosing <span class="math inline">\(Z\)</span> and <span class="math inline">\(R\)</span>, we consider the solution to the regularized empirical risk minimization problem as a regression function for the data. Notice that this approach is a non-parametric approach (<span class="math inline">\(f \in Z\)</span>).</p>
 <p>Q: What types of regularizers we could work with?</p>
 <p>A: Later we will consider <span class="math inline">\(Z = \mathcal H\)</span> (RKHS) and <span class="math inline">\(R(f) = ||f||^2_\mathcal H\)</span>, but for now let us consider an unrelated setting:</p>
 <div class="example">
-<p><span id="exm:J" class="example"><strong>Example 8.1  </strong></span>Let <span class="math inline">\(\mathcal X = [0,1]\)</span> and the data <span class="math inline">\(0&lt;x_1&lt;\cdots&lt;x_n&lt;1\)</span> with corresponding values <span class="math inline">\(y_1,\cdots,y_n \in \mathcal R\)</span>. Let <span class="math inline">\(Z\)</span> be the set of functions <span class="math inline">\(f:[0,1] \to \mathcal R\)</span> s.t <span class="math inline">\(f(x) = \int_0^x f&#39;(t)dt\)</span>, <span class="math inline">\(\forall x \in (0,1)\)</span> and s.t <span class="math inline">\(\int_0^1 (f&#39;(x))^2 dx &lt; \infty\)</span>. Define <span class="math inline">\(C_1([0,1])\)</span> as <em>Absolutely Continuous Functions defined on [0,1]</em>. Then, <span class="math inline">\(C_1([0,1]) \subset Z\)</span> i.e. <span class="math inline">\(f \in C_1([0,1]) \text{ and } f(0) = 0\Rightarrow f\in Z\)</span>.</p>
+<p><span id="exm:J" class="example"><strong>Example 9.1  </strong></span>Let <span class="math inline">\(\mathcal X = [0,1]\)</span> and the data <span class="math inline">\(0&lt;x_1&lt;\cdots&lt;x_n&lt;1\)</span> with corresponding values <span class="math inline">\(y_1,\cdots,y_n \in \mathcal R\)</span>. Let <span class="math inline">\(Z\)</span> be the set of functions <span class="math inline">\(f:[0,1] \to \mathcal R\)</span> s.t <span class="math inline">\(f(x) = \int_0^x f&#39;(t)dt\)</span>, <span class="math inline">\(\forall x \in (0,1)\)</span> and s.t <span class="math inline">\(\int_0^1 (f&#39;(x))^2 dx &lt; \infty\)</span>. Define <span class="math inline">\(C_1([0,1])\)</span> as <em>Absolutely Continuous Functions defined on [0,1]</em>. Then, <span class="math inline">\(C_1([0,1]) \subset Z\)</span> i.e. <span class="math inline">\(f \in C_1([0,1]) \text{ and } f(0) = 0\Rightarrow f\in Z\)</span>.</p>
 <p>Now let <span class="math inline">\(J(f):= \lambda \int_0^1 (f&#39;(x))^2 dx (\text{ Regularization Term}) + \sum_{i=1}^n (f(x_i) - y_i)^2 (\text{Fidality Term})\)</span>. The goal is to:</p>
 <ul>
 <li>Minimize <span class="math inline">\(J\)</span>: <span class="math inline">\(\underset{f \in Z}{\operatorname{min}} J(f)\)</span>.</li>
@@ -209,7 +214,7 @@
 \]</span></p>
 <p>The optimality condition in <span class="math inline">\(\mathcal R^m\)</span> is equivalent to the optimality condition fro a collection of functions in <span class="math inline">\(\mathcal R\)</span>.</p>
 <hr />
-<p>So, going back to <strong>Example <a href="regularized-empirical-risk-minimization.html#exm:J">8.1</a></strong>, suppose <span class="math inline">\(f^*\)</span> solves the problem (it is a minimizer). Pick an arbitrary <span class="math inline">\(g \in Z\)</span> and consider the function: <span class="math inline">\(\phi_g(t):= J(f^* + tg)\)</span>, <span class="math inline">\(t \in \mathcal R\)</span>. Then <span class="math inline">\(\phi_g\)</span> has a minimum at <span class="math inline">\(t=0\)</span> (<span class="math inline">\(\phi&#39;_g(0) = 0\)</span>). Thus, we have:</p>
+<p>So, going back to <strong>Example <a href="regularized-empirical-risk-minimization-1.html#exm:J">9.1</a></strong>, suppose <span class="math inline">\(f^*\)</span> solves the problem (it is a minimizer). Pick an arbitrary <span class="math inline">\(g \in Z\)</span> and consider the function: <span class="math inline">\(\phi_g(t):= J(f^* + tg)\)</span>, <span class="math inline">\(t \in \mathcal R\)</span>. Then <span class="math inline">\(\phi_g\)</span> has a minimum at <span class="math inline">\(t=0\)</span> (<span class="math inline">\(\phi&#39;_g(0) = 0\)</span>). Thus, we have:</p>
 <p><span class="math display">\[
 \begin{aligned}
 J(f^* + tg) &amp;= \lambda \int_0^1 (f^{*\prime} + tg&#39;)^2 dx + \sum_{i=1}^n (f^*(x_i) + tg(x_i) - y_i)^2\\
@@ -245,8 +250,8 @@ J(f)&amp;= \lambda \int_0^1 (f&#39;(x))^2 dx + \sum_{i=1}^n (f(x_i) - y_i)^2\\
 </ul>
 <p>As <span class="math inline">\(J(f)\)</span> has a minimum when <span class="math inline">\(f&#39;(x) = 0\)</span> at <span class="math inline">\([x_n, 1]\)</span> and <span class="math inline">\(f^*\)</span> minimizes <span class="math inline">\(J(f)\)</span>, we have <span class="math inline">\(f^*\)</span> is constant in <span class="math inline">\([x_n, 1]\)</span>.</p>
 </div>
-<div id="erm-with-kernels" class="section level2 hasAnchor" number="8.2">
-<h2><span class="header-section-number">8.2</span> ERM with Kernels<a href="regularized-empirical-risk-minimization.html#erm-with-kernels" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="erm-with-kernels-1" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> ERM with Kernels<a href="regularized-empirical-risk-minimization-1.html#erm-with-kernels-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Let <span class="math inline">\(K\)</span> be a kernel over <span class="math inline">\(\mathcal X\)</span> and consider <span class="math inline">\(\mathcal H\)</span> the RKHS associated to <span class="math inline">\(K\)</span>. Consider the problem:</p>
 <p><span class="math display">\[
 \underset{f \in \mathcal H}{\operatorname{min}}\underset{\text{Regularizer}}{\lambda || f ||_\mathcal H^2} + \underset{\text{Fidality}}{\sum_{i=1}^n (y_i - f(x_i))^2}
@@ -257,7 +262,7 @@ J(f)&amp;= \lambda \int_0^1 (f&#39;(x))^2 dx + \sum_{i=1}^n (f(x_i) - y_i)^2\\
 \]</span>
 Here, <span class="math inline">\(\phi_g(t) = \lambda || f^* + tg||^2_\mathcal H + \sum_{i=1}^n (f^*(x_i) - y_i)^2\)</span>, where <span class="math inline">\(|| f^* + tg||^2_\mathcal H = &lt;f^* + tg, f^* + tg&gt;_\mathcal H = &lt;f^*, f^*&gt;_\mathcal H + 2t&lt;f^*, g&gt;_\mathcal H + t^2 &lt;g,g&gt;_\mathcal H\)</span>.</p>
 <div class="theorem">
-<p><span id="thm:representer" class="theorem"><strong>Theorem 8.1  (Representer Theorem) </strong></span>After using the Euler-Lagrange equations with the reproducing property of the kernel, we will deduce:</p>
+<p><span id="thm:representer" class="theorem"><strong>Theorem 9.1  (Representer Theorem) </strong></span>After using the Euler-Lagrange equations with the reproducing property of the kernel, we will deduce:</p>
 <p><span class="math display">\[
 f^* = \sum_{i=1}^n a_i^* K(\cdot, x_i)
 \]</span></p>
@@ -270,13 +275,13 @@ f^* = \sum_{i=1}^n a_i^* K(\cdot, x_i)
 \end{aligned}
 \]</span></p>
 </div>
-<div id="comparison" class="section level3 hasAnchor" number="8.2.1">
-<h3><span class="header-section-number">8.2.1</span> Comparison<a href="regularized-empirical-risk-minimization.html#comparison" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="comparison-1" class="section level3 hasAnchor" number="9.2.1">
+<h3><span class="header-section-number">9.2.1</span> Comparison<a href="regularized-empirical-risk-minimization-1.html#comparison-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <!-- ```{r RKHS,echo=F, fig.align='center', fig.pos="ht", out.width = "70%"} -->
 <!-- knitr::include_graphics("./figures/RKHS.png") -->
 <!-- ``` -->
 <div class="example">
-<p><span id="exm:unlabeled-div-40" class="example"><strong>Example 8.2  </strong></span>Go back to <strong>Example <a href="regularized-empirical-risk-minimization.html#exm:J">8.1</a></strong>, <span class="math inline">\(f^*\)</span> coincides with the solution to a problem of the form</p>
+<p><span id="exm:unlabeled-div-2" class="example"><strong>Example 9.2  </strong></span>Go back to <strong>Example <a href="regularized-empirical-risk-minimization-1.html#exm:J">9.1</a></strong>, <span class="math inline">\(f^*\)</span> coincides with the solution to a problem of the form</p>
 <p><span class="math display">\[
 \underset{f \in \mathcal H}{\operatorname{min}} \lambda ||f||^2_\mathcal H + \sum_{i=1}^n (f(x_i) - y_i)^2
 \]</span></p>
@@ -313,7 +318,7 @@ l(x):=
 \]</span></p></li>
 </ul>
 <div class="theorem">
-<p><span id="thm:grt" class="theorem"><strong>Theorem 8.2  (Generalized Representer Theorem) </strong></span>Consider the problem</p>
+<p><span id="thm:grt" class="theorem"><strong>Theorem 9.2  (Generalized Representer Theorem) </strong></span>Consider the problem</p>
 <p><span class="math display">\[
 \underset{f \in \mathcal H}{\operatorname{min}} \lambda ||f||^2_\mathcal H + \sum_{i=1}^n G_i(f(x_i)),
 \]</span></p>
@@ -326,24 +331,24 @@ l(x):=
 </div>
 </div>
 </div>
-<div id="regularity" class="section level2 hasAnchor" number="8.3">
-<h2><span class="header-section-number">8.3</span> Regularity<a href="regularized-empirical-risk-minimization.html#regularity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="regularity-1" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> Regularity<a href="regularized-empirical-risk-minimization-1.html#regularity-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For a given kernel <span class="math inline">\(K\)</span> over <span class="math inline">\(\mathcal R^d\)</span>, its associated RKHS <span class="math inline">\(\mathcal H\)</span> is built using the function <span class="math inline">\(K(\cdot, x)\)</span>, <span class="math inline">\(x \in \mathcal R^d\)</span>. Thus, it is to be expected that the regularity of the kernel influences the regularity of the element in <span class="math inline">\(\mathcal H\)</span>. For example, if <span class="math inline">\(K(\cdot, \cdot)\)</span> has derivatives of all orders, it should not come as a surprise that the element in <span class="math inline">\(\mathcal H\)</span> have derivatives of all orders (This is the case for the Gaussian Kernel <span class="math inline">\(K(x, \tilde x) = exp(-\frac{|x - \tilde x|^2}{\sigma^2})\)</span>). Conversely, if the kernel <span class="math inline">\(K(x, \tilde x)\)</span> is not differentiable (<span class="math inline">\(K(x, \tilde x) = x \wedge \tilde x\)</span>), the function in <span class="math inline">\(\mathcal H\)</span> will not be very smooth either.</p>
 <p>Also, notice that for the Gaussian Kernel , all functions <span class="math inline">\(K(\cdot, x)\)</span> have the same amount of regularity, this is because <span class="math inline">\(K\)</span> is <strong><em>homogeneous</em></strong>, i.e. <span class="math inline">\(K(x, \tilde x) = h(x - \tilde x)\)</span>. In some applications however, it may be useful to have a space of functions <span class="math inline">\(\mathcal H\)</span> with inhomogeneous regularity.</p>
 <p>To change the set of examples of homogeneous kernels, we introduce the following theorem.</p>
 <div class="theorem">
-<p><span id="thm:Boch" class="theorem"><strong>Theorem 8.3  (Bochner's Theorem) </strong></span>(A simplified version that doesn’t involve complex random vectors)</p>
+<p><span id="thm:Boch" class="theorem"><strong>Theorem 9.3  (Bochner's Theorem) </strong></span>(A simplified version that doesn’t involve complex random vectors)</p>
 <p>Suppose that <span class="math inline">\(Z\)</span> is a d-dimensional random vector and that its characteristic function: <span class="math inline">\(h(\vec u):= E[e^{\textbf{i} &lt;Z, \vec u&gt;_{\mathcal R^d}}]\)</span>, <span class="math inline">\(\vec u \in \mathcal R^d\)</span> is real valued. Then, the function <span class="math inline">\(K: \mathcal R^d \times \mathcal R^d \to \mathcal R\)</span> defined by <span class="math inline">\(K(x, \tilde x) = h(x - \tilde x)\)</span> is a kernel.</p>
 </div>
 <div class="remark">
-<p><span id="unlabeled-div-41" class="remark"><em>Remark</em>. </span></p>
+<p><span id="unlabeled-div-3" class="remark"><em>Remark</em>. </span></p>
 <ul>
 <li><p>Bochner’s Theorem includes a converse statement (If <span class="math inline">\(K\)</span> is a homogeneous kernel, then <span class="math inline">\(\exists r.v. Z)\)</span>, s.t. the above condition holds) and a more general version for complex valued random vectors.</p></li>
 <li><p>One way to produce kernel: <span class="math inline">\(K(x, \tilde x) = E[e^{\textbf{i} &lt;Z, x - \tilde x&gt;}] \underset{M.C.S}{\approx} \frac{1}{N} \sum_{j=1}^n e^{\textbf{i} &lt;z_j, x - \tilde x&gt;}\)</span>.</p></li>
 </ul>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-42" class="proof"><em>Proof</em>. </span>(Sketch)</p>
+<p><span id="unlabeled-div-4" class="proof"><em>Proof</em>. </span>(Sketch)</p>
 <ul>
 <li><p>Symmetry: <span class="math inline">\(K(x, \tilde x) = K(\tilde x, x)\)</span>.<br />
 We would need to show that <span class="math inline">\(h(\vec u) = h(-\vec u)\)</span>. However, if a characteristic function is real values, necessarily it has to be symmetric:<br />
@@ -372,24 +377,24 @@ E[e^{\textbf{i} &lt;\vec u, Z&gt;}] &amp;= E[cos(&lt;\vec u, Z&gt;) + \textbf{i}
 </div>
 <p>Thanks to this theorem, we can show that the following <span class="math inline">\(K(x, \tilde x) = h(x - \tilde x)\)</span>, <span class="math inline">\(x, \tilde x \in \mathcal R^d\)</span> are kernels, where</p>
 <div class="example">
-<p><span id="exm:rqf" class="example"><strong>Example 8.3  (Rational Quadratic Family) </strong></span><span class="math display">\[
+<p><span id="exm:rqf" class="example"><strong>Example 9.3  (Rational Quadratic Family) </strong></span><span class="math display">\[
 h(\vec u) = (1 + \frac{|\vec u|^2}{\alpha l^2})^{-\alpha}, ~\alpha, l &gt; 0
 \]</span></p>
 <p>When <span class="math inline">\(\alpha \to \infty\)</span>, we recover Gaussian Kernel.</p>
 </div>
 <div class="example">
-<p><span id="exm:gammaef" class="example"><strong>Example 8.4  (Exponential Family) </strong></span><span class="math display">\[
+<p><span id="exm:gammaef" class="example"><strong>Example 9.4  (Exponential Family) </strong></span><span class="math display">\[
 h(\vec u) = exp(-\frac{|\vec u|^\gamma}{l^\gamma}), ~0 &lt; \gamma \leq 2, ~l &gt; 0
 \]</span></p>
 <p>When <span class="math inline">\(\gamma = 2\)</span>, we get Gaussian Kernel. Change <span class="math inline">\(\gamma\)</span>, we change the regularity.</p>
 </div>
 <div class="example">
-<p><span id="exm:mf" class="example"><strong>Example 8.5  (Matern Family of Kernels) </strong></span><span class="math inline">\(\cdots\)</span></p>
+<p><span id="exm:mf" class="example"><strong>Example 9.5  (Matern Family of Kernels) </strong></span><span class="math inline">\(\cdots\)</span></p>
 </div>
 <p>These are all examples of homogeneous kernels. Now let’s make inhomogeneous kernels from homogeneous ones.</p>
 <p>Let <span class="math inline">\(\beta: \mathcal R^d \to \mathcal R^m\)</span> be a non-linear function and let <span class="math inline">\(\tilde K: \mathcal R^m \times \mathcal R^m \to \mathcal R\)</span> be as kernel. Then, <span class="math inline">\(K(x, \tilde x):= \tilde K(\beta(x), \beta(\tilde x))\)</span> is a kernel over <span class="math inline">\(\mathcal R^d\)</span>. In particular, if <span class="math inline">\(\tilde K(z, \tilde z) = h(z - \tilde z)\)</span> is one of the homogeneous kernels we considered before, <span class="math inline">\(K(x, \tilde x) = h(\beta(x) - \beta(\tilde x))\)</span> is a kernel which in general will not be homogeneous (<span class="math inline">\(h(\beta(x) - \beta(\tilde x)) \neq h(\beta(\tilde x) - \beta(x))\)</span>).</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-43" class="example"><strong>Example 8.6  </strong></span>Let <span class="math inline">\(\beta(x): x \in \mathcal R \to (cos(x), sin(x))\)</span>. Take <span class="math inline">\(h(\vec u) = exp(-\frac{|\vec u|^2}{\sigma^2})\)</span>, then</p>
+<p><span id="exm:unlabeled-div-5" class="example"><strong>Example 9.6  </strong></span>Let <span class="math inline">\(\beta(x): x \in \mathcal R \to (cos(x), sin(x))\)</span>. Take <span class="math inline">\(h(\vec u) = exp(-\frac{|\vec u|^2}{\sigma^2})\)</span>, then</p>
 <p><span class="math display">\[
 \begin{aligned}
 K(x, \tilde x) &amp;= exp(- \frac{[cos(x) - cos(\tilde x)]^2 + [sin(x) - sin(\tilde x)]^2}{\sigma^2})\\
@@ -405,8 +410,8 @@ K(x, \tilde x) &amp;= exp(- \frac{[cos(x) - cos(\tilde x)]^2 + [sin(x) - sin(\ti
           </div>
         </div>
       </div>
-<a href="support-vector-machine.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="uncertainty-quantification.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="regularized-empirical-risk-minimization.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -437,7 +442,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/USERNAME/REPO/edit/BRANCH/07-RERM.Rmd",
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/08-Bayes.Rmd",
 "text": "Edit"
 },
 "history": {

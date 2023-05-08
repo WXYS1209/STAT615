@@ -1,0 +1,105 @@
+# Uncertainty Quantification
+Imagine there is an unknown quantity \(u\) that we can't observe directly. However, we may obtain a collection of observations \(Y = (y_i, \cdots, y_p) \in \mathcal R^p\). Then the **Forward Problem** is \(\underset{\text{unknown}}{u \in Z} \to \underset{\text{observed}}{Y}\).
+
+In a sense, when we talk about science, we are talking about use \(Y\) to learn about \(u\). In practice, there are at least two "sources" of uncertainty associated to the picture: \(u \to Y\):
+
+1. \(u\) is unknown.
+
+2. Observations are usually contaminated by some sort of noise so that in general \(Y\) is not simply a function of the unknown \(u\). In statistics, we may model the "likelihood" or "probability" of observing \(Y\) given a certain value of \(u\). This quantifies our uncertainty of the possible values \(Y\) given the unknown \(u\) through the probability mass function: \(P(Y = y, | u)\) or through a density function: \(P(Y \in C | u) = \int_C p(y | u) dy\).
+
+:::{.example #ber}
+Let \(u \in (0,1)\) be the probability that the outcome of a certain biased coin flip is H. Suppose that this coin is flipped \(p\) times and we get \(y_i = \begin{cases}1 &i\text{-th is H}\\0 & i\text{-th is T}\end{cases}\). 
+
+In this case, the likelihood is 
+
+$$
+P(Y = y | u) = u^{\sum_{i=1}^p y_i} (1-u)^{p - \sum_{i=1}^p y_i}, ~y_i \in \{0,1\}
+$$
+:::
+
+:::{.example #gau}
+- Regression: \(u: \mathcal X \to \mathcal R\) (Hidden regression function). \(y_i = u(x_i) + \varepsilon_i\), \(\varepsilon_i \sim N(0, \sigma^2)\).  
+$$
+p(y|u) = \frac{1}{(\sqrt{2 \pi \sigma^2})^p} exp(-\frac{||y - (u(x_1), \cdots, u(x_n)||^2}{2\sigma^2})
+$$
+
+- Classification with logistic model: Given \(u: \mathcal X \to \mathcal R\), define: \(q_i = \frac{exp(u(x_i))}{1+exp(u(x_i))}\) for \(x_1, \cdots, x_p\). Then, \(y_i = \begin{cases}1 &\text{with prob } q_i\\0 & \text{with prob } 1-q_i\end{cases}\). Thus,  
+$$
+P(y | u) = \prod_{i=1}^p q_i^{y_i} (1- q_i)^{1-y_i} = \prod_{i=1}^p \frac{exp(y_iu(x_i))}{1+exp(u(x_i))}
+$$
+::: 
+
+:::{.example #DE name="Density Estimation"}
+Let \(\mathcal X = \mathcal R^d\) and suppose that \(u: \mathcal X \to \mathcal R\) is an unknown density function (\(u(x) \geq 0\), \(\forall x\), and \(\int_{\mathcal R^d} u(x) dx = 1\)), \(y_1, \cdots, y_p \underset{i.i.d}{\sim} u\). Thus, the likelihood of \(Y=(y_1, \cdots, y_p)\) is:  
+$$
+p(y|u) = u(y_1) \cdots u(y_p)
+$$
+:::
+
+So far we have talked about the distribution of \(Y\) given \(u\) (Forward Problem). This models the uncertainty of our "measurement" if we had access to \(u\). However, how do we learn \(u\) from \(Y\) (Inverse Problem)? Moreover, how do we quantify the uncertainty of the unknown \(u\) before observing \(Y\), and after observing \(Y\)?
+
+## Bayes Perspective
+
+Bayes Rule: \(p(u | y) \propto p(y | u) \pi(u)\). For the moment, we consider the case where \(u \in \mathcal R^d\). Suppose \(\pi(u)\) is then interpreted as a density in \(\mathcal R^d\). The posterior is usually also a density in \(\mathcal R^d\).
+
+:::{.example name="\@ref(exm:ber) Continued"}
+Let \(u \in (0,1)\), the likelihood is \(Bernoulli(u):\)
+
+$$
+P(Y = y | u) = u^{\sum_{i=1}^p y_i} (1-u)^{p - \sum_{i=1}^p y_i}, ~y_i \in \{0,1\},
+$$
+
+the prior is \(Beta(\alpha, \beta)\):
+
+$$
+\pi(u) = \frac{u^{\alpha-1}(1-u)^{\beta-1}}{\Gamma(\alpha, \beta)}, ~\alpha, \beta >0.
+$$
+
+Then the posterior is 
+
+$$
+p(u | y) \propto p(y |u) \pi(u) \propto u^{\sum_{i=1}^p y_i + \alpha - 1} (1-u)^{p - \sum_{i=1}^p y_i + \beta - 1},
+$$
+
+that is, given \(Y=y\), \(u\) is \(Beta(\sum_{i=1}^p y_i + \alpha, p - \sum_{i=1}^p y_i + \beta)\)
+:::
+
+:::{.example name="\@ref(exm:gau) Continued"}
+Let \(u \in \mathcal R^d\) and \(x_1, \cdots, x_p \in \mathcal R^d\), the likelihood is:
+
+$$
+p(y|u) = \frac{1}{(\sqrt{2 \pi \sigma^2})^p} exp(-\frac{||y - (u(x_1), \cdots, u(x_n)||^2}{2\sigma^2}),
+$$
+
+the prior is 
+
+$$
+\pi(u) = \frac{1}{(\sqrt{2 \pi \lambda^{-1}})^p} exp(-\frac{\lambda}{2} ||u||^2_{\mathcal R^d}), ~i.e. ~ u \sim N(\vec 0, \frac{1}{\lambda} I).
+$$
+
+Let \(X = (x_1, \cdots, x_p)^T_{p \times d}\). Then the posterior is 
+
+$$
+\begin{aligned}
+p(u | y) &\propto p(y |u) \pi(u) \\
+&\propto exp \Big(<\frac{X^Ty}{\sigma^2}, u> - \frac{1}{2} <(\lambda I + \frac{X^TX}{\sigma^2})u, u>\Big)\\
+&= N(\mu, \Sigma),
+\end{aligned}
+$$
+
+where \(\mu = \frac{1}{\sigma^2} (\lambda I + \frac{1}{\sigma^2} (X^TX))^{-1} X^Ty\) and \(\Sigma= (\lambda I + \frac{1}{\sigma^2} (X^TX))^{-1}\).
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -64,6 +64,11 @@ exm:rqf
 exm:gammaef
 exm:mf
 exm:unlabeled-div-43
+exm:ber
+exm:gau
+exm:DE
+exm:unlabeled-div-44
+exm:unlabeled-div-45
 about
 usage
 render-book
@@ -114,3 +119,9 @@ ill-posed-problems
 erm-with-kernels
 comparison
 regularity
+uncertainty-quantification
+bayes-perspective
+exm:unlabeled-div-1
+exm:unlabeled-div-2
+exm:unlabeled-div-3
+exm:unlabeled-div-4
