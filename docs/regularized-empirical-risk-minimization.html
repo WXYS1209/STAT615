@@ -150,6 +150,7 @@
 <ul>
 <li class="chapter" data-level="8.2.1" data-path="regularized-empirical-risk-minimization.html"><a href="regularized-empirical-risk-minimization.html#comparison"><i class="fa fa-check"></i><b>8.2.1</b> Comparison</a></li>
 </ul></li>
+<li class="chapter" data-level="8.3" data-path="regularized-empirical-risk-minimization.html"><a href="regularized-empirical-risk-minimization.html#regularity"><i class="fa fa-check"></i><b>8.3</b> Regularity</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -267,6 +268,9 @@ f^* = \sum_{i=1}^n a_i^* K(\cdot, x_i)
 </div>
 <div id="comparison" class="section level3 hasAnchor" number="8.2.1">
 <h3><span class="header-section-number">8.2.1</span> Comparison<a href="regularized-empirical-risk-minimization.html#comparison" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<!-- ```{r RKHS,echo=F, fig.align='center', fig.pos="ht", out.width = "70%"} -->
+<!-- knitr::include_graphics("./figures/RKHS.png") -->
+<!-- ``` -->
 <div class="example">
 <p><span id="exm:unlabeled-div-40" class="example"><strong>Example 8.2  </strong></span>Go back to <strong>Example <a href="regularized-empirical-risk-minimization.html#exm:J">8.1</a></strong>, <span class="math inline">\(f^*\)</span> coincides with the solution to a problem of the form</p>
 <p><span class="math display">\[
@@ -316,8 +320,80 @@ l(x):=
 \end{aligned}
 \]</span></p>
 </div>
-
 </div>
+</div>
+<div id="regularity" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Regularity<a href="regularized-empirical-risk-minimization.html#regularity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For a given kernel <span class="math inline">\(K\)</span> over <span class="math inline">\(\mathcal R^d\)</span>, its associated RKHS <span class="math inline">\(\mathcal H\)</span> is built using the function <span class="math inline">\(K(\cdot, x)\)</span>, <span class="math inline">\(x \in \mathcal R^d\)</span>. Thus, it is to be expected that the regularity of the kernel influences the regularity of the element in <span class="math inline">\(\mathcal H\)</span>. For example, if <span class="math inline">\(K(\cdot, \cdot)\)</span> has derivatives of all orders, it should not come as a surprise that the element in <span class="math inline">\(\mathcal H\)</span> have derivatives of all orders (This is the case for the Gaussian Kernel <span class="math inline">\(K(x, \tilde x) = exp(-\frac{|x - \tilde x|^2}{\sigma^2})\)</span>). Conversely, if the kernel <span class="math inline">\(K(x, \tilde x)\)</span> is not differentiable (<span class="math inline">\(K(x, \tilde x) = x \wedge \tilde x\)</span>), the function in <span class="math inline">\(\mathcal H\)</span> will not be very smooth either.</p>
+<p>Also, notice that for the Gaussian Kernel , all functions <span class="math inline">\(K(\cdot, x)\)</span> have the same amount of regularity, this is because <span class="math inline">\(K\)</span> is <strong><em>homogeneous</em></strong>, i.e. <span class="math inline">\(K(x, \tilde x) = h(x - \tilde x)\)</span>. In some applications however, it may be useful to have a space of functions <span class="math inline">\(\mathcal H\)</span> with inhomogeneous regularity.</p>
+<p>To change the set of examples of homogeneous kernels, we introduce the following theorem.</p>
+<div class="theorem">
+<p><span id="thm:Boch" class="theorem"><strong>Theorem 8.3  (Bochner's Theorem) </strong></span>(A simplified version that doesn’t involve complex random vectors)</p>
+<p>Suppose that <span class="math inline">\(Z\)</span> is a d-dimensional random vector and that its characteristic function: <span class="math inline">\(h(\vec u):= E[e^{\textbf{i} &lt;Z, \vec u&gt;_{\mathcal R^d}}]\)</span>, <span class="math inline">\(\vec u \in \mathcal R^d\)</span> is real valued. Then, the function <span class="math inline">\(K: \mathcal R^d \times \mathcal R^d \to \mathcal R\)</span> defined by <span class="math inline">\(K(x, \tilde x) = h(x - \tilde x)\)</span> is a kernel.</p>
+</div>
+<div class="remark">
+<p><span id="unlabeled-div-41" class="remark"><em>Remark</em>. </span></p>
+<ul>
+<li><p>Bochner’s Theorem includes a converse statement (If <span class="math inline">\(K\)</span> is a homogeneous kernel, then <span class="math inline">\(\exists r.v. Z)\)</span>, s.t. the above condition holds) and a more general version for complex valued random vectors.</p></li>
+<li><p>One way to produce kernel: <span class="math inline">\(K(x, \tilde x) = E[e^{\textbf{i} &lt;Z, x - \tilde x&gt;}] \underset{M.C.S}{\approx} \frac{1}{N} \sum_{j=1}^n e^{\textbf{i} &lt;z_j, x - \tilde x&gt;}\)</span>.</p></li>
+</ul>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-42" class="proof"><em>Proof</em>. </span>(Sketch)</p>
+<ul>
+<li><p>Symmetry: <span class="math inline">\(K(x, \tilde x) = K(\tilde x, x)\)</span>.<br />
+We would need to show that <span class="math inline">\(h(\vec u) = h(-\vec u)\)</span>. However, if a characteristic function is real values, necessarily it has to be symmetric:<br />
+<span class="math display">\[
+\begin{aligned}
+E[e^{\textbf{i} &lt;\vec u, Z&gt;}] &amp;= E[cos(&lt;\vec u, Z&gt;) + \textbf{i} ~sin(&lt;\vec u, Z&gt;)]\\
+&amp;= E[cos(&lt;\vec u, Z&gt;)]\\
+&amp;= E[cos(&lt;-\vec u, Z&gt;)]\\
+&amp;= E[e^{\textbf{i} &lt;-\vec u, Z&gt;}]
+\end{aligned}
+\]</span></p></li>
+<li><p>Positive Definiteness:<br />
+<span class="math display">\[
+\begin{aligned}
+&lt;Kv ,v&gt;_{\mathcal R^d} &amp;= \sum_{i=1}^n \sum_{j=1}^n K(x_i, x_j) v_i v_j\\
+&amp;= \sum_{i=1}^n \sum_{j=1}^n E[e^{\textbf{i} &lt;x_i - x_j, Z&gt;}] v_i v_j\\
+&amp;= \sum_{i=1}^n \sum_{j=1}^n E[e^{\textbf{i} &lt;x_i, Z&gt;} e^{-\textbf{i} &lt;x_i, Z&gt;}] v_i v_j\\
+&amp;= E\Big[(\sum_{i=1}^n v_ie^{\textbf{i} &lt;x_i, Z&gt;}) \cdot (\sum_{j=1}^n v_j e^{-\textbf{i} &lt;x_i, Z&gt;}) \Big]\\
+&amp;:= E[T \cdot \bar T]\\
+&amp;= E[|T|^2]\\
+&amp;\underset{\text{conjugate of complex number}}{=}E\Big[|\sum_{j=1}^n v_j e^{\textbf{i} &lt;x_i, Z&gt;}|^2\Big]\\
+&amp;\geq 0
+\end{aligned}
+\]</span></p></li>
+</ul>
+</div>
+<p>Thanks to this theorem, we can show that the following <span class="math inline">\(K(x, \tilde x) = h(x - \tilde x)\)</span>, <span class="math inline">\(x, \tilde x \in \mathcal R^d\)</span> are kernels, where</p>
+<div class="example">
+<p><span id="exm:rqf" class="example"><strong>Example 8.3  (Rational Quadratic Family) </strong></span><span class="math display">\[
+h(\vec u) = (1 + \frac{|\vec u|^2}{\alpha l^2})^{-\alpha}, ~\alpha, l &gt; 0
+\]</span></p>
+<p>When <span class="math inline">\(\alpha \to \infty\)</span>, we recover Gaussian Kernel.</p>
+</div>
+<div class="example">
+<p><span id="exm:gammaef" class="example"><strong>Example 8.4  (Exponential Family) </strong></span><span class="math display">\[
+h(\vec u) = exp(-\frac{|\vec u|^\gamma}{l^\gamma}), ~0 &lt; \gamma \leq 2, ~l &gt; 0
+\]</span></p>
+<p>When <span class="math inline">\(\gamma = 2\)</span>, we get Gaussian Kernel. Change <span class="math inline">\(\gamma\)</span>, we change the regularity.</p>
+</div>
+<div class="example">
+<p><span id="exm:mf" class="example"><strong>Example 8.5  (Matern Family of Kernels) </strong></span><span class="math inline">\(\cdots\)</span></p>
+</div>
+<p>These are all examples of homogeneous kernels. Now let’s make inhomogeneous kernels from homogeneous ones.</p>
+<p>Let <span class="math inline">\(\beta: \mathcal R^d \to \mathcal R^m\)</span> be a non-linear function and let <span class="math inline">\(\tilde K: \mathcal R^m \times \mathcal R^m \to \mathcal R\)</span> be as kernel. Then, <span class="math inline">\(K(x, \tilde x):= \tilde K(\beta(x), \beta(\tilde x))\)</span> is a kernel over <span class="math inline">\(\mathcal R^d\)</span>. In particular, if <span class="math inline">\(\tilde K(z, \tilde z) = h(z - \tilde z)\)</span> is one of the homogeneous kernels we considered before, <span class="math inline">\(K(x, \tilde x) = h(\beta(x) - \beta(\tilde x))\)</span> is a kernel which in general will not be homogeneous (<span class="math inline">\(h(\beta(x) - \beta(\tilde x)) \neq h(\beta(\tilde x) - \beta(x))\)</span>).</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-43" class="example"><strong>Example 8.6  </strong></span>Let <span class="math inline">\(\beta(x): x \in \mathcal R \to (cos(x), sin(x))\)</span>. Take <span class="math inline">\(h(\vec u) = exp(-\frac{|\vec u|^2}{\sigma^2})\)</span>, then</p>
+<p><span class="math display">\[
+\begin{aligned}
+K(x, \tilde x) &amp;= exp(- \frac{[cos(x) - cos(\tilde x)]^2 + [sin(x) - sin(\tilde x)]^2}{\sigma^2})\\
+&amp;= exp(-\frac{4sin^2(\frac{x - \tilde x}{2})}{\sigma^2})
+\end{aligned}
+\]</span></p>
+</div>
+
 </div>
 </div>
             </section>

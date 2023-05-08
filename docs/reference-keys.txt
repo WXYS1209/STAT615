@@ -59,6 +59,11 @@ exm:J
 thm:representer
 exm:unlabeled-div-40
 thm:grt
+thm:Boch
+exm:rqf
+exm:gammaef
+exm:mf
+exm:unlabeled-div-43
 about
 usage
 render-book
@@ -108,3 +113,4 @@ regularized-empirical-risk-minimization
 ill-posed-problems
 erm-with-kernels
 comparison
+regularity

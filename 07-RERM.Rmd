@@ -145,7 +145,9 @@ $$
 
 ### Comparison
 
-
+<!-- ```{r RKHS,echo=F, fig.align='center', fig.pos="ht", out.width = "70%"} -->
+<!-- knitr::include_graphics("./figures/RKHS.png") -->
+<!-- ``` -->
 
 :::{.example }
 Go back to **Example \@ref(exm:J)**, \(f^*\) coincides with the solution to a problem of the form
@@ -209,23 +211,92 @@ $$
 :::
 
 
+## Regularity
+For a given kernel \(K\) over \(\mathcal R^d\), its associated RKHS \(\mathcal H\) is built using the function \(K(\cdot, x)\), \(x \in \mathcal R^d\). Thus, it is to be expected that the regularity of the kernel influences the regularity of the element in \(\mathcal H\). For example, if \(K(\cdot, \cdot)\) has derivatives of all orders, it should not come as a surprise that the element in \(\mathcal H\) have derivatives of all orders (This is the case for the Gaussian Kernel \(K(x, \tilde x) = exp(-\frac{|x - \tilde x|^2}{\sigma^2})\)). Conversely, if the kernel \(K(x, \tilde x)\) is not differentiable (\(K(x, \tilde x) = x \wedge \tilde x\)), the function in \(\mathcal H\) will not be very smooth either. 
+
+Also, notice that for the Gaussian Kernel , all functions \(K(\cdot, x)\) have the same amount of regularity, this is because \(K\) is ***homogeneous***, i.e. \(K(x, \tilde x) = h(x - \tilde x)\). In some applications however, it may be useful to have a space of functions \(\mathcal H\) with inhomogeneous regularity.
+
+To change the set of examples of homogeneous kernels, we introduce the following theorem.
+
+:::{.theorem #Boch name="Bochner's Theorem"} 
+(A simplified version that doesn't involve complex random vectors)
+
+Suppose that \(Z\) is a d-dimensional random vector and that its characteristic function: \(h(\vec u):= E[e^{\textbf{i} <Z, \vec u>_{\mathcal R^d}}]\), \(\vec u \in \mathcal R^d\) is real valued. Then, the function \(K: \mathcal R^d \times \mathcal R^d \to \mathcal R\) defined by \(K(x, \tilde x) = h(x - \tilde x)\) is a kernel.
+:::
+
+:::{.remark}
+- Bochner's Theorem includes a converse statement (If \(K\) is a homogeneous kernel, then \(\exists r.v. Z)\), s.t. the above condition holds) and a more general version for complex valued random vectors. 
+
+- One way to produce kernel: \(K(x, \tilde x) = E[e^{\textbf{i} <Z, x - \tilde x>}] \underset{M.C.S}{\approx} \frac{1}{N} \sum_{j=1}^n e^{\textbf{i} <z_j, x - \tilde x>}\).
+:::
+
+:::{.proof}
+(Sketch)
+
+- Symmetry: \(K(x, \tilde x) = K(\tilde x, x)\).  
+We would need to show that \(h(\vec u) = h(-\vec u)\). However, if a characteristic function is real values, necessarily it has to be symmetric:  
+$$
+\begin{aligned}
+E[e^{\textbf{i} <\vec u, Z>}] &= E[cos(<\vec u, Z>) + \textbf{i} ~sin(<\vec u, Z>)]\\
+&= E[cos(<\vec u, Z>)]\\
+&= E[cos(<-\vec u, Z>)]\\
+&= E[e^{\textbf{i} <-\vec u, Z>}]
+\end{aligned}
+$$
+
+- Positive Definiteness:  
+$$
+\begin{aligned}
+<Kv ,v>_{\mathcal R^d} &= \sum_{i=1}^n \sum_{j=1}^n K(x_i, x_j) v_i v_j\\
+&= \sum_{i=1}^n \sum_{j=1}^n E[e^{\textbf{i} <x_i - x_j, Z>}] v_i v_j\\
+&= \sum_{i=1}^n \sum_{j=1}^n E[e^{\textbf{i} <x_i, Z>} e^{-\textbf{i} <x_i, Z>}] v_i v_j\\
+&= E\Big[(\sum_{i=1}^n v_ie^{\textbf{i} <x_i, Z>}) \cdot (\sum_{j=1}^n v_j e^{-\textbf{i} <x_i, Z>}) \Big]\\
+&:= E[T \cdot \bar T]\\
+&= E[|T|^2]\\
+&\underset{\text{conjugate of complex number}}{=}E\Big[|\sum_{j=1}^n v_j e^{\textbf{i} <x_i, Z>}|^2\Big]\\
+&\geq 0
+\end{aligned}
+$$
+:::
 
 
+Thanks to this theorem, we can show that the following \(K(x, \tilde x) = h(x - \tilde x)\), \(x, \tilde x \in \mathcal R^d\) are kernels, where
+
+:::{.example #rqf name="Rational Quadratic Family"}
+$$
+h(\vec u) = (1 + \frac{|\vec u|^2}{\alpha l^2})^{-\alpha}, ~\alpha, l > 0
+$$
+
+When \(\alpha \to \infty\), we recover Gaussian Kernel.
+:::
+
+:::{.example #gammaef name="Exponential Family"}
+$$
+h(\vec u) = exp(-\frac{|\vec u|^\gamma}{l^\gamma}), ~0 < \gamma \leq 2, ~l > 0
+$$
+
+When \(\gamma = 2\), we get Gaussian Kernel. Change \(\gamma\), we change the regularity.
+:::
+
+:::{.example #mf name="Matern Family of Kernels"}
+\(\cdots\)
+:::
 
 
+These are all examples of homogeneous kernels. Now let's make inhomogeneous kernels from homogeneous ones. 
 
+Let \(\beta: \mathcal R^d \to \mathcal R^m\) be a non-linear function and let \(\tilde K: \mathcal R^m \times \mathcal R^m \to \mathcal R\) be as kernel. Then, \(K(x, \tilde x):= \tilde K(\beta(x), \beta(\tilde x))\) is a kernel over \(\mathcal R^d\). In particular, if \(\tilde K(z, \tilde z) = h(z - \tilde z)\) is one of the homogeneous kernels we considered before, \(K(x, \tilde x) = h(\beta(x) - \beta(\tilde x))\) is a kernel which in general will not be homogeneous (\(h(\beta(x) - \beta(\tilde x)) \neq h(\beta(\tilde x) - \beta(x))\)).
 
+:::{.example}
+Let \(\beta(x): x \in \mathcal R \to (cos(x), sin(x))\). Take \(h(\vec u) = exp(-\frac{|\vec u|^2}{\sigma^2})\), then 
 
-
-
-
-
-
-
-
-
-
-
+$$
+\begin{aligned}
+K(x, \tilde x) &= exp(- \frac{[cos(x) - cos(\tilde x)]^2 + [sin(x) - sin(\tilde x)]^2}{\sigma^2})\\
+&= exp(-\frac{4sin^2(\frac{x - \tilde x}{2})}{\sigma^2})
+\end{aligned}
+$$
+:::
 
 
 
