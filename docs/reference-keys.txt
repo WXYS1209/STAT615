@@ -123,5 +123,5 @@ uncertainty-quantification
 bayes-perspective
 exm:unlabeled-div-1
 exm:unlabeled-div-2
-exm:unlabeled-div-3
-exm:unlabeled-div-4
+exm:gaucon
+exm:gauconcon

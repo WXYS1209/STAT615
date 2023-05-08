@@ -215,7 +215,7 @@ p(y|u) = u(y_1) \cdots u(y_p)
 <h2><span class="header-section-number">9.1</span> Bayes Perspective<a href="uncertainty-quantification.html#bayes-perspective" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Bayes Rule: <span class="math inline">\(p(u | y) \propto p(y | u) \pi(u)\)</span>. For the moment, we consider the case where <span class="math inline">\(u \in \mathcal R^d\)</span>. Suppose <span class="math inline">\(\pi(u)\)</span> is then interpreted as a density in <span class="math inline">\(\mathcal R^d\)</span>. The posterior is usually also a density in <span class="math inline">\(\mathcal R^d\)</span>.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-1" class="example"><strong>Example 9.4  (<a href="uncertainty-quantification.html#exm:ber">9.1</a> Continued) </strong></span>Let <span class="math inline">\(u \in (0,1)\)</span>, the likelihood is <span class="math inline">\(Bernoulli(u):\)</span></p>
+<p><span id="exm:unlabeled-div-1" class="example"><strong>Example 9.4  (Example <a href="uncertainty-quantification.html#exm:ber">9.1</a> Continued) </strong></span>Let <span class="math inline">\(u \in (0,1)\)</span>, the likelihood is <span class="math inline">\(Bernoulli(u):\)</span></p>
 <p><span class="math display">\[
 P(Y = y | u) = u^{\sum_{i=1}^p y_i} (1-u)^{p - \sum_{i=1}^p y_i}, ~y_i \in \{0,1\},
 \]</span></p>
@@ -230,7 +230,7 @@ p(u | y) \propto p(y |u) \pi(u) \propto u^{\sum_{i=1}^p y_i + \alpha - 1} (1-u)^
 <p>that is, given <span class="math inline">\(Y=y\)</span>, <span class="math inline">\(u\)</span> is <span class="math inline">\(Beta(\sum_{i=1}^p y_i + \alpha, p - \sum_{i=1}^p y_i + \beta)\)</span></p>
 </div>
 <div class="example">
-<p><span id="exm:unlabeled-div-2" class="example"><strong>Example 9.5  (<a href="uncertainty-quantification.html#exm:gau">9.2</a> Continued) </strong></span>Let <span class="math inline">\(u \in \mathcal R^d\)</span> and <span class="math inline">\(x_1, \cdots, x_p \in \mathcal R^d\)</span>, the likelihood is:</p>
+<p><span id="exm:gaucon" class="example"><strong>Example 9.5  (Example <a href="uncertainty-quantification.html#exm:gau">9.2</a> Continued) </strong></span>Let <span class="math inline">\(u \in \mathcal R^d\)</span> and <span class="math inline">\(x_1, \cdots, x_p \in \mathcal R^d\)</span>, the likelihood is:</p>
 <p><span class="math display">\[
 p(y|u) = \frac{1}{(\sqrt{2 \pi \sigma^2})^p} exp(-\frac{||y - (u(x_1), \cdots, u(x_n)||^2}{2\sigma^2}),
 \]</span></p>
@@ -248,6 +248,59 @@ p(u | y) &amp;\propto p(y |u) \pi(u) \\
 \]</span></p>
 <p>where <span class="math inline">\(\mu = \frac{1}{\sigma^2} (\lambda I + \frac{1}{\sigma^2} (X^TX))^{-1} X^Ty\)</span> and <span class="math inline">\(\Sigma= (\lambda I + \frac{1}{\sigma^2} (X^TX))^{-1}\)</span>.</p>
 </div>
+<p>With the posterior, we can then compute the following:</p>
+<ol style="list-style-type: decimal">
+<li>Posterior Mean:</li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+\hat u_{PM} = E[u_i | y] &amp;= \frac{\int_{\mathcal R^d} u_i p(y | u) \pi(u) du_1 \cdots du_d}{\int_{\mathcal R^d} p(y | u) \pi(u) du_1 \cdots du_d}\\
+&amp;= \frac{\int_{\mathcal R^d} u_i p(y | u) \pi(u) du_1 \cdots du_d}{Z(y)}
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(Z(y)\)</span> is the normalization constant.</p>
+<p>Then, based on the observations (and model), we estimate the i-th coordinate of the unknown as <span class="math inline">\(E[u_i | y]\)</span>.</p>
+<p>We could also estimate <span class="math inline">\(u_i^2 cos(u_j)\)</span> with: <span class="math inline">\(E[u_i^2 cos(u_j) | y] = \frac{\int_{\mathcal R^d} u_i^2cos(u_j) p(y | u) \pi(u) du_1 \cdots du_d}{Z(y)}\)</span></p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Posterior Covariance: <span class="math inline">\(Cov(u_i, u_j | y)\)</span> or <span class="math inline">\(Var(u_i|y) = E[u_i^2 | y] - (E[u|y])^2\)</span>. A measure of how certain we are about the estimation of <span class="math inline">\(u_i\)</span>.</p></li>
+<li><p>Map (Maximum a posterior):</p></li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+u^* &amp;= \underset{u}{\operatorname{arg max}} \pi(u) p(y | u)\\
+&amp;= \underset{u}{\operatorname{arg max}} log(\pi(u)) + log(p(y | u))\\
+&amp;= \underset{u}{\operatorname{arg min}} -log(\pi(u)) - log(p(y | u))
+\end{aligned}
+\]</span></p>
+<p>Both 1 and 2 are based on being able to take expectation w.r.t. posterior. 3 on the other hand, is not related to expectation but rather to optimization.</p>
+<div class="example">
+<p><span id="exm:gauconcon" class="example"><strong>Example 9.6  (Example <a href="uncertainty-quantification.html#exm:gaucon">9.5</a> Continued) </strong></span>We have:</p>
+<ul>
+<li><p><span class="math inline">\(E[u_i |y] = \mu_i\)</span></p></li>
+<li><p><span class="math inline">\(Cov(u_iu_j | y) = \Sigma_{ij}\)</span></p></li>
+<li><p>The Map is determined by:<br />
+<span class="math display">\[
+\begin{aligned}
+u^* &amp;= \underset{u}{\operatorname{arg min}} -log(p(u | y))\\
+&amp;= \underset{u}{\operatorname{arg min}} -log(\pi(u)) - log(p(y | u))\\
+&amp;= \underset{u}{\operatorname{arg min}} \frac{\lambda}{2} ||u||^2 + \frac{1}{\sigma^2} \sum_{j=1}^p (y_i - &lt;u, x_i&gt;)^2,
+\end{aligned}
+\]</span></p></li>
+</ul>
+<p>which is just the ridge regression.</p>
+</div>
+<div class="remark">
+<p><span id="unlabeled-div-2" class="remark"><em>Remark</em>. </span><span class="math display">\[
+u^* = \mu
+\]</span></p>
+<p>This can be seen by direct optimization or by noticing that the Map of a Gaussian random vector coincides with its mean vector.</p>
+<p>The posterior can be interpreted as a different kind of regularization:</p>
+<p><span class="math display">\[
+p(u | y) \propto \underset{\text{Fidality}}{p(y | u)} ~\underset{\text{Regularizer}}{\pi(u)}
+\]</span></p>
+</div>
+<p>Back to <strong>Example <a href="uncertainty-quantification.html#exm:gauconcon">9.6</a></strong>, when <span class="math inline">\(u | y\)</span> is <span class="math inline">\(N(\mu, \Sigma)\)</span>, we have formulas for <span class="math inline">\(E[u_i | y]\)</span> and <span class="math inline">\(Cov(u_i, u_j)\)</span>. However, something like <span class="math inline">\(E[u_1cos(u_2) exp(u_3) | y]\)</span> would be quite impossible to compute. Nevertheless, we can use Monte-Carlo to approximate this. The idea is that we know what the posterior is. Thus, we can try to sample <span class="math inline">\(u^1, \cdots, u^K \sim N_d(\mu, \Sigma)\)</span>. Then consider the empirical average: <span class="math inline">\(\frac{1}{K} \sum{j=1}^K u_1^j cos(u_2^j) exp(u_3^j)\)</span>. That is, if we can sample from the posterior, we can numerically approximate <span class="math inline">\(E[G(u) | y] \approx \frac{1}{K} \sum_{j=1}^K G(u^j)\)</span>, where <span class="math inline">\(u^1, \cdots, u^K \underset{i.i.d}{\sim} Posterior\)</span>.</p>
+<p>If it is difficult to sample from the posterior, we can use MCMC (Monte Carlo Markov Chain).</p>
 
 </div>
 </div>
