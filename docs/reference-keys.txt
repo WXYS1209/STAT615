@@ -56,6 +56,9 @@ thm:RRT
 def:RKHS
 thm:MAT
 exm:J
+thm:representer
+exm:unlabeled-div-40
+thm:grt
 about
 usage
 render-book
@@ -103,3 +106,5 @@ case-2
 case-3
 regularized-empirical-risk-minimization
 ill-posed-problems
+erm-with-kernels
+comparison

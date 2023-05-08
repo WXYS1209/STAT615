@@ -23,7 +23,7 @@
 <meta name="author" content="Peter Wang" />
 
 
-<meta name="date" content="2023-05-04" />
+<meta name="date" content="2023-05-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -146,6 +146,10 @@
 <li class="chapter" data-level="8" data-path="regularized-empirical-risk-minimization.html"><a href="regularized-empirical-risk-minimization.html"><i class="fa fa-check"></i><b>8</b> Regularized Empirical Risk Minimization</a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="regularized-empirical-risk-minimization.html"><a href="regularized-empirical-risk-minimization.html#ill-posed-problems"><i class="fa fa-check"></i><b>8.1</b> ill Posed Problems</a></li>
+<li class="chapter" data-level="8.2" data-path="regularized-empirical-risk-minimization.html"><a href="regularized-empirical-risk-minimization.html#erm-with-kernels"><i class="fa fa-check"></i><b>8.2</b> ERM with Kernels</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="regularized-empirical-risk-minimization.html"><a href="regularized-empirical-risk-minimization.html#comparison"><i class="fa fa-check"></i><b>8.2.1</b> Comparison</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -235,7 +239,85 @@ J(f)&amp;= \lambda \int_0^1 (f&#39;(x))^2 dx + \sum_{i=1}^n (f(x_i) - y_i)^2\\
 \]</span></p></li>
 </ul>
 <p>As <span class="math inline">\(J(f)\)</span> has a minimum when <span class="math inline">\(f&#39;(x) = 0\)</span> at <span class="math inline">\([x_n, 1]\)</span> and <span class="math inline">\(f^*\)</span> minimizes <span class="math inline">\(J(f)\)</span>, we have <span class="math inline">\(f^*\)</span> is constant in <span class="math inline">\([x_n, 1]\)</span>.</p>
+</div>
+<div id="erm-with-kernels" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> ERM with Kernels<a href="regularized-empirical-risk-minimization.html#erm-with-kernels" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let <span class="math inline">\(K\)</span> be a kernel over <span class="math inline">\(\mathcal X\)</span> and consider <span class="math inline">\(\mathcal H\)</span> the RKHS associated to <span class="math inline">\(K\)</span>. Consider the problem:</p>
+<p><span class="math display">\[
+\underset{f \in \mathcal H}{\operatorname{min}}\underset{\text{Regularizer}}{\lambda || f ||_\mathcal H^2} + \underset{\text{Fidality}}{\sum_{i=1}^n (y_i - f(x_i))^2}
+\]</span></p>
+<p>This is actually Ridge Regression in disguise: let <span class="math inline">\(\psi: \begin{matrix}\mathcal X \to \mathcal H\\x \to K(\cdot, x) \end{matrix}\)</span>, <span class="math inline">\(f \in \mathcal H\)</span>, then <span class="math inline">\(f(x_i) = &lt;f, K(\cdot, x_i)&gt;_\mathcal H = &lt;f, \psi(x_i)&gt;_\mathcal H\)</span>, which means we want to solve:</p>
+<p><span class="math display">\[
+\underset{f \in \mathcal H}{\operatorname{min}}\underset{\text{Regularizer}}{\lambda || f ||_\mathcal H^2} + \underset{\text{Fidality}}{\sum_{i=1}^n (y_i - &lt;f, \psi(x_i)&gt;_\mathcal H)^2}
+\]</span>
+Here, <span class="math inline">\(\phi_g(t) = \lambda || f^* + tg||^2_\mathcal H + \sum_{i=1}^n (f^*(x_i) - y_i)^2\)</span>, where <span class="math inline">\(|| f^* + tg||^2_\mathcal H = &lt;f^* + tg, f^* + tg&gt;_\mathcal H = &lt;f^*, f^*&gt;_\mathcal H + 2t&lt;f^*, g&gt;_\mathcal H + t^2 &lt;g,g&gt;_\mathcal H\)</span>.</p>
+<div class="theorem">
+<p><span id="thm:representer" class="theorem"><strong>Theorem 8.1  (Representer Theorem) </strong></span>After using the Euler-Lagrange equations with the reproducing property of the kernel, we will deduce:</p>
+<p><span class="math display">\[
+f^* = \sum_{i=1}^n a_i^* K(\cdot, x_i)
+\]</span></p>
+<p>Moreover, we can characterize the coefficient completely from <span class="math inline">\(y_1, \cdots, y_n\)</span> and the matrix <span class="math inline">\(K = \{K(x_i, x_j)\}\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{a_1, \cdots, a_n}{\operatorname{min}} \lambda || \sum_{j=1}^n a_j K(\cdot, x_j)||^2_\mathcal H &amp;+  \sum_{i=1}^n(\sum_{j=1}^n a_j K(x_i, x_j) - y_i)^2\\
+&amp;\Updownarrow\\
+\underset{\vec a \in \mathcal R^n}{\operatorname{min}} \lambda &lt;K \vec a, \vec a&gt;_{\mathcal R^n} &amp;+  ||K \vec a - \vec y||^2\\
+\end{aligned}
+\]</span></p>
+</div>
+<div id="comparison" class="section level3 hasAnchor" number="8.2.1">
+<h3><span class="header-section-number">8.2.1</span> Comparison<a href="regularized-empirical-risk-minimization.html#comparison" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="example">
+<p><span id="exm:unlabeled-div-40" class="example"><strong>Example 8.2  </strong></span>Go back to <strong>Example <a href="regularized-empirical-risk-minimization.html#exm:J">8.1</a></strong>, <span class="math inline">\(f^*\)</span> coincides with the solution to a problem of the form</p>
+<p><span class="math display">\[
+\underset{f \in \mathcal H}{\operatorname{min}} \lambda ||f||^2_\mathcal H + \sum_{i=1}^n (f(x_i) - y_i)^2
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal H\)</span> is the RKHS for a well chosen kernel <span class="math inline">\(K\)</span>.</p>
+<p>Let <span class="math inline">\(K: [0,1] \times [0,1] \to \mathcal R\)</span>, <span class="math inline">\(K(x, \tilde x) = x \wedge \tilde x\)</span>, by the representer theorem, the solution to the above problem takes the form:</p>
+<p><span class="math display">\[
+\tilde f := \sum_{i=1}^n a_i^* ~min\{\cdot, x_i\}
+\]</span></p>
+<p>which coincides with the solution <span class="math inline">\(f^*\)</span> to <span class="math inline">\(\underset{f \in Z}{\operatorname{min}} J(f)\)</span> (linear within intervals).</p>
+</div>
+<hr />
+<p>In general, we can consider the optimization problem:</p>
+<p><span class="math display">\[
+\underset{f \in \mathcal H}{\operatorname{min}} \lambda ||f||^2_\mathcal H + \sum_{i=1}^n G_i(f(x_i))
+\]</span></p>
+<p>where <span class="math inline">\(G: \mathcal R \to \mathcal R\)</span> is general depends on <span class="math inline">\(y_i\)</span>.</p>
+<ul>
+<li><p>For Regression: <span class="math inline">\(G_i(t) = (t - y_i)^2\)</span> (Usual Square Loss)<br />
+But there are reasons to use things like <span class="math inline">\(G_i(t) = G(t - y_i)\)</span>, where <span class="math inline">\(G\)</span> is the Hubber Loss: <span class="math inline">\(G(t) = \begin{cases} t^2 &amp; t \in [-1,1]\\ |t| &amp; o.w.\end{cases}\)</span>.<br />
+For example, to take care of outliers in the labels <span class="math inline">\(y_i\)</span>.</p></li>
+<li><p>For Classification: <span class="math inline">\(y_i \in \{-1,1\}\)</span></p>
+<ul>
+<li><span class="math inline">\(G_i(t) = \log(\frac{exp(y_i-t)}{1 + exp(y_i-t)})\)</span>, problem above is then a regularized (non-parametric) logistic regression.<br />
+</li>
+<li><span class="math inline">\(G_i(t) = max\{0, 1 - ty_i\}\)</span>, problem above is then a kernelized soft margin SVM.</li>
+</ul>
+<p>Notice that when we solve the above problem for a classification problem, we get <span class="math inline">\(f^* :\mathcal X \to \mathcal R\)</span>, we still need to do<br />
+<span class="math display">\[
+l(x):=
+\begin{cases}
+1 &amp; f^*(x) &gt; 0\\
+-1 &amp; f^*(x) &lt; 0
+\end{cases}
+\]</span></p></li>
+</ul>
+<div class="theorem">
+<p><span id="thm:grt" class="theorem"><strong>Theorem 8.2  (Generalized Representer Theorem) </strong></span>Consider the problem</p>
+<p><span class="math display">\[
+\underset{f \in \mathcal H}{\operatorname{min}} \lambda ||f||^2_\mathcal H + \sum_{i=1}^n G_i(f(x_i)),
+\]</span></p>
+<p>the solution is <span class="math inline">\(f^* = \sum_{i=1}^n a_i^* K(\cdot, x_i)\)</span>, where <span class="math inline">\(a_i^*\)</span> are</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underset{\vec a \in \mathcal R^n}{\operatorname{min}} \lambda &lt;K \vec a, \vec a&gt;_{\mathcal R^n} +  \sum_{i=1}^n G_i\Big (\sum_{j=1}^n a_j K(x_i, x_j)\Big)
+\end{aligned}
+\]</span></p>
+</div>
 
+</div>
 </div>
 </div>
             </section>

@@ -111,6 +111,125 @@ $$
 As \(J(f)\) has a minimum when \(f'(x) = 0\) at \([x_n, 1]\) and \(f^*\) minimizes \(J(f)\), we have \(f^*\) is constant in \([x_n, 1]\).
 
 
+## ERM with Kernels
+Let \(K\) be a kernel over \(\mathcal X\) and consider \(\mathcal H\) the RKHS associated to \(K\). Consider the problem:
+
+$$
+\underset{f \in \mathcal H}{\operatorname{min}}\underset{\text{Regularizer}}{\lambda || f ||_\mathcal H^2} + \underset{\text{Fidality}}{\sum_{i=1}^n (y_i - f(x_i))^2}
+$$
+
+This is actually Ridge Regression in disguise: let \(\psi: \begin{matrix}\mathcal X \to \mathcal H\\x \to K(\cdot, x) \end{matrix}\), \(f \in \mathcal H\), then \(f(x_i) = <f, K(\cdot, x_i)>_\mathcal H = <f, \psi(x_i)>_\mathcal H\), which means we want to solve:
+
+$$
+\underset{f \in \mathcal H}{\operatorname{min}}\underset{\text{Regularizer}}{\lambda || f ||_\mathcal H^2} + \underset{\text{Fidality}}{\sum_{i=1}^n (y_i - <f, \psi(x_i)>_\mathcal H)^2}
+$$
+Here, \(\phi_g(t) = \lambda || f^* + tg||^2_\mathcal H + \sum_{i=1}^n (f^*(x_i) - y_i)^2\), where \(|| f^* + tg||^2_\mathcal H = <f^* + tg, f^* + tg>_\mathcal H = <f^*, f^*>_\mathcal H + 2t<f^*, g>_\mathcal H + t^2 <g,g>_\mathcal H\).
+
+:::{.theorem #representer name="Representer Theorem"}
+After using the Euler-Lagrange equations with the reproducing property of the kernel, we will deduce:
+
+$$
+f^* = \sum_{i=1}^n a_i^* K(\cdot, x_i)
+$$
+
+Moreover, we can characterize the coefficient completely from \(y_1, \cdots, y_n\) and the matrix \(K = \{K(x_i, x_j)\}\):
+
+$$
+\begin{aligned}
+\underset{a_1, \cdots, a_n}{\operatorname{min}} \lambda || \sum_{j=1}^n a_j K(\cdot, x_j)||^2_\mathcal H &+  \sum_{i=1}^n(\sum_{j=1}^n a_j K(x_i, x_j) - y_i)^2\\
+&\Updownarrow\\
+\underset{\vec a \in \mathcal R^n}{\operatorname{min}} \lambda <K \vec a, \vec a>_{\mathcal R^n} &+  ||K \vec a - \vec y||^2\\
+\end{aligned}
+$$
+:::
+
+### Comparison
+
+
+
+:::{.example }
+Go back to **Example \@ref(exm:J)**, \(f^*\) coincides with the solution to a problem of the form
+
+$$
+\underset{f \in \mathcal H}{\operatorname{min}} \lambda ||f||^2_\mathcal H + \sum_{i=1}^n (f(x_i) - y_i)^2
+$$
+
+where \(\mathcal H\) is the RKHS for a well chosen kernel \(K\).
+
+Let \(K: [0,1] \times [0,1] \to \mathcal R\), \(K(x, \tilde x) = x \wedge \tilde x\), by the representer theorem, the solution to the above problem takes the form:
+
+$$
+\tilde f := \sum_{i=1}^n a_i^* ~min\{\cdot, x_i\}
+$$
+
+which coincides with the solution \(f^*\) to \(\underset{f \in Z}{\operatorname{min}} J(f)\) (linear within intervals).
+:::
+
+-----
+
+In general, we can consider the optimization problem:
+
+$$
+\underset{f \in \mathcal H}{\operatorname{min}} \lambda ||f||^2_\mathcal H + \sum_{i=1}^n G_i(f(x_i))
+$$
+
+where \(G: \mathcal R \to \mathcal R\) is general depends on \(y_i\).
+
+- For Regression:  \(G_i(t) = (t - y_i)^2\) (Usual Square Loss)  
+But there are reasons to use things like \(G_i(t) = G(t - y_i)\), where \(G\) is the Hubber Loss: \(G(t) = \begin{cases} t^2 & t \in [-1,1]\\ |t| & o.w.\end{cases}\).  
+For example, to take care of outliers in the labels \(y_i\).
+
+- For Classification: \(y_i \in \{-1,1\}\)  
+  - \(G_i(t) = \log(\frac{exp(y_i-t)}{1 + exp(y_i-t)})\), problem above is then a regularized (non-parametric) logistic regression.  
+  - \(G_i(t) = max\{0, 1 - ty_i\}\), problem above is then a kernelized soft margin SVM.  
+
+  Notice that when we solve the above problem for a classification problem, we get \(f^* :\mathcal X \to \mathcal R\), we still need to do  
+  $$
+  l(x):= 
+  \begin{cases}
+  1 & f^*(x) > 0\\
+  -1 & f^*(x) < 0
+  \end{cases}
+  $$
+
+:::{.theorem #grt name="Generalized Representer Theorem"}
+Consider the problem
+
+$$
+\underset{f \in \mathcal H}{\operatorname{min}} \lambda ||f||^2_\mathcal H + \sum_{i=1}^n G_i(f(x_i)),
+$$
+
+the solution is \(f^* = \sum_{i=1}^n a_i^* K(\cdot, x_i)\), where \(a_i^*\) are
+
+$$
+\begin{aligned}
+\underset{\vec a \in \mathcal R^n}{\operatorname{min}} \lambda <K \vec a, \vec a>_{\mathcal R^n} +  \sum_{i=1}^n G_i\Big (\sum_{j=1}^n a_j K(x_i, x_j)\Big)
+\end{aligned}
+$$
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
