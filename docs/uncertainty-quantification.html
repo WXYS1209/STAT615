@@ -23,7 +23,7 @@
 <meta name="author" content="Peter Wang" />
 
 
-<meta name="date" content="2023-05-08" />
+<meta name="date" content="2023-05-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -218,7 +218,7 @@ p(y|u) = u(y_1) \cdots u(y_p)
 <h2><span class="header-section-number">9.1</span> Bayes Perspective<a href="uncertainty-quantification.html#bayes-perspective" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Bayes Rule: <span class="math inline">\(p(u | y) \propto p(y | u) \pi(u)\)</span>. For the moment, we consider the case where <span class="math inline">\(u \in \mathcal R^d\)</span>. Suppose <span class="math inline">\(\pi(u)\)</span> is then interpreted as a density in <span class="math inline">\(\mathcal R^d\)</span>. The posterior is usually also a density in <span class="math inline">\(\mathcal R^d\)</span>.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-1" class="example"><strong>Example 9.4  (Example <a href="uncertainty-quantification.html#exm:ber">9.1</a> Continued) </strong></span>Let <span class="math inline">\(u \in (0,1)\)</span>, the likelihood is <span class="math inline">\(Bernoulli(u):\)</span></p>
+<p><span id="exm:unlabeled-div-44" class="example"><strong>Example 9.4  (Example <a href="uncertainty-quantification.html#exm:ber">9.1</a> Continued) </strong></span>Let <span class="math inline">\(u \in (0,1)\)</span>, the likelihood is <span class="math inline">\(Bernoulli(u):\)</span></p>
 <p><span class="math display">\[
 P(Y = y | u) = u^{\sum_{i=1}^p y_i} (1-u)^{p - \sum_{i=1}^p y_i}, ~y_i \in \{0,1\},
 \]</span></p>
@@ -293,7 +293,7 @@ u^* &amp;= \underset{u}{\operatorname{arg min}} -log(p(u | y))\\
 <p>which is just the ridge regression.</p>
 </div>
 <div class="remark">
-<p><span id="unlabeled-div-2" class="remark"><em>Remark</em>. </span><span class="math display">\[
+<p><span id="unlabeled-div-45" class="remark"><em>Remark</em>. </span><span class="math display">\[
 u^* = \mu
 \]</span></p>
 <p>This can be seen by direct optimization or by noticing that the Map of a Gaussian random vector coincides with its mean vector.</p>
@@ -308,7 +308,7 @@ p(u | y) \propto \underset{\text{Fidality}}{p(y | u)} ~\underset{\text{Regulariz
 <div id="gaussians-in-mathcal-rd" class="section level2 hasAnchor" number="9.2">
 <h2><span class="header-section-number">9.2</span> Gaussians in <span class="math inline">\(\mathcal R^d\)</span><a href="uncertainty-quantification.html#gaussians-in-mathcal-rd" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="definition">
-<p><span id="def:unlabeled-div-3" class="definition"><strong>Definition 9.1  </strong></span>A Gaussian random vector <span class="math inline">\(Z\)</span> with mean zero and covariance <span class="math inline">\(\Sigma \in \mathcal R_{d\times d}\)</span> (positive definite matrix) is a random vector with density (in <span class="math inline">\(\mathcal R^d\)</span>):</p>
+<p><span id="def:unlabeled-div-46" class="definition"><strong>Definition 9.1  </strong></span>A Gaussian random vector <span class="math inline">\(Z\)</span> with mean zero and covariance <span class="math inline">\(\Sigma \in \mathcal R_{d\times d}\)</span> (positive definite matrix) is a random vector with density (in <span class="math inline">\(\mathcal R^d\)</span>):</p>
 <p><span class="math display">\[
 p(z) = \frac{1}{\sqrt{(2 \pi)^d ~det(\Sigma)}} \cdot exp(-\frac{1}{2} &lt; \Sigma^{-1} z, z&gt;),
 \]</span></p>
@@ -317,10 +317,10 @@ p(z) = \frac{1}{\sqrt{(2 \pi)^d ~det(\Sigma)}} \cdot exp(-\frac{1}{2} &lt; \Sigm
 <p>We can characterize this distribution via its characteristic function: <span class="math inline">\(\phi_Z(v):= E[e^{\textbf{i} &lt;Z, v&gt;}]_{V \in \mathcal R^d} = e^{-\frac{1}{2} &lt;\Sigma v, v&gt;}\)</span>.</p>
 <p>Notice that we can see <span class="math inline">\(Z\)</span> as a collection of real valued random variables: <span class="math inline">\(Z = (Z_1, \cdots, Z_d)\)</span>, namely the coordinates of <span class="math inline">\(Z\)</span>. For convenience let’s write <span class="math inline">\(Z\)</span> in the following form: <span class="math inline">\(\{Z_x\}_{x \in \mathcal X}\)</span>, where <span class="math inline">\(\mathcal X\)</span> is the set <span class="math inline">\(\mathcal X = \{1, \cdots, d\}\)</span>.</p>
 <div class="proposition">
-<p><span id="prp:unlabeled-div-4" class="proposition"><strong>Proposition 9.1  </strong></span>Let <span class="math inline">\(\mathcal X = \{1, \cdots, d\}\)</span>, <span class="math inline">\(\{Z_x\}_{x \in \mathcal X}\)</span> a collection of real valued random variables is a Gaussian iff <span class="math inline">\(\forall\)</span> (finite) subset <span class="math inline">\(\mathcal X&#39; \subseteq \mathcal X\)</span>, the collection <span class="math inline">\(\{Z_x\}_{x \in \mathcal X&#39;}\)</span> is a Gaussian.</p>
+<p><span id="prp:unlabeled-div-47" class="proposition"><strong>Proposition 9.1  </strong></span>Let <span class="math inline">\(\mathcal X = \{1, \cdots, d\}\)</span>, <span class="math inline">\(\{Z_x\}_{x \in \mathcal X}\)</span> a collection of real valued random variables is a Gaussian iff <span class="math inline">\(\forall\)</span> (finite) subset <span class="math inline">\(\mathcal X&#39; \subseteq \mathcal X\)</span>, the collection <span class="math inline">\(\{Z_x\}_{x \in \mathcal X&#39;}\)</span> is a Gaussian.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span></p>
+<p><span id="unlabeled-div-48" class="proof"><em>Proof</em>. </span></p>
 <p>“<span class="math inline">\(\Leftarrow\)</span>”: It is obvious since we can pick <span class="math inline">\(\mathcal X&#39; = \mathcal X\)</span>.</p>
 <p>“<span class="math inline">\(\Rightarrow\)</span>”: For simplicity, suppose <span class="math inline">\(\mathcal X&#39; = \{1, \cdots, m\}\)</span>, <span class="math inline">\(m \leq d\)</span>. Let <span class="math inline">\(\tilde Z = \{Z_x\}_{x \in \mathcal X&#39;}\)</span>, <span class="math inline">\(w \in \mathcal R^m\)</span>. Then we have:</p>
 <p><span class="math display">\[
@@ -335,7 +335,7 @@ E[e^{\textbf{i} &lt;\tilde Z, w&gt;_{\mathcal R^m}}] &amp;= E[e^{\textbf{i} &lt;
 <p>Since the characteristic function of <span class="math inline">\(\tilde Z\)</span> is that of a Gaussian in <span class="math inline">\(\mathcal R^m\)</span>, we have <span class="math inline">\(\tilde Z \sim N_m(0, \tilde \Sigma)\)</span>.</p>
 </div>
 <div class="proposition">
-<p><span id="prp:unlabeled-div-6" class="proposition"><strong>Proposition 9.2  </strong></span>Let <span class="math inline">\(Z\)</span> be a Gaussian random vector in <span class="math inline">\(\mathcal R^d: Z \sim N_d(0, \Sigma)\)</span>.</p>
+<p><span id="prp:unlabeled-div-49" class="proposition"><strong>Proposition 9.2  </strong></span>Let <span class="math inline">\(Z\)</span> be a Gaussian random vector in <span class="math inline">\(\mathcal R^d: Z \sim N_d(0, \Sigma)\)</span>.</p>
 <ol style="list-style-type: decimal">
 <li><p>If <span class="math inline">\(A \in \mathcal R^{m \times d}\)</span> is a matrix, then <span class="math inline">\(U = AZ\)</span> is a Gaussian in <span class="math inline">\(\mathcal R^m\)</span> and <span class="math inline">\(U \sim N_m(0, A\Sigma A^T)\)</span>.</p></li>
 <li><p>If <span class="math inline">\(Z \sim N_d(0, \Sigma)\)</span>, <span class="math inline">\(\tilde Z \sim N_m(0, \tilde \Sigma)\)</span>, and <span class="math inline">\(Z, \tilde Z\)</span> are independent, then <span class="math inline">\(Z, \tilde Z \sim N_{d+m}(0, \left(\begin{matrix}\Sigma&amp;0\\0&amp;\tilde \Sigma\end{matrix}\right))\)</span>.</p></li>
@@ -355,7 +355,7 @@ Cov(&lt;Z, v&gt;, &lt;Z, \tilde v&gt;) = &lt;\Sigma v, \tilde v&gt; = &lt;\Sigma
 </ol>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span></p>
+<p><span id="unlabeled-div-50" class="proof"><em>Proof</em>. </span></p>
 <ol style="list-style-type: decimal">
 <li></li>
 </ol>
@@ -387,7 +387,7 @@ Cov(&lt;Z, v&gt;, &lt;Z, \tilde v&gt;) &amp;= Cov(\sum_{i=1}^n Z_i v_i, \sum_{j=
 <div id="diagonalization-of-sigma-and-sampling-for-n0-sigma" class="section level2 hasAnchor" number="9.3">
 <h2><span class="header-section-number">9.3</span> Diagonalization of <span class="math inline">\(\Sigma\)</span> and Sampling for <span class="math inline">\(N(0, \Sigma)\)</span><a href="uncertainty-quantification.html#diagonalization-of-sigma-and-sampling-for-n0-sigma" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="theorem">
-<p><span id="thm:unlabeled-div-8" class="theorem"><strong>Theorem 9.1  </strong></span>If <span class="math inline">\(\Sigma \in \mathcal R^{d \times d}\)</span> is symmetric positive semi definite, then there are vectors <span class="math inline">\(v_1, \cdots, v_d \in \mathcal R^d\)</span> and non-negative <span class="math inline">\(\lambda_1 \geq \cdots \geq \lambda_d \geq 0\)</span> s.t <span class="math inline">\(\Sigma v_i = \lambda_i vi_i\)</span> and <span class="math inline">\(&lt;v_i, v_j&gt;_{\mathcal R^d} = \begin{cases}1 &amp; i=j\\0 &amp; i \neq j\end{cases}\)</span>.</p>
+<p><span id="thm:unlabeled-div-51" class="theorem"><strong>Theorem 9.1  </strong></span>If <span class="math inline">\(\Sigma \in \mathcal R^{d \times d}\)</span> is symmetric positive semi definite, then there are vectors <span class="math inline">\(v_1, \cdots, v_d \in \mathcal R^d\)</span> and non-negative <span class="math inline">\(\lambda_1 \geq \cdots \geq \lambda_d \geq 0\)</span> s.t <span class="math inline">\(\Sigma v_i = \lambda_i vi_i\)</span> and <span class="math inline">\(&lt;v_i, v_j&gt;_{\mathcal R^d} = \begin{cases}1 &amp; i=j\\0 &amp; i \neq j\end{cases}\)</span>.</p>
 <p>In short: <span class="math inline">\(\Sigma\)</span> induces an orthonormal basis for <span class="math inline">\(\mathcal R^d\)</span> formed of eigen vectors of <span class="math inline">\(\Sigma\)</span>. Moreover, all of <span class="math inline">\(\Sigma\)</span>’s eigen values are non-negative.</p>
 </div>
 <ul>
@@ -412,7 +412,7 @@ So, we can write: <span class="math inline">\(Z = \sum_{i=1}^d \sqrt{\lambda_i}(
 <li><p>Set <span class="math inline">\(Z = \sum_{i=1}^d \sqrt{\lambda_i}\xi_i v_i\)</span>.</p></li>
 </ol>
 <div class="remark">
-<p><span id="unlabeled-div-9" class="remark"><em>Remark</em>. </span>The above is preciselt what we need to sample form Gaussian in more general settings. In particular, for Gaussians in certain RKHSs.</p>
+<p><span id="unlabeled-div-52" class="remark"><em>Remark</em>. </span>The above is preciselt what we need to sample form Gaussian in more general settings. In particular, for Gaussians in certain RKHSs.</p>
 </div>
 </div>
 <div id="stochastic-processes-and-gaussian-processes" class="section level2 hasAnchor" number="9.4">
@@ -432,8 +432,145 @@ K(x, \tilde x):= Cov(Z_x, Z_{\tilde x})
 <p>We will write <span class="math inline">\(Z \sim N(0, K)\)</span> for simplicity.</p>
 </div>
 <div class="proposition">
-<p><span id="prp:unlabeled-div-10" class="proposition"><strong>Proposition 9.3  </strong></span>The covariance function of a Gaussian process over <span class="math inline">\(\mathcal X\)</span> is a kernel over <span class="math inline">\(\mathcal X\)</span>:</p>
+<p><span id="prp:unlabeled-div-53" class="proposition"><strong>Proposition 9.3  </strong></span>The covariance function of a Gaussian process over <span class="math inline">\(\mathcal X\)</span> is a kernel over <span class="math inline">\(\mathcal X\)</span>:</p>
 <p><span class="math inline">\(x_1, \cdots, x_n \in \mathcal X\)</span>, <span class="math inline">\(\{Z_{x_1}, \cdots, Z_{x_n}\}\)</span> is a n-dimensional Gaussian. Thus <span class="math inline">\(\Sigma\)</span> is positive semi definite and <span class="math inline">\(\Sigma_{ij} = K(x_i, x_j)\)</span>.</p>
+</div>
+<p>Let <span class="math inline">\(K: \mathcal R^d \times \mathcal R^d \to \mathcal R\)</span> be a continuous kernel, for which <span class="math inline">\(|K(x, \tilde x)| \leq M\)</span>, where <span class="math inline">\(M\)</span> is a constant. Let <span class="math inline">\(p: \mathcal R^d \to \mathcal R\)</span> be a density function.</p>
+<p>Consider the following operator:</p>
+<p><span class="math display">\[
+T_K: f \in \mathcal L^2(p) \to \int_{\mathcal R^d} K(\cdot, x) f(x) dx,
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal L^2(p) = \{f: \int_{\mathcal R^d} f^2 p(x)dx &lt; \infty\}\)</span>. In particular, for <span class="math inline">\(f \in \mathcal L^2(p)\)</span>, <span class="math inline">\(T_K f\)</span> is a function on <span class="math inline">\(\mathcal R^d\)</span>, defined by <span class="math inline">\(T_K f(\tilde x):= \int_{\mathcal R^d} K(\tilde x, x) f(x) p(x) dx\)</span>, <span class="math inline">\(\tilde x \in \mathcal R^d\)</span>.</p>
+<div class="definition">
+<p><span id="def:ep" class="definition"><strong>Definition 9.5  (Eigen Values and Eigen Functions) </strong></span><span class="math inline">\(\lambda \in \mathcal R\)</span> is said to be an eigen value of <span class="math inline">\(T_K\)</span> if <span class="math inline">\(\exists f \in \mathcal L^2(p)\)</span>, s.t <span class="math inline">\(T_Kf = \lambda f\)</span>.</p>
+<p>In other words, if <span class="math inline">\(\lambda f(\cdot) = \int_{\mathcal R^d} K(\cdot, \tilde x) f(\tilde x) p(\tilde x) d \tilde x\)</span>, we call <span class="math inline">\((\lambda, f)\)</span> and eigen pair.</p>
+</div>
+<div class="theorem">
+<p><span id="thm:mt" class="theorem"><strong>Theorem 9.2  (Mercer's Theorem) </strong></span>There exists a sequence of eigen pairs <span class="math inline">\(\{(\lambda_k, \phi_k)\}_{k \in \mathcal N}\)</span> of <span class="math inline">\(T_K\)</span> s.t</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(&lt;\phi_k, \phi_l)&gt;_{\mathcal L^2(p)} = \int_{\mathcal R^d} \phi_k(x) \phi_l(x) p(x) dx = \begin{cases}1 &amp;k=l\\0&amp;o.w.\end{cases}\)</span>.</p></li>
+<li><p><span class="math inline">\(\mathcal L^2(p) = \{\sum_{i=1}^\infty a_i \phi_i: \sum_{i=1}^\infty a_i^2 &lt; \infty\}\)</span> and <span class="math inline">\(f \in \mathcal L^2(p)\)</span> can be represented as <span class="math inline">\(\sum_{i=1}^\infty &lt;f, \phi_i&gt;_{\mathcal L^2(p)} \phi_i\)</span> and the inner product can be written as <span class="math inline">\(&lt;f,g&gt;_{\mathcal L^2(p)} = \sum_{i=1}^\infty &lt;f, \phi_i&gt;_{\mathcal L^2(p)} &lt; g, \phi_i&gt;_{\mathcal L^2(p)}\)</span>.</p></li>
+<li><p>The numbers <span class="math inline">\(\lambda_1, \lambda_2, \cdots\)</span> satisfy <span class="math inline">\(\lambda_1 \geq \lambda_2 \geq \cdots \geq 0\)</span> and <span class="math inline">\(\lambda_n \to 0\)</span> as <span class="math inline">\(n \to \infty\)</span>.</p></li>
+<li><p>The kernel <span class="math inline">\(K\)</span> can be written as <span class="math inline">\(K(x, \tilde x) = \sum_{i=1}^\infty \lambda_i \phi_i(x) \phi_i(\tilde x)\)</span>.</p></li>
+</ol>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-54" class="proof"><em>Proof</em>. </span></p>
+<ol start="4" style="list-style-type: decimal">
+<li>First, note that <span class="math inline">\(K(\cdot, x) \in \mathcal L^2(p)\)</span>:</li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+\int_{\mathcal R^d} (K(\tilde x, x))^2 p(\tilde x) d\tilde x &amp;\leq \int_{\mathcal R^d} [\sqrt{K(\tilde x, \tilde x)} \sqrt{K(x,x)}]^2 p(\tilde x) d\tilde x\\
+&amp;= K(x,x) \int_{\mathcal R^d} K(\tilde x, \tilde x) p(\tilde x) d\tilde x\\
+&amp;&lt; \infty
+\end{aligned}
+\]</span></p>
+<p>In particular, <span class="math inline">\(K(\cdot, x) = \sum_{i=1}^\infty &lt;K(\cdot,x), \phi_i&gt;_{\mathcal L^2(p)} \phi_i(\cdot)\)</span>. Thus, <span class="math inline">\(K(\tilde x, x) = \sum_{i=1}^\infty &lt;K(\cdot,x), \phi_i&gt;_{\mathcal L^2(p)} \phi_i(\tilde x)\)</span>. We just need to show that <span class="math inline">\(&lt;K(\cdot,x), \phi_i&gt;_{\mathcal L^2(p)} = \lambda_i \phi_i(x)\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&lt;K(\cdot,x), \phi_i&gt;_{\mathcal L^2(p)} &amp;= \int_{\mathcal R^d} K(\tilde x, x) \phi_i(\tilde x) p(\tilde x) d \tilde x\\
+&amp;= T_K \phi_i(x)\\
+&amp;= \lambda_i \phi_i(x)
+\end{aligned}
+\]</span></p>
+</div>
+<ul>
+<li>How to define a Gaussian Process over <span class="math inline">\(\mathcal X\)</span> with covariance function <span class="math inline">\(K\)</span>? How to do sampling?<br />
+Assuming <span class="math inline">\(K\)</span> satisfies the condition for Mercer’s Theorem for some density <span class="math inline">\(p\)</span>, we consider the eigen pairs <span class="math inline">\(\{(\lambda_i, \phi_i)\}\)</span> and do the following:</li>
+</ul>
+<p>Let <span class="math inline">\(\xi_1, \cdots\)</span> be i.i.d <span class="math inline">\(N(0,1)\)</span> random variables. We define a random function: <span class="math inline">\(Z = \sum_{i=1}^\infty \sqrt{\lambda_i} \xi_i \phi_i\)</span>. In particular, <span class="math inline">\(Z(x) = \sum_{i=1}^\infty \sqrt{\lambda_i} \xi_i \phi_i(x_i)\)</span>.</p>
+<p>It follows that,</p>
+<p><span class="math display">\[
+\begin{aligned}
+Cov(Z(x), Z(\tilde x)) &amp;= E[\sum_{i=1}^\infty \sum_{j=1}^\infty \sqrt{\lambda_i} \sqrt{\lambda_j} \xi_1 \xi_j \phi_i(\tilde x)\phi_i(x)]\\
+&amp;= \sum_{i=1}^\infty \sum_{j=1}^\infty \sqrt{\lambda_i} \sqrt{\lambda_j} \phi_i(\tilde x)\phi_i(x)E[\xi_1 \xi_j]\\
+&amp;\underset{E[\xi_i \xi_j] = 1_{i=j}}{=} \sum_{i=1}^\infty\lambda_i \phi_i(x) \phi_i(\tilde x)\\
+&amp;= K(x, \tilde x)
+\end{aligned}
+\]</span></p>
+<div class="theorem">
+<p><span id="thm:kle" class="theorem"><strong>Theorem 9.3  (Karhunen-Loewe Expansion) </strong></span>The representation: <span class="math inline">\(Z = \sum_{i=1}^\infty \sqrt{\lambda_i} \xi_i \phi_i\)</span> for <span class="math inline">\(Z \sim N(0, K)\)</span> is known as Karhunen-Loewe Expansion.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-55" class="example"><strong>Example 9.7  </strong></span>Let <span class="math inline">\(\mathcal X = [0,1]\)</span>, <span class="math inline">\(K(s,t) = min\{s,t\} - st\)</span> is a kernel. Consider <span class="math inline">\(p(t) = 1\)</span>, <span class="math inline">\(t \in [0,1]\)</span>. Consider the operator: <span class="math inline">\(T_K: f \in \mathcal L^2(p) \to T_Kf \in \mathcal L^2(p)\)</span>, where <span class="math inline">\(T_K f(\cdot) = \int_0^1 K(\cdot, s) f(s) ds\)</span>.</p>
+<p>Let us try to find the eigen pairs of <span class="math inline">\(T_K\)</span>. That is,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\lambda \phi(t) &amp;= \int_0^1 K(t,s) \phi(s) ds\\
+&amp;= \int_0^1 (min\{s,t\} - st) \phi(s) ds\\
+&amp;= \int_0^1 min\{s,t\} \phi(s) ds - t\int_0^1 s \phi(s) ds\\
+&amp;= \int_0^t s\phi(s) ds + t\int_t^1 \phi(s) ds - t\int_0^1 s \phi(s) ds\\
+&amp;:= \int_0^t s\phi(s) ds + t\int_t^1 \phi(s) ds - tC
+\end{aligned}
+\]</span></p>
+<p>Take derivative w.r.t. <span class="math inline">\(t\)</span> to get</p>
+<p><span class="math display">\[
+\begin{aligned}
+\lambda \phi&#39;(t) &amp;= t\phi(t) + [\int_t^1 \phi(s) ds - t\phi(t)] - C\\
+&amp; = \int_t^1 \phi(s) ds - C
+\end{aligned}
+\]</span></p>
+<p>Take derivative w.t.t. <span class="math inline">\(t\)</span> again to derive:</p>
+<p><span class="math display">\[
+\lambda \phi&#39;&#39;(t) = - \phi(t)
+\]</span></p>
+<p>For reasons that will soon become apparent (<span class="math inline">\(\phi \in \mathcal H\)</span>), we must have:</p>
+<p><span class="math display">\[
+\phi(0) = 0 = \phi(1)
+\]</span></p>
+<p>Thus, we have the equation:</p>
+<p><span class="math display">\[
+\begin{cases}
+\lambda \phi&#39;&#39;(t) + \phi(t) = 0, ~\forall t \in (0,1)\\
+\phi(0) = 0\\
+\phi(1) = 0
+\end{cases}
+\]</span></p>
+<p>Thus, <span class="math inline">\(\phi\)</span> has to take the form:</p>
+<p><span class="math display">\[\phi(t) = A cos(\frac{t}{\sqrt{\lambda}}) + B sin(\frac{t}{\sqrt \lambda})\]</span></p>
+<p>However, we need to make sure <span class="math inline">\(\phi(0) = 0 = \phi(1)\)</span>, which means that <span class="math inline">\(0 = \phi(0) = A\)</span>, and <span class="math inline">\(0 = \phi(1) = B sin(\frac{1}{\sqrt \lambda})\)</span>, which forces <span class="math inline">\(\frac{1}{\sqrt \lambda}\)</span> to be a multiple of <span class="math inline">\(\pi\)</span>.</p>
+<p>In other words: <span class="math inline">\(\frac{1}{\sqrt \lambda} = k\pi\)</span>, i.e. <span class="math inline">\(\lambda = \frac{1}{k^2 \pi^2}\)</span>, <span class="math inline">\(k \in \mathcal N\)</span>.</p>
+<p>Thus, we have</p>
+<p><span class="math display">\[
+\begin{cases}
+\lambda_k = \frac{1}{k^2 \pi^2}\\
+\phi_k = C_k sin (k\pi t)
+\end{cases}
+\]</span></p>
+<p>where <span class="math inline">\(C_k\)</span> satisfies <span class="math inline">\(\int_0^1 \phi^2(x) dx = 1\)</span>.</p>
+</div>
+<div class="remark">
+<p><span id="unlabeled-div-56" class="remark"><em>Remark</em>. </span>Let’s go back to the setting of Mercer’s Theorem:</p>
+<ul>
+<li><p><span class="math inline">\(K\)</span> a continuous, bounded kernel.</p></li>
+<li><p><span class="math inline">\(p\)</span> a density.</p></li>
+<li><p><span class="math inline">\(\{(\lambda_k, \phi_k)\}_{k \in \mathcal N}\)</span> are eigen pairs of <span class="math inline">\(T_K\)</span>.</p></li>
+</ul>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(\mathcal L^2(p)\)</span> can be alternatively written as: <span class="math inline">\(\mathcal L^2(p) = \{\sum_{i=1}^\infty : \sum_{i=1}^\infty a_i^2 &lt; \infty\}\)</span>.</p></li>
+<li><p>The RKHS <span class="math inline">\(\mathcal H\)</span> of <span class="math inline">\(K\)</span> is defined as</p></li>
+</ol>
+<p><span class="math display">\[
+\mathcal H := \{\sum_{i=1}^\infty b_i K(\cdot, x_i): \{x_i\} \subseteq \mathcal X, \{b_i\} \subseteq \mathcal R, \text{ s.t } \sum_{j=1}^\infty \sum_{i=1}^\infty K(x_i, x_j) b_i b_j &lt; \infty\}
+\]</span></p>
+<p>As</p>
+<p><span class="math display">\[
+\begin{aligned}
+\sum_{i=1}^\infty b_i K(\cdot, x_i) &amp;= \sum_{i=1}^\infty b_i \sum_{k=1}^\infty \lambda_k \phi_k(\cdot) \phi_k(x_i)\\
+&amp;= \sum_{k=1}^\infty \lambda_k (\sum_{i=1}^\infty b_i\phi_k(x_i)) \phi_k(\cdot)\\
+&amp;= \sum_{k=1}^\infty &lt;\sum_{i=1}^\infty b_i K(\cdot, x_i), \phi_k&gt;_{\mathcal L^2(p)} \phi_k(\cdot)\\
+&amp;:= \sum_{k=1}^\infty a_k \phi_k(\cdot),
+\end{aligned}
+\]</span></p>
+<p>we can write it as:</p>
+<p><span class="math display">\[\mathcal H := \{\sum_{k=1}^\infty a_k \phi_k(\cdot): \{x_i\} \subseteq \mathcal X, \{b_i\} \subseteq \mathcal R, \text{ s.t } \sum_{i=1}^\infty \frac{a_i^2}{\lambda_i} &lt; \infty.\]</span></p>
+<p>In particular,</p>
+<ul>
+<li><p><span class="math inline">\(\mathcal H \subseteq \mathcal L^2(p)\)</span></p></li>
+<li><p><span class="math inline">\(\phi_i \in \mathcal H\)</span>, <span class="math inline">\(\forall i\)</span>.</p></li>
+<li><p><span class="math inline">\(Z = \sum_{i=1}^\infty \sqrt{\lambda_i} \xi_i \phi_i \notin \mathcal H\)</span>, although it does belong to <span class="math inline">\(\mathcal L^2(p)\)</span>.</p></li>
+</ul>
 </div>
 
 </div>

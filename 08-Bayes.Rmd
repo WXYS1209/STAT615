@@ -319,10 +319,187 @@ The covariance function of a Gaussian process over \(\mathcal X\) is a kernel ov
 
 :::
 
+Let \(K: \mathcal R^d \times \mathcal R^d \to \mathcal R\) be a continuous kernel, for which \(|K(x, \tilde x)| \leq M\), where \(M\) is a constant. Let \(p: \mathcal R^d \to \mathcal R\) be a density function. 
+
+Consider the following operator:
+
+$$
+T_K: f \in \mathcal L^2(p) \to \int_{\mathcal R^d} K(\cdot, x) f(x) dx,
+$$
+
+where \(\mathcal L^2(p) = \{f: \int_{\mathcal R^d} f^2 p(x)dx < \infty\}\). In particular, for \(f \in \mathcal L^2(p)\), \(T_K f\) is a function on \(\mathcal R^d\), defined by \(T_K f(\tilde x):= \int_{\mathcal R^d} K(\tilde x, x) f(x) p(x) dx\), \(\tilde x \in \mathcal R^d\).
+
+:::{.definition #ep name="Eigen Values and Eigen Functions"}
+\(\lambda \in \mathcal R\) is said to be an eigen value of \(T_K\) if \(\exists f \in \mathcal L^2(p)\), s.t \(T_Kf = \lambda f\).
+
+In other words, if \(\lambda f(\cdot) = \int_{\mathcal R^d} K(\cdot, \tilde x) f(\tilde x) p(\tilde x) d \tilde x\), we call \((\lambda, f)\) and eigen pair.
+:::
 
 
+:::{.theorem #mt name="Mercer's Theorem"}
+There exists a sequence of eigen pairs \(\{(\lambda_k, \phi_k)\}_{k \in \mathcal N}\) of \(T_K\) s.t
+
+1. \(<\phi_k, \phi_l)>_{\mathcal L^2(p)} = \int_{\mathcal R^d} \phi_k(x) \phi_l(x) p(x) dx = \begin{cases}1 &k=l\\0&o.w.\end{cases}\).
+
+2. \(\mathcal L^2(p) = \{\sum_{i=1}^\infty a_i \phi_i: \sum_{i=1}^\infty a_i^2 < \infty\}\) and \(f \in \mathcal L^2(p)\) can be represented as \(\sum_{i=1}^\infty <f, \phi_i>_{\mathcal L^2(p)} \phi_i\) and the inner product can be written as \(<f,g>_{\mathcal L^2(p)} = \sum_{i=1}^\infty <f, \phi_i>_{\mathcal L^2(p)} < g, \phi_i>_{\mathcal L^2(p)}\).
+
+3. The numbers \(\lambda_1, \lambda_2, \cdots\) satisfy \(\lambda_1 \geq \lambda_2 \geq \cdots \geq 0\) and \(\lambda_n \to 0\) as \(n \to \infty\).
+
+4. The kernel \(K\) can be written as \(K(x, \tilde x) = \sum_{i=1}^\infty \lambda_i \phi_i(x) \phi_i(\tilde x)\).
+:::
+
+:::{.proof}
+4. First, note that \(K(\cdot, x) \in \mathcal L^2(p)\): 
+
+$$
+\begin{aligned}
+\int_{\mathcal R^d} (K(\tilde x, x))^2 p(\tilde x) d\tilde x &\leq \int_{\mathcal R^d} [\sqrt{K(\tilde x, \tilde x)} \sqrt{K(x,x)}]^2 p(\tilde x) d\tilde x\\
+&= K(x,x) \int_{\mathcal R^d} K(\tilde x, \tilde x) p(\tilde x) d\tilde x\\
+&< \infty
+\end{aligned}
+$$
+
+In particular, \(K(\cdot, x) = \sum_{i=1}^\infty <K(\cdot,x), \phi_i>_{\mathcal L^2(p)} \phi_i(\cdot)\). Thus, \(K(\tilde x, x) = \sum_{i=1}^\infty <K(\cdot,x), \phi_i>_{\mathcal L^2(p)} \phi_i(\tilde x)\). We just need to show that \(<K(\cdot,x), \phi_i>_{\mathcal L^2(p)} = \lambda_i \phi_i(x)\):
+
+$$
+\begin{aligned}
+<K(\cdot,x), \phi_i>_{\mathcal L^2(p)} &= \int_{\mathcal R^d} K(\tilde x, x) \phi_i(\tilde x) p(\tilde x) d \tilde x\\
+&= T_K \phi_i(x)\\
+&= \lambda_i \phi_i(x)
+\end{aligned}
+$$
+
+:::
+
+- How to define a Gaussian Process over \(\mathcal X\) with covariance function \(K\)? How to do sampling?  
+Assuming \(K\) satisfies the condition for Mercer's Theorem for some density \(p\), we consider the eigen pairs \(\{(\lambda_i, \phi_i)\}\) and do the following:
+
+Let \(\xi_1, \cdots \) be i.i.d \(N(0,1)\) random variables. We define a random function: \(Z = \sum_{i=1}^\infty \sqrt{\lambda_i} \xi_i \phi_i\). In particular, \(Z(x) = \sum_{i=1}^\infty \sqrt{\lambda_i} \xi_i \phi_i(x_i)\).
+
+It follows that,
+
+$$
+\begin{aligned}
+Cov(Z(x), Z(\tilde x)) &= E[\sum_{i=1}^\infty \sum_{j=1}^\infty \sqrt{\lambda_i} \sqrt{\lambda_j} \xi_1 \xi_j \phi_i(\tilde x)\phi_i(x)]\\
+&= \sum_{i=1}^\infty \sum_{j=1}^\infty \sqrt{\lambda_i} \sqrt{\lambda_j} \phi_i(\tilde x)\phi_i(x)E[\xi_1 \xi_j]\\
+&\underset{E[\xi_i \xi_j] = 1_{i=j}}{=} \sum_{i=1}^\infty\lambda_i \phi_i(x) \phi_i(\tilde x)\\
+&= K(x, \tilde x)
+\end{aligned}
+$$
 
 
+:::{.theorem #kle name="Karhunen-Loewe Expansion"}
+The representation: \(Z = \sum_{i=1}^\infty \sqrt{\lambda_i} \xi_i \phi_i\) for \(Z \sim N(0, K)\) is known as Karhunen-Loewe Expansion.
+:::
+
+:::{.example}
+Let \(\mathcal X = [0,1]\), \(K(s,t) = min\{s,t\} - st\) is a kernel. Consider \(p(t) = 1\), \(t \in [0,1]\). Consider the operator: \(T_K: f \in \mathcal L^2(p) \to T_Kf \in \mathcal L^2(p)\), where \(T_K f(\cdot) = \int_0^1 K(\cdot, s) f(s) ds\).
+
+Let us try to find the eigen pairs of \(T_K\). That is,
+
+$$
+\begin{aligned}
+\lambda \phi(t) &= \int_0^1 K(t,s) \phi(s) ds\\
+&= \int_0^1 (min\{s,t\} - st) \phi(s) ds\\
+&= \int_0^1 min\{s,t\} \phi(s) ds - t\int_0^1 s \phi(s) ds\\
+&= \int_0^t s\phi(s) ds + t\int_t^1 \phi(s) ds - t\int_0^1 s \phi(s) ds\\
+&:= \int_0^t s\phi(s) ds + t\int_t^1 \phi(s) ds - tC
+\end{aligned}
+$$
+
+
+Take derivative w.r.t. \(t\) to get
+
+$$
+\begin{aligned}
+\lambda \phi'(t) &= t\phi(t) + [\int_t^1 \phi(s) ds - t\phi(t)] - C\\
+& = \int_t^1 \phi(s) ds - C
+\end{aligned}
+$$
+
+Take derivative w.t.t. \(t\) again to derive:
+
+$$
+\lambda \phi''(t) = - \phi(t)
+$$
+
+For reasons that will soon become apparent (\(\phi \in \mathcal H\)), we must have:
+
+$$
+\phi(0) = 0 = \phi(1)
+$$
+
+Thus, we have the equation:
+
+$$
+\begin{cases}
+\lambda \phi''(t) + \phi(t) = 0, ~\forall t \in (0,1)\\
+\phi(0) = 0\\
+\phi(1) = 0
+\end{cases}
+$$
+
+Thus, \(\phi\) has to take the form: 
+
+\[\phi(t) = A cos(\frac{t}{\sqrt{\lambda}}) + B sin(\frac{t}{\sqrt \lambda})\]
+
+However, we need to make sure \(\phi(0) = 0 = \phi(1)\), which means that \(0 = \phi(0) = A\), and \(0 = \phi(1) = B sin(\frac{1}{\sqrt \lambda})\), which forces \(\frac{1}{\sqrt \lambda}\) to be a multiple of \(\pi\).
+
+In other words: \(\frac{1}{\sqrt \lambda} = k\pi\), i.e. \(\lambda = \frac{1}{k^2 \pi^2}\), \(k \in \mathcal N\).
+
+Thus, we have 
+
+$$
+\begin{cases}
+\lambda_k = \frac{1}{k^2 \pi^2}\\
+\phi_k = C_k sin (k\pi t)
+\end{cases}
+$$
+
+where \(C_k\) satisfies \(\int_0^1 \phi^2(x) dx = 1\).
+:::
+
+
+:::{.remark}
+Let's go back to the setting of Mercer's Theorem:
+
+- \(K\) a continuous, bounded kernel.
+
+- \(p\) a density.
+
+- \(\{(\lambda_k, \phi_k)\}_{k \in \mathcal N}\) are eigen pairs of \(T_K\).
+
+1. \(\mathcal L^2(p)\) can be alternatively written as: \(\mathcal L^2(p) = \{\sum_{i=1}^\infty : \sum_{i=1}^\infty a_i^2 < \infty\}\).
+
+2. The RKHS \(\mathcal H\) of \(K\) is defined as 
+
+$$
+\mathcal H := \{\sum_{i=1}^\infty b_i K(\cdot, x_i): \{x_i\} \subseteq \mathcal X, \{b_i\} \subseteq \mathcal R, \text{ s.t } \sum_{j=1}^\infty \sum_{i=1}^\infty K(x_i, x_j) b_i b_j < \infty\}
+$$
+
+As 
+
+$$
+\begin{aligned}
+\sum_{i=1}^\infty b_i K(\cdot, x_i) &= \sum_{i=1}^\infty b_i \sum_{k=1}^\infty \lambda_k \phi_k(\cdot) \phi_k(x_i)\\
+&= \sum_{k=1}^\infty \lambda_k (\sum_{i=1}^\infty b_i\phi_k(x_i)) \phi_k(\cdot)\\
+&= \sum_{k=1}^\infty <\sum_{i=1}^\infty b_i K(\cdot, x_i), \phi_k>_{\mathcal L^2(p)} \phi_k(\cdot)\\
+&:= \sum_{k=1}^\infty a_k \phi_k(\cdot),
+\end{aligned}
+$$
+
+we can write it as:
+
+\[\mathcal H := \{\sum_{k=1}^\infty a_k \phi_k(\cdot): \{x_i\} \subseteq \mathcal X, \{b_i\} \subseteq \mathcal R, \text{ s.t } \sum_{i=1}^\infty \frac{a_i^2}{\lambda_i} < \infty.\]
+
+In particular,
+
+- \(\mathcal H \subseteq \mathcal L^2(p)\)
+
+- \(\phi_i \in \mathcal H\), \(\forall i\).
+
+- \(Z = \sum_{i=1}^\infty \sqrt{\lambda_i} \xi_i \phi_i \notin \mathcal H\), although it does belong to \(\mathcal L^2(p)\).
+:::
 
 
 
