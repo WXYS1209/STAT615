@@ -179,7 +179,7 @@ If yes, $\{\hat{\mathfrak f}_n\}_n$ is consistent for $\rho$.
 
 
 
-## Functions of $\hat{\eta}_n$
+## Functions of \(\hat \eta_n\)
 
 $$
 \hat \eta_n(X; (x_1,y_1), \cdots, (x_n,y_n)) = \sum_{i=1}^n y_i \omega_{in} (X; x_1, \cdots, x_n)

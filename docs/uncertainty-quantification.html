@@ -94,7 +94,7 @@
 <li class="chapter" data-level="3" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html"><i class="fa fa-check"></i><b>3</b> Plug-in Classifiers (Similarity Classifier)</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#notions-of-consistency-for-families-of-binary-classifier"><i class="fa fa-check"></i><b>3.1</b> Notions of Consistency for Families of Binary Classifier</a></li>
-<li class="chapter" data-level="3.2" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#functions-of-hateta_n"><i class="fa fa-check"></i><b>3.2</b> Functions of <span class="math inline">\(\hat{\eta}_n\)</span></a></li>
+<li class="chapter" data-level="3.2" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#functions-of-hat-eta_n"><i class="fa fa-check"></i><b>3.2</b> Functions of <span class="math inline">\(\hat \eta_n\)</span></a></li>
 <li class="chapter" data-level="3.3" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#consistency"><i class="fa fa-check"></i><b>3.3</b> Consistency</a></li>
 <li class="chapter" data-level="3.4" data-path="plug-in-classifiers-similarity-classifier.html"><a href="plug-in-classifiers-similarity-classifier.html#strong-consistency"><i class="fa fa-check"></i><b>3.4</b> Strong Consistency</a>
 <ul>
@@ -155,6 +155,9 @@
 <li class="chapter" data-level="9" data-path="uncertainty-quantification.html"><a href="uncertainty-quantification.html"><i class="fa fa-check"></i><b>9</b> Uncertainty Quantification</a>
 <ul>
 <li class="chapter" data-level="9.1" data-path="uncertainty-quantification.html"><a href="uncertainty-quantification.html#bayes-perspective"><i class="fa fa-check"></i><b>9.1</b> Bayes Perspective</a></li>
+<li class="chapter" data-level="9.2" data-path="uncertainty-quantification.html"><a href="uncertainty-quantification.html#gaussians-in-mathcal-rd"><i class="fa fa-check"></i><b>9.2</b> Gaussians in <span class="math inline">\(\mathcal R^d\)</span></a></li>
+<li class="chapter" data-level="9.3" data-path="uncertainty-quantification.html"><a href="uncertainty-quantification.html#diagonalization-of-sigma-and-sampling-for-n0-sigma"><i class="fa fa-check"></i><b>9.3</b> Diagonalization of <span class="math inline">\(\Sigma\)</span> and Sampling for <span class="math inline">\(N(0, \Sigma)\)</span></a></li>
+<li class="chapter" data-level="9.4" data-path="uncertainty-quantification.html"><a href="uncertainty-quantification.html#stochastic-processes-and-gaussian-processes"><i class="fa fa-check"></i><b>9.4</b> Stochastic Processes and Gaussian Processes</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -301,6 +304,137 @@ p(u | y) \propto \underset{\text{Fidality}}{p(y | u)} ~\underset{\text{Regulariz
 </div>
 <p>Back to <strong>Example <a href="uncertainty-quantification.html#exm:gauconcon">9.6</a></strong>, when <span class="math inline">\(u | y\)</span> is <span class="math inline">\(N(\mu, \Sigma)\)</span>, we have formulas for <span class="math inline">\(E[u_i | y]\)</span> and <span class="math inline">\(Cov(u_i, u_j)\)</span>. However, something like <span class="math inline">\(E[u_1cos(u_2) exp(u_3) | y]\)</span> would be quite impossible to compute. Nevertheless, we can use Monte-Carlo to approximate this. The idea is that we know what the posterior is. Thus, we can try to sample <span class="math inline">\(u^1, \cdots, u^K \sim N_d(\mu, \Sigma)\)</span>. Then consider the empirical average: <span class="math inline">\(\frac{1}{K} \sum{j=1}^K u_1^j cos(u_2^j) exp(u_3^j)\)</span>. That is, if we can sample from the posterior, we can numerically approximate <span class="math inline">\(E[G(u) | y] \approx \frac{1}{K} \sum_{j=1}^K G(u^j)\)</span>, where <span class="math inline">\(u^1, \cdots, u^K \underset{i.i.d}{\sim} Posterior\)</span>.</p>
 <p>If it is difficult to sample from the posterior, we can use MCMC (Monte Carlo Markov Chain).</p>
+</div>
+<div id="gaussians-in-mathcal-rd" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> Gaussians in <span class="math inline">\(\mathcal R^d\)</span><a href="uncertainty-quantification.html#gaussians-in-mathcal-rd" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:unlabeled-div-3" class="definition"><strong>Definition 9.1  </strong></span>A Gaussian random vector <span class="math inline">\(Z\)</span> with mean zero and covariance <span class="math inline">\(\Sigma \in \mathcal R_{d\times d}\)</span> (positive definite matrix) is a random vector with density (in <span class="math inline">\(\mathcal R^d\)</span>):</p>
+<p><span class="math display">\[
+p(z) = \frac{1}{\sqrt{(2 \pi)^d ~det(\Sigma)}} \cdot exp(-\frac{1}{2} &lt; \Sigma^{-1} z, z&gt;),
+\]</span></p>
+<p>and we write <span class="math inline">\(Z \sim N(0, \Sigma)\)</span>.</p>
+</div>
+<p>We can characterize this distribution via its characteristic function: <span class="math inline">\(\phi_Z(v):= E[e^{\textbf{i} &lt;Z, v&gt;}]_{V \in \mathcal R^d} = e^{-\frac{1}{2} &lt;\Sigma v, v&gt;}\)</span>.</p>
+<p>Notice that we can see <span class="math inline">\(Z\)</span> as a collection of real valued random variables: <span class="math inline">\(Z = (Z_1, \cdots, Z_d)\)</span>, namely the coordinates of <span class="math inline">\(Z\)</span>. For convenience let’s write <span class="math inline">\(Z\)</span> in the following form: <span class="math inline">\(\{Z_x\}_{x \in \mathcal X}\)</span>, where <span class="math inline">\(\mathcal X\)</span> is the set <span class="math inline">\(\mathcal X = \{1, \cdots, d\}\)</span>.</p>
+<div class="proposition">
+<p><span id="prp:unlabeled-div-4" class="proposition"><strong>Proposition 9.1  </strong></span>Let <span class="math inline">\(\mathcal X = \{1, \cdots, d\}\)</span>, <span class="math inline">\(\{Z_x\}_{x \in \mathcal X}\)</span> a collection of real valued random variables is a Gaussian iff <span class="math inline">\(\forall\)</span> (finite) subset <span class="math inline">\(\mathcal X&#39; \subseteq \mathcal X\)</span>, the collection <span class="math inline">\(\{Z_x\}_{x \in \mathcal X&#39;}\)</span> is a Gaussian.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span></p>
+<p>“<span class="math inline">\(\Leftarrow\)</span>”: It is obvious since we can pick <span class="math inline">\(\mathcal X&#39; = \mathcal X\)</span>.</p>
+<p>“<span class="math inline">\(\Rightarrow\)</span>”: For simplicity, suppose <span class="math inline">\(\mathcal X&#39; = \{1, \cdots, m\}\)</span>, <span class="math inline">\(m \leq d\)</span>. Let <span class="math inline">\(\tilde Z = \{Z_x\}_{x \in \mathcal X&#39;}\)</span>, <span class="math inline">\(w \in \mathcal R^m\)</span>. Then we have:</p>
+<p><span class="math display">\[
+\begin{aligned}
+E[e^{\textbf{i} &lt;\tilde Z, w&gt;_{\mathcal R^m}}] &amp;= E[e^{\textbf{i} &lt;\tilde Z,uw&gt;_{\mathcal R^m}}]\\
+&amp;(u = (w_1, \cdots, w_m, 0, \cdots, 0))\\
+&amp;= e^{-\frac{1}{2} &lt; \Sigma u, u &gt;_{\mathcal R^d}}\\
+&amp;= e^{-\frac{1}{2} &lt; \tilde \Sigma w, w &gt;_{\mathcal R^m}},
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\tilde \Sigma \in \mathcal R^{m \times m}\)</span> and <span class="math inline">\(\tilde \Sigma_{ij} = \Sigma_{ij}\)</span>, <span class="math inline">\(i,j = 1,\cdots,m\)</span>.</p>
+<p>Since the characteristic function of <span class="math inline">\(\tilde Z\)</span> is that of a Gaussian in <span class="math inline">\(\mathcal R^m\)</span>, we have <span class="math inline">\(\tilde Z \sim N_m(0, \tilde \Sigma)\)</span>.</p>
+</div>
+<div class="proposition">
+<p><span id="prp:unlabeled-div-6" class="proposition"><strong>Proposition 9.2  </strong></span>Let <span class="math inline">\(Z\)</span> be a Gaussian random vector in <span class="math inline">\(\mathcal R^d: Z \sim N_d(0, \Sigma)\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li><p>If <span class="math inline">\(A \in \mathcal R^{m \times d}\)</span> is a matrix, then <span class="math inline">\(U = AZ\)</span> is a Gaussian in <span class="math inline">\(\mathcal R^m\)</span> and <span class="math inline">\(U \sim N_m(0, A\Sigma A^T)\)</span>.</p></li>
+<li><p>If <span class="math inline">\(Z \sim N_d(0, \Sigma)\)</span>, <span class="math inline">\(\tilde Z \sim N_m(0, \tilde \Sigma)\)</span>, and <span class="math inline">\(Z, \tilde Z\)</span> are independent, then <span class="math inline">\(Z, \tilde Z \sim N_{d+m}(0, \left(\begin{matrix}\Sigma&amp;0\\0&amp;\tilde \Sigma\end{matrix}\right))\)</span>.</p></li>
+<li><p><span class="math inline">\(Z\)</span> is a Gaussian in <span class="math inline">\(\mathcal R^d\)</span> iff every linear combination of its coordinates is univariate (单元的) Gaussian:</p></li>
+</ol>
+<p><span class="math display">\[
+Z = (Z_1, \cdots, Z_d) \sim N_d \Leftrightarrow \forall a_1, \cdots, a_d \in \mathcal R, ~\sum_{j=1}^d a_j Z_j \sim N_1.
+\]</span></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Suppose that <span class="math inline">\(Z \sim N_d(0, \Sigma)\)</span>, and let <span class="math inline">\(v, \tilde v \in \mathcal R^d\)</span> be two vectors, then</li>
+</ol>
+<p><span class="math display">\[
+Cov(&lt;Z, v&gt;, &lt;Z, \tilde v&gt;) = &lt;\Sigma v, \tilde v&gt; = &lt;\Sigma \tilde v, v&gt;
+\]</span></p>
+<ol start="5" style="list-style-type: decimal">
+<li>Suppose <span class="math inline">\(Z = (Z_1, \cdots, Z_d)\)</span> is Gaussian with cov. matrix <span class="math inline">\(\Sigma\)</span>, then the coordinates of <span class="math inline">\(Z\)</span> are independent random variables iff <span class="math inline">\(\Sigma\)</span> is a diagonal matrix.</li>
+</ol>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span></p>
+<ol style="list-style-type: decimal">
+<li></li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+E[e^{\textbf{i}&lt;w,U&gt;_{\mathcal R^m}}] &amp;= E[e^{\textbf{i}&lt;w,AZ&gt;_{\mathcal R^m}}]\\
+&amp;\underset{&lt;A,B&gt; = tr(A^TB)}{=} E[e^{\textbf{i}&lt;A^Tw,Z&gt;_{\mathcal R^m}}]\\
+&amp;= e^{-\frac{1}{2} &lt; \Sigma (A^Tw), A^Tw&gt;_{\mathcal R^d}}\\
+&amp;= e^{-\frac{1}{2} &lt; A \Sigma A^Tw, w&gt;_{\mathcal R^d}}
+\end{aligned}
+\]</span></p>
+<ol start="3" style="list-style-type: decimal">
+<li>“<span class="math inline">\(\Rightarrow\)</span>”: Let <span class="math inline">\(U = \sum_{j=1}^d a_j Z_j\)</span> be a linear combination of the coordinates of <span class="math inline">\(Z\)</span>. By 1, we have <span class="math inline">\(U=AZ\)</span>, where <span class="math inline">\(A = (a_1, \cdots, a_d)\)</span>, is a Gaussian.</li>
+</ol>
+<p>“<span class="math inline">\(\Leftarrow\)</span>”: Let <span class="math inline">\(a \in \mathcal R^d\)</span>, with <span class="math inline">\(a = (a_1, \cdots, a_d)\)</span>. Then, <span class="math inline">\(E[e^{\textbf{i}&lt;a,Z&gt;}] = E[e^{\textbf{i} \sum_{j=1}^d a_j Z_j}] \underset{\sum_{j=1}^d a_j Z_j \sim N(0, \sigma_a^2)}{=} e^{-\frac{1}{2} \sigma_a^2}\)</span>, where <span class="math inline">\(\sigma_a^2 = Var(\sum_{j=1}^d a_j Z_j) = &lt;\Sigma a, a&gt;_{\mathcal R^d}\)</span>, <span class="math inline">\(\Sigma\)</span> is the covariance matrix of <span class="math inline">\(Z = (Z_1, \cdots, Z_d)\)</span>. Thus, <span class="math inline">\(E[e^{\textbf{i}&lt;a,Z&gt;}] = e^{-\frac{1}{2} &lt;\Sigma a, a&gt;_{\mathcal R^d}}\)</span>, <span class="math inline">\(\forall a \in \mathcal R^d\)</span>, which means that <span class="math inline">\(Z \sim N_d\)</span>.</p>
+<ol start="4" style="list-style-type: decimal">
+<li></li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+Cov(&lt;Z, v&gt;, &lt;Z, \tilde v&gt;) &amp;= Cov(\sum_{i=1}^n Z_i v_i, \sum_{j=1}^n Z_j, \tilde v_j)\\
+&amp;= \sum_{i=1}^n \sum_{j=1}^n v_i \tilde v_j Cov(Z_i, Z_j)\\
+&amp;= \sum_{i=1}^n \sum_{j=1}^n (\Sigma_{ij}v_i \tilde v_j)\\
+&amp;= &lt;\Sigma v, \tilde v&gt; = &lt;\Sigma \tilde v, v&gt;.
+\end{aligned}
+\]</span></p>
+</div>
+</div>
+<div id="diagonalization-of-sigma-and-sampling-for-n0-sigma" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> Diagonalization of <span class="math inline">\(\Sigma\)</span> and Sampling for <span class="math inline">\(N(0, \Sigma)\)</span><a href="uncertainty-quantification.html#diagonalization-of-sigma-and-sampling-for-n0-sigma" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-8" class="theorem"><strong>Theorem 9.1  </strong></span>If <span class="math inline">\(\Sigma \in \mathcal R^{d \times d}\)</span> is symmetric positive semi definite, then there are vectors <span class="math inline">\(v_1, \cdots, v_d \in \mathcal R^d\)</span> and non-negative <span class="math inline">\(\lambda_1 \geq \cdots \geq \lambda_d \geq 0\)</span> s.t <span class="math inline">\(\Sigma v_i = \lambda_i vi_i\)</span> and <span class="math inline">\(&lt;v_i, v_j&gt;_{\mathcal R^d} = \begin{cases}1 &amp; i=j\\0 &amp; i \neq j\end{cases}\)</span>.</p>
+<p>In short: <span class="math inline">\(\Sigma\)</span> induces an orthonormal basis for <span class="math inline">\(\mathcal R^d\)</span> formed of eigen vectors of <span class="math inline">\(\Sigma\)</span>. Moreover, all of <span class="math inline">\(\Sigma\)</span>’s eigen values are non-negative.</p>
+</div>
+<ul>
+<li>How to sample from <span class="math inline">\(Z \sim N_d(0, \Sigma)\)</span>:<br />
+Since <span class="math inline">\(Z \in \mathcal R^d\)</span>, we notice that <span class="math inline">\(Z = \sum_{i=1}^d &lt;Z, v_i&gt;_{\mathcal R^d} v_i\)</span>, where <span class="math inline">\(\{v_i\}\)</span> is an orthonormal basis for <span class="math inline">\(\mathcal R^d\)</span> and are fixed. We then have <span class="math inline">\(&lt;Z, v_i&gt; \sim N_1(0, &lt;\Sigma v_i, v_i&gt;) = N_1(0, \lambda_i &lt;v_i, v_i&gt;) = N_1(0, \lambda_i)\)</span>.<br />
+Moreover, for <span class="math inline">\(i \neq j\)</span>:<br />
+<span class="math display">\[
+\begin{aligned}
+Cov(&lt;Z, v_i&gt;, &lt;Z, v_j&gt;) &amp;= &lt;\Sigma v_i, v_j&gt;\\
+&amp;= &lt;\lambda_i v_i, v_j&gt;\\
+&amp;= \lambda &lt;v_i, v_j&gt;\\
+&amp;= 0
+\end{aligned}
+\]</span><br />
+which means that the random variables <span class="math inline">\(&lt;Z, v_1&gt;,\cdots, &lt;Z,v_d&gt;\)</span> are independent.<br />
+So, we can write: <span class="math inline">\(Z = \sum_{i=1}^d \sqrt{\lambda_i}(\frac{&lt;Z, v_i&gt;}{\sqrt{\lambda_i}}) v_i\ = \sum_{i=1}^d \sqrt{\lambda_i}\xi_i v_i\)</span>, where <span class="math inline">\(\xi_1, \cdots, \xi_d\)</span> are i.i.d <span class="math inline">\(N(0,1)\)</span> random variables.</li>
+</ul>
+<p>Thus, to sample from <span class="math inline">\(N_d(0, \Sigma)\)</span>, we can do the following:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the eigen pairs <span class="math inline">\(\{(\lambda_i, v_i)\}_{i=1,\cdots,d}\)</span> for <span class="math inline">\(\Sigma\)</span>.</p></li>
+<li><p>Sample <span class="math inline">\(\xi_1, \cdots, \xi_d \sim N(0,1)\)</span>.</p></li>
+<li><p>Set <span class="math inline">\(Z = \sum_{i=1}^d \sqrt{\lambda_i}\xi_i v_i\)</span>.</p></li>
+</ol>
+<div class="remark">
+<p><span id="unlabeled-div-9" class="remark"><em>Remark</em>. </span>The above is preciselt what we need to sample form Gaussian in more general settings. In particular, for Gaussians in certain RKHSs.</p>
+</div>
+</div>
+<div id="stochastic-processes-and-gaussian-processes" class="section level2 hasAnchor" number="9.4">
+<h2><span class="header-section-number">9.4</span> Stochastic Processes and Gaussian Processes<a href="uncertainty-quantification.html#stochastic-processes-and-gaussian-processes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:sp" class="definition"><strong>Definition 9.2  (Stochastic Processes) </strong></span>Let <span class="math inline">\(\mathcal X\)</span> be a set. A stochastic process over <span class="math inline">\(\mathcal X\)</span> is a collection of random variables <span class="math inline">\(\{Z_x\}_{x \in \mathcal X}\)</span>.</p>
+</div>
+<div class="definition">
+<p><span id="def:gp" class="definition"><strong>Definition 9.3  (Gaussian Processes) </strong></span>A Gaussian Process over <span class="math inline">\(\mathcal X\)</span> is a stochastic process <span class="math inline">\(\{Z_x\}_{x \in \mathcal X}\)</span> with the property that <span class="math inline">\(\forall\)</span> finite subset <span class="math inline">\(\mathcal X&#39;\)</span> of <span class="math inline">\(\mathcal X\)</span>, the vector <span class="math inline">\(\{Z_x\}_{x \in \mathcal X&#39;}\)</span> is a Gaussian.</p>
+</div>
+<div class="definition">
+<p><span id="def:cf" class="definition"><strong>Definition 9.4  (Covariance Funciton) </strong></span>Suppose <span class="math inline">\(Z = \{Z_x\}_{x \in \mathcal X}\)</span> is a Gaussian Process over <span class="math inline">\(\mathcal X\)</span>. We define <span class="math inline">\(Z\)</span>’s covariance function as:</p>
+<p><span class="math display">\[
+K: \mathcal X \times \mathcal X \to \mathcal R\\
+K(x, \tilde x):= Cov(Z_x, Z_{\tilde x})
+\]</span></p>
+<p>We will write <span class="math inline">\(Z \sim N(0, K)\)</span> for simplicity.</p>
+</div>
+<div class="proposition">
+<p><span id="prp:unlabeled-div-10" class="proposition"><strong>Proposition 9.3  </strong></span>The covariance function of a Gaussian process over <span class="math inline">\(\mathcal X\)</span> is a kernel over <span class="math inline">\(\mathcal X\)</span>:</p>
+<p><span class="math inline">\(x_1, \cdots, x_n \in \mathcal X\)</span>, <span class="math inline">\(\{Z_{x_1}, \cdots, Z_{x_n}\}\)</span> is a n-dimensional Gaussian. Thus <span class="math inline">\(\Sigma\)</span> is positive semi definite and <span class="math inline">\(\Sigma_{ij} = K(x_i, x_j)\)</span>.</p>
+</div>
 
 </div>
 </div>

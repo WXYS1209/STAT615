@@ -160,17 +160,164 @@ Back to **Example \@ref(exm:gauconcon)**, when \(u | y\) is \(N(\mu, \Sigma)\), 
 If it is difficult to sample from the posterior, we can use MCMC (Monte Carlo Markov Chain).
 
 
+## Gaussians in \(\mathcal R^d\)
 
+:::{.definition}
+A Gaussian random vector \(Z\) with mean zero and covariance \(\Sigma \in \mathcal R_{d\times d}\) (positive definite matrix) is a random vector with density (in \(\mathcal R^d\)):
 
+$$
+p(z) = \frac{1}{\sqrt{(2 \pi)^d ~det(\Sigma)}} \cdot exp(-\frac{1}{2} < \Sigma^{-1} z, z>),
+$$
 
+and we write \(Z \sim N(0, \Sigma)\).
+:::
 
+We can characterize this distribution via its characteristic function: \(\phi_Z(v):= E[e^{\textbf{i} <Z, v>}]_{V \in \mathcal R^d} = e^{-\frac{1}{2} <\Sigma v, v>}\).
 
+Notice that we can see \(Z\) as a collection of real valued random variables: \(Z = (Z_1, \cdots, Z_d)\), namely the coordinates of \(Z\). For convenience let's write \(Z\) in the following form: \(\{Z_x\}_{x \in \mathcal X}\), where \(\mathcal X\) is the set \(\mathcal X = \{1, \cdots, d\}\).
 
+:::{.proposition}
+Let \(\mathcal X = \{1, \cdots, d\}\), \(\{Z_x\}_{x \in \mathcal X}\) a collection of real valued random variables is a Gaussian iff \(\forall\) (finite) subset \(\mathcal X' \subseteq \mathcal X\), the collection \(\{Z_x\}_{x \in \mathcal X'}\) is a Gaussian.
+:::
 
+:::{.proof}
+\quad
 
+"\(\Leftarrow\)": It is obvious since we can pick \(\mathcal X' = \mathcal X\).
 
+"\(\Rightarrow\)": For simplicity, suppose \(\mathcal X' = \{1, \cdots, m\}\), \(m \leq d\). Let \(\tilde Z = \{Z_x\}_{x \in \mathcal X'}\), \(w \in \mathcal R^m\). Then we have:
 
+$$
+\begin{aligned}
+E[e^{\textbf{i} <\tilde Z, w>_{\mathcal R^m}}] &= E[e^{\textbf{i} <\tilde Z,uw>_{\mathcal R^m}}]\\
+&(u = (w_1, \cdots, w_m, 0, \cdots, 0))\\
+&= e^{-\frac{1}{2} < \Sigma u, u >_{\mathcal R^d}}\\
+&= e^{-\frac{1}{2} < \tilde \Sigma w, w >_{\mathcal R^m}},
+\end{aligned}
+$$
 
+where \(\tilde \Sigma \in \mathcal R^{m \times m}\) and \(\tilde \Sigma_{ij} = \Sigma_{ij}\), \(i,j = 1,\cdots,m\).
+
+Since the characteristic function of \(\tilde Z\) is that of a Gaussian in \(\mathcal R^m\), we have \(\tilde Z \sim N_m(0, \tilde \Sigma)\).
+:::
+
+:::{.proposition}
+Let \(Z\) be a Gaussian random vector in \(\mathcal R^d: Z \sim N_d(0, \Sigma)\).
+
+1. If \(A \in \mathcal R^{m \times d}\) is a matrix, then \(U = AZ\) is a Gaussian in \(\mathcal R^m\) and \(U \sim N_m(0, A\Sigma A^T)\).
+
+2. If \(Z \sim N_d(0, \Sigma)\), \(\tilde Z \sim N_m(0, \tilde \Sigma)\), and \(Z, \tilde Z\) are independent, then \(Z, \tilde Z \sim N_{d+m}(0, \left(\begin{matrix}\Sigma&0\\0&\tilde \Sigma\end{matrix}\right))\).
+
+3. \(Z\) is a Gaussian in \(\mathcal R^d\) iff every linear combination of its coordinates is univariate (单元的) Gaussian:
+
+$$
+Z = (Z_1, \cdots, Z_d) \sim N_d \Leftrightarrow \forall a_1, \cdots, a_d \in \mathcal R, ~\sum_{j=1}^d a_j Z_j \sim N_1.
+$$
+
+4. Suppose that \(Z \sim N_d(0, \Sigma)\), and let \(v, \tilde v \in \mathcal R^d\) be two vectors, then 
+
+$$
+Cov(<Z, v>, <Z, \tilde v>) = <\Sigma v, \tilde v> = <\Sigma \tilde v, v>
+$$
+
+5. Suppose \(Z = (Z_1, \cdots, Z_d)\) is Gaussian with cov. matrix \(\Sigma\), then the coordinates of \(Z\) are independent random variables iff \(\Sigma\) is a diagonal matrix.
+:::
+
+:::{.proof}
+1. 
+
+$$
+\begin{aligned}
+E[e^{\textbf{i}<w,U>_{\mathcal R^m}}] &= E[e^{\textbf{i}<w,AZ>_{\mathcal R^m}}]\\
+&\underset{<A,B> = tr(A^TB)}{=} E[e^{\textbf{i}<A^Tw,Z>_{\mathcal R^m}}]\\
+&= e^{-\frac{1}{2} < \Sigma (A^Tw), A^Tw>_{\mathcal R^d}}\\
+&= e^{-\frac{1}{2} < A \Sigma A^Tw, w>_{\mathcal R^d}}
+\end{aligned}
+$$
+
+3. "\(\Rightarrow\)": Let \(U = \sum_{j=1}^d a_j Z_j\) be a linear combination of the coordinates of \(Z\). By 1, we have \(U=AZ\), where \(A = (a_1, \cdots, a_d)\), is a Gaussian.
+
+"\(\Leftarrow\)": Let \(a \in \mathcal R^d\), with \(a = (a_1, \cdots, a_d)\). Then, \(E[e^{\textbf{i}<a,Z>}] = E[e^{\textbf{i} \sum_{j=1}^d a_j Z_j}] \underset{\sum_{j=1}^d a_j Z_j \sim N(0, \sigma_a^2)}{=} e^{-\frac{1}{2} \sigma_a^2}\), where \(\sigma_a^2 = Var(\sum_{j=1}^d a_j Z_j) = <\Sigma a, a>_{\mathcal R^d}\), \(\Sigma\) is the covariance matrix of \(Z = (Z_1, \cdots, Z_d)\). Thus, \(E[e^{\textbf{i}<a,Z>}] = e^{-\frac{1}{2} <\Sigma a, a>_{\mathcal R^d}}\), \(\forall a \in \mathcal R^d\), which means that \(Z \sim N_d\).
+
+4. 
+
+$$
+\begin{aligned}
+Cov(<Z, v>, <Z, \tilde v>) &= Cov(\sum_{i=1}^n Z_i v_i, \sum_{j=1}^n Z_j, \tilde v_j)\\
+&= \sum_{i=1}^n \sum_{j=1}^n v_i \tilde v_j Cov(Z_i, Z_j)\\
+&= \sum_{i=1}^n \sum_{j=1}^n (\Sigma_{ij}v_i \tilde v_j)\\
+&= <\Sigma v, \tilde v> = <\Sigma \tilde v, v>.
+\end{aligned}
+$$
+:::
+
+## Diagonalization of \(\Sigma\) and Sampling for \(N(0, \Sigma)\)
+
+:::{.theorem}
+If \(\Sigma \in \mathcal R^{d \times d}\) is symmetric positive semi definite, then there are vectors \(v_1, \cdots, v_d \in \mathcal R^d\) and non-negative \(\lambda_1 \geq \cdots \geq \lambda_d \geq 0\) s.t \(\Sigma v_i = \lambda_i vi_i\) and \(<v_i, v_j>_{\mathcal R^d} = \begin{cases}1 & i=j\\0 & i \neq j\end{cases}\).
+
+In short: \(\Sigma\) induces an orthonormal basis for \(\mathcal R^d\) formed of eigen vectors of \(\Sigma\). Moreover, all of \(\Sigma\)'s eigen values are non-negative.
+:::
+
+- How to sample from \(Z \sim N_d(0, \Sigma)\):  
+Since \(Z \in \mathcal R^d\), we notice that \(Z = \sum_{i=1}^d <Z, v_i>_{\mathcal R^d} v_i\), where \(\{v_i\}\) is an orthonormal basis for \(\mathcal R^d\) and are fixed. We then have \(<Z, v_i> \sim N_1(0, <\Sigma v_i, v_i>) = N_1(0, \lambda_i <v_i, v_i>) = N_1(0, \lambda_i)\).  
+Moreover, for \(i \neq j\):  
+$$
+\begin{aligned}
+Cov(<Z, v_i>, <Z, v_j>) &= <\Sigma v_i, v_j>\\
+&= <\lambda_i v_i, v_j>\\
+&= \lambda <v_i, v_j>\\
+&= 0
+\end{aligned}
+$$  
+which means that the random variables \(<Z, v_1>,\cdots, <Z,v_d>\) are independent.  
+So, we can write: \(Z = \sum_{i=1}^d \sqrt{\lambda_i}(\frac{<Z, v_i>}{\sqrt{\lambda_i}}) v_i\ = \sum_{i=1}^d \sqrt{\lambda_i}\xi_i  v_i\), where \(\xi_1, \cdots, \xi_d\) are i.i.d \(N(0,1)\) random variables.  
+
+Thus, to sample from \(N_d(0, \Sigma)\), we can do the following:
+
+1. Find the eigen pairs \(\{(\lambda_i, v_i)\}_{i=1,\cdots,d}\) for \(\Sigma\).
+
+2. Sample \(\xi_1, \cdots, \xi_d \sim N(0,1)\).
+
+3. Set \(Z = \sum_{i=1}^d \sqrt{\lambda_i}\xi_i  v_i\).
+
+:::{.remark}
+The above is preciselt what we need to sample form Gaussian in more general settings. In particular, for Gaussians in certain RKHSs.
+:::
+
+## Stochastic Processes and Gaussian Processes
+
+:::{.definition #sp name="Stochastic Processes"}
+
+Let \(\mathcal X\) be a set. A stochastic process over \(\mathcal X\) is a collection of random variables \(\{Z_x\}_{x \in \mathcal X}\).
+
+:::
+
+:::{.definition #gp name="Gaussian Processes"}
+
+A Gaussian Process over \(\mathcal X\) is a stochastic process \(\{Z_x\}_{x \in \mathcal X}\) with the property that \(\forall\) finite subset \(\mathcal X'\) of \(\mathcal X\), the vector \(\{Z_x\}_{x \in \mathcal X'}\) is a Gaussian.
+
+:::
+
+:::{.definition #cf name="Covariance Funciton"}
+
+Suppose \(Z = \{Z_x\}_{x \in \mathcal X}\) is a Gaussian Process over \(\mathcal X\). We define \(Z\)'s covariance function as:
+
+$$
+K: \mathcal X \times \mathcal X \to \mathcal R\\
+K(x, \tilde x):= Cov(Z_x, Z_{\tilde x})
+$$
+
+We will write \(Z \sim N(0, K)\) for simplicity.
+
+:::
+
+:::{.proposition}
+The covariance function of a Gaussian process over \(\mathcal X\) is a kernel over \(\mathcal X\):
+
+\(x_1, \cdots, x_n \in \mathcal X\), \(\{Z_{x_1}, \cdots, Z_{x_n}\}\) is a n-dimensional Gaussian. Thus \(\Sigma\) is positive semi definite and \(\Sigma_{ij} = K(x_i, x_j)\).
+
+:::
 
 
 
