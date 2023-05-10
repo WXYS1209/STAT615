@@ -283,7 +283,7 @@ s.t. &amp;~\lambda_i \geq 0 ~\forall i=1,\cdots,n
 <p>Then, <span class="math inline">\(\forall z^*\)</span> solution to <em>(P)</em>, <span class="math inline">\(\exists \lambda^*\)</span> solution to <em>(D)</em>, s.t.</p>
 <ol style="list-style-type: decimal">
 <li><p><span class="math inline">\(\vec 0 ~(\in R^s) = \nabla f(z^*) + \sum_{i=1}^n \lambda_i^* \nabla h_i(z^*)\)</span> (Stationarity)</p></li>
-<li><p><span class="math inline">\(h_i(z^*) \geq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Primal Feasibility)</p></li>
+<li><p><span class="math inline">\(h_i(z^*) \leq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Primal Feasibility)</p></li>
 <li><p><span class="math inline">\(\lambda_i^* \geq 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Dual Feasibility)</p></li>
 <li><p><span class="math inline">\(\lambda_i^* h_i(z^*) = 0\)</span>, <span class="math inline">\(\forall i=1,\cdots,n\)</span> (Complementary Slackness)</p></li>
 </ol>
@@ -555,7 +555,7 @@ And by Cauthy-Schwartz Ineq, we have <span class="math inline">\(|L_g(f)| = |&lt
 <p><strong>Why “Reproducing Kernel”?</strong>:</p>
 <p><span class="math inline">\(L_x\)</span> is clearly linear, and if in addition it is continuous, then by <strong>Theorem <a href="support-vector-machine.html#thm:RRT">7.3</a></strong>, <span class="math inline">\(\exists\)</span> a unique <span class="math inline">\(K_x \in \mathcal H\)</span> s.t <span class="math inline">\(f(x) = L_x(f) = &lt;f, K_x&gt;_\mathcal H\)</span>, <span class="math inline">\(\forall f \in \mathcal H\)</span>. That is, to evaluate <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span>, it is enough to take the inner product of <span class="math inline">\(f\)</span> with <span class="math inline">\(K_x\)</span>.</p>
 <p>Now, let <span class="math inline">\(\tilde x \in \mathcal X\)</span>, then <span class="math inline">\(K_{\tilde x} (x) = &lt;K_{\tilde x}, K_x&gt;_\mathcal H\)</span>. Let’s call them <span class="math inline">\(K(\tilde x, x)\)</span>. Then the function <span class="math inline">\(K\)</span> defined above is a kernel: take <span class="math inline">\(\psi: \begin{matrix} \mathcal X \to \mathcal H\\x \to K_x\end{matrix}\)</span>, then <span class="math inline">\(K(\tilde x, x) = &lt;K_{\tilde x}, K_x&gt;_\mathcal H = &lt;\psi(\tilde x), \psi(x)&gt;_\mathcal H\)</span>.</p>
-<p>So far, we have gone from RKHS to Kernel (<span class="math inline">\(K\)</span>). And the Kernel <span class="math inline">\(K\)</span> has the reproducing property: <span class="math inline">\(&lt;f, K(\cdot, x)&gt;_\mathcal H \ f(x)\)</span>, <span class="math inline">\(\forall f\)</span>.</p>
+<p>So far, we have gone from RKHS to Kernel (<span class="math inline">\(K\)</span>). And the Kernel <span class="math inline">\(K\)</span> has the reproducing property: <span class="math inline">\(&lt;f, K(\cdot, x)&gt;_\mathcal H = f(x)\)</span>, <span class="math inline">\(\forall f\)</span>.</p>
 <p>How about we go from Kernel (<span class="math inline">\(K\)</span>) to RKHS?</p>
 <div class="theorem">
 <p><span id="thm:MAT" class="theorem"><strong>Theorem 7.4  (Moore-Aronszjan Theorem) </strong></span>Let <span class="math inline">\(K\)</span> be a kernel defined on <span class="math inline">\(\mathcal X\)</span>. Define</p>

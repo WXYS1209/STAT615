@@ -132,7 +132,7 @@ Then,  \(\forall z^*\) solution to *(P)*, \(\exists \lambda^*\) solution to *(D)
 
 1. \(\vec 0 ~(\in R^s) = \nabla f(z^*) + \sum_{i=1}^n \lambda_i^* \nabla h_i(z^*)\) (Stationarity)
 
-1. \(h_i(z^*) \geq 0\), \(\forall i=1,\cdots,n\) (Primal Feasibility)
+1. \(h_i(z^*) \leq 0\), \(\forall i=1,\cdots,n\) (Primal Feasibility)
 
 1. \(\lambda_i^* \geq 0\), \(\forall i=1,\cdots,n\) (Dual Feasibility)
 
@@ -510,7 +510,7 @@ Let \(\mathcal X\) be a set, \(\mathcal H\) be a Hilbert Space of real valued fu
 
 Now, let \(\tilde x \in \mathcal X\), then \(K_{\tilde x} (x) = <K_{\tilde x}, K_x>_\mathcal H\). Let's call them \(K(\tilde x, x)\). Then the function \(K\) defined above is a kernel: take \(\psi: \begin{matrix} \mathcal X \to \mathcal H\\x \to K_x\end{matrix}\), then \(K(\tilde x, x) = <K_{\tilde x}, K_x>_\mathcal H = <\psi(\tilde x), \psi(x)>_\mathcal H\).
 
-So far, we have gone from RKHS to Kernel (\(K\)). And the Kernel \(K\) has the reproducing property: \(<f, K(\cdot, x)>_\mathcal H \ f(x)\), \(\forall f\).
+So far, we have gone from RKHS to Kernel (\(K\)). And the Kernel \(K\) has the reproducing property: \(<f, K(\cdot, x)>_\mathcal H = f(x)\), \(\forall f\).
 
 How about we go from Kernel (\(K\)) to RKHS?
 

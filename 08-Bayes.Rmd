@@ -282,7 +282,7 @@ Thus, to sample from \(N_d(0, \Sigma)\), we can do the following:
 3. Set \(Z = \sum_{i=1}^d \sqrt{\lambda_i}\xi_i  v_i\).
 
 :::{.remark}
-The above is preciselt what we need to sample form Gaussian in more general settings. In particular, for Gaussians in certain RKHSs.
+The above is precisely what we need to sample form Gaussian in more general settings. In particular, for Gaussians in certain RKHSs.
 :::
 
 ## Stochastic Processes and Gaussian Processes

@@ -213,6 +213,7 @@ $\mathcal X = R^d$, select a length-scale $h > 0$.
 
 For $d=2$, we have:
 
+![](./figures/wei2.png)
 
 Introduce pre-weights:
 
